@@ -1,0 +1,76 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+
+public class PlayerAnimator : MonoBehaviour
+{
+    private const string IS_WALKING = "IsWalking";
+    private const string IS_RUNNING = "IsRunning";
+    private const string IS_BLOCKING = "IsBlocking";
+    private const string IS_SPELLCASTING = "IsSpellcasting";
+    private const string TRIGGER_ATTACK = "Attack";
+
+    private Animator animator;
+
+    private float attackTimer;
+    private float attackTimerMax = 1.5f;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        attackTimer = attackTimerMax;
+
+        PlayerCombat.Instance.OnChargingMagicAttack += HandleSpellcasting;
+    }
+
+    private void Update()
+    {
+        HandleWalking();
+        HandleRunning();
+        HandleBlocking();
+
+        if (!PlayerInput.Instance.IsBlockingPressed())
+        {
+            HandleAttacking();
+        }
+    }
+
+    private void HandleSpellcasting(bool isSpellcasting)
+    {
+        // // There's animation event inside Spellcasting animation, that triggers attack.
+        animator.SetBool(IS_SPELLCASTING, isSpellcasting);
+    }
+
+    private void HandleWalking()
+    {
+        animator.SetBool(IS_WALKING, PlayerInput.Instance.GetMovementVectorNormalized() != Vector2.zero);
+    }
+
+    private void HandleRunning()
+    {
+        animator.SetBool(IS_RUNNING, PlayerInput.Instance.IsRunningTriggered());
+    }
+
+    private void HandleAttacking()
+    {
+        attackTimer += Time.deltaTime;
+
+        if (attackTimer >= attackTimerMax && PlayerInput.Instance.IsAttackTriggered())
+        {
+            animator.SetTrigger(TRIGGER_ATTACK);
+            attackTimer = 0;
+        }
+    }
+
+    private void HandleBlocking()
+    {
+        animator.SetBool(IS_BLOCKING, PlayerInput.Instance.IsBlockingPressed());
+    }
+
+    private void OnDestroy()
+    {
+        PlayerCombat.Instance.OnChargingMagicAttack -= HandleSpellcasting;
+    }
+}

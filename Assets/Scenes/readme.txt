@@ -1,0 +1,2 @@
+Tavern scene is broken because the main character in this scene is not the same as in the Dungeon one.
+Think the best solution is build another interior, at least because the existing one looks bad. Then, need to make a prefab out of the main character in the Dungeon scene and put the MC into the tavern.

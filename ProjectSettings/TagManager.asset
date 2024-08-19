@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - SkeletonMinion
+  - SkeletonArcher
+  - MeleeSkeleton
+  - RangedSkeleton
+  - Floor
+  - WizardLightMagicCharge
+  - WizardMediumMagicCharge
+  - WizardStrongMagicCharge
+  - LightMagicCharge
+  - MediumMagicCharge
+  - StrongMagicCharge
+  - SkeletonMage
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - Mage_Head
+  - Mage_Hat
+  - Player
+  - Skeleton
+  - Mage_Staff
+  - IgnoreSkeletonRaycast
+  - Interactable
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
