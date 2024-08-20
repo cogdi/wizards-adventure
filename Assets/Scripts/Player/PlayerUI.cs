@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
+    private CharacterAttributes characterAttributesInstance;
+
     [SerializeField] private TextMeshProUGUI playerHPAmount;
     [SerializeField] private Image manaBar;
     [SerializeField] private Image staminaBar;
@@ -24,6 +26,8 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        characterAttributesInstance = CharacterAttributes.Instance;
+
         frontHealthBar.value = CharacterAttributes.MAX_HEALTH;
         backgroundHealthBar.value = frontHealthBar.value;
 
@@ -40,15 +44,16 @@ public class PlayerUI : MonoBehaviour
     // TODO: Add more visuals.
     private void UpdateCharacterAttributes()
     {
-        playerHPAmount.text = CharacterAttributes.Instance.Health.ToString() + " " + PlayerInput.Instance.IsBlockingPressed();
+        // Debug;
+        playerHPAmount.text = characterAttributesInstance.Health.ToString() + " " + PlayerInput.Instance.IsBlockingPressed();
 
-        manaBar.fillAmount = CharacterAttributes.Instance.Mana / CharacterAttributes.MAX_MANA;
-        staminaBar.fillAmount = CharacterAttributes.Instance.Stamina / CharacterAttributes.MAX_STAMINA;
+        manaBar.fillAmount = characterAttributesInstance.Mana / CharacterAttributes.MAX_MANA;
+        staminaBar.fillAmount = characterAttributesInstance.Stamina / CharacterAttributes.MAX_STAMINA;
     }
 
     private void UpdateHealthBarUI()
     {
-        float health = CharacterAttributes.Instance.Health;
+        float health = characterAttributesInstance.Health;
 
         if (health < backgroundHealthBar.value)
         {

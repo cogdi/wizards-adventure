@@ -6,6 +6,8 @@ public class PlayerLook : MonoBehaviour
 {
     public static PlayerLook Instance { get; private set; }
 
+    private PlayerInput playerInputInstance;
+
     [SerializeField] private Camera cam;
     private const float CAMERA_UPPER_CLAMP = -90f;
     private const float CAMERA_LOWER_CLAMP = 54f;
@@ -17,6 +19,11 @@ public class PlayerLook : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        playerInputInstance = PlayerInput.Instance;
+    }
+
     private void LateUpdate()
     {
         Look();
@@ -24,8 +31,8 @@ public class PlayerLook : MonoBehaviour
 
     private void Look()
     {
-        float mouseX = PlayerInput.Instance.GetLookingAxis().x * sensitivity * Time.deltaTime;
-        float mouseY = PlayerInput.Instance.GetLookingAxis().y * sensitivity * Time.deltaTime;
+        float mouseX = playerInputInstance.GetLookingAxis().x * sensitivity * Time.deltaTime;
+        float mouseY = playerInputInstance.GetLookingAxis().y * sensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, CAMERA_UPPER_CLAMP, CAMERA_LOWER_CLAMP);

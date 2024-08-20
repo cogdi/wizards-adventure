@@ -45,6 +45,7 @@ public class CharacterAttributes : MonoBehaviour
 
     private void Update()
     {
+        // Debug;
         if (Input.GetKeyDown(KeyCode.E))
         {
             Heal(100f);

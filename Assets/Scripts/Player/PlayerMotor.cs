@@ -113,6 +113,7 @@ public class PlayerMotor : MonoBehaviour
 
         if (isMoving && playerInputInstance.IsRunningTriggered() && !playerInputInstance.IsBlockingPressed())
         {
+            // TODO: Try to make it better.
             if (CharacterAttributes.Instance.IsCharacterAbleToRun())
             {
                 currentSpeed = runningSpeed;

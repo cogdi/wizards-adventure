@@ -27,7 +27,7 @@ public class SkeletonPatrolState : SkeletonBaseState
             agent.SetDestination(patrolPointList[0].position);
         }
 
-        //PlayerCombat.Instance.OnWallHit += PlayerCombat_OnWallHit;
+        //PlayerCombat.Instance.OnWallHit += SoundManager_OnAnySoundMade;
         SoundManager.Instance.OnAnySoundMade += PlayerCombat_OnWallHit;
     }
 

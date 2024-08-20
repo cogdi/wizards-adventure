@@ -12,6 +12,8 @@ public class PlayerAnimator : MonoBehaviour
     private const string IS_SPELLCASTING = "IsSpellcasting";
     private const string TRIGGER_ATTACK = "Attack";
 
+    private PlayerInput playerInputInstance;
+
     private Animator animator;
 
     private float attackTimer;
@@ -19,6 +21,8 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Start()
     {
+        playerInputInstance = PlayerInput.Instance;
+
         animator = GetComponent<Animator>();
         attackTimer = attackTimerMax;
 
@@ -31,7 +35,7 @@ public class PlayerAnimator : MonoBehaviour
         HandleRunning();
         HandleBlocking();
 
-        if (!PlayerInput.Instance.IsBlockingPressed())
+        if (!playerInputInstance.IsBlockingPressed())
         {
             HandleAttacking();
         }
@@ -45,19 +49,19 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleWalking()
     {
-        animator.SetBool(IS_WALKING, PlayerInput.Instance.GetMovementVectorNormalized() != Vector2.zero);
+        animator.SetBool(IS_WALKING, playerInputInstance.GetMovementVectorNormalized() != Vector2.zero);
     }
 
     private void HandleRunning()
     {
-        animator.SetBool(IS_RUNNING, PlayerInput.Instance.IsRunningTriggered());
+        animator.SetBool(IS_RUNNING, playerInputInstance.IsRunningTriggered());
     }
 
     private void HandleAttacking()
     {
         attackTimer += Time.deltaTime;
 
-        if (attackTimer >= attackTimerMax && PlayerInput.Instance.IsAttackTriggered())
+        if (attackTimer >= attackTimerMax && playerInputInstance.IsAttackTriggered())
         {
             animator.SetTrigger(TRIGGER_ATTACK);
             attackTimer = 0;
@@ -66,7 +70,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleBlocking()
     {
-        animator.SetBool(IS_BLOCKING, PlayerInput.Instance.IsBlockingPressed());
+        animator.SetBool(IS_BLOCKING, playerInputInstance.IsBlockingPressed());
     }
 
     private void OnDestroy()

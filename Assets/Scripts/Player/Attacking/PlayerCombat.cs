@@ -38,6 +38,8 @@ public class PlayerCombat : MonoBehaviour
         { STRONG_MAGIC_CHARGE_TAG, 100 } // Debug value. To be returned to 50.
     };
 
+    private PlayerInput playerInputInstance;
+
     // Damaging enemies.
     // Melee attacks.
     private Collider[] hitColliders = new Collider[10];
@@ -61,9 +63,14 @@ public class PlayerCombat : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        playerInputInstance = PlayerInput.Instance;
+    }
+
     private void Update()
     {
-        if (!PlayerInput.Instance.IsBlockingPressed())
+        if (!playerInputInstance.IsBlockingPressed())
         {
             HandleMagicAttacks();
         }
@@ -132,9 +139,9 @@ public class PlayerCombat : MonoBehaviour
         if (magicAttackIntervalTimer < magicAttackIntervalTimerMax)
             magicAttackIntervalTimer += Time.deltaTime;
 
-        else
+        else if (!PlayerMotor.Instance.IsCharacterRunning())
         {
-            if (PlayerInput.Instance.IsMagicAttackTriggered())
+            if (playerInputInstance.IsMagicAttackTriggered())
             {
                 OnStaffStateChanged?.Invoke(StaffState.Charging);
                 magicChargePowerTimer += Time.deltaTime;

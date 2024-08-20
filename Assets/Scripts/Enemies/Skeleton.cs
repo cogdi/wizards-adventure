@@ -26,8 +26,8 @@ public class Skeleton : MonoBehaviour
     public SkeletonStateMachine StateMachine { get => stateMachine; }
     public NavMeshAgent Agent { get => agent; }
 
-    private const string SKELETON_ARCHER_NAME = "SkeletonArcher";
-    private const string SKELETON_MAGE_NAME = "SkeletonMage";
+    //private const string SKELETON_ARCHER_NAME = "SkeletonArcher";
+    //private const string SKELETON_MAGE_NAME = "SkeletonMage";
     private const string ARROW = "Arrow";
     private const string SKELETON_MAGIC_CHARGE = "SkeletonMagicCharge";
     private const float MAX_HEALTH = 100f;
@@ -41,7 +41,7 @@ public class Skeleton : MonoBehaviour
     private float health = 0f;
     private SkeletonStateMachine stateMachine;
     private NavMeshAgent agent;
-    private GameObject player;
+    private Transform playerTransform;
     private Vector3 playerLastPosition;
 
     // Raycast
@@ -59,8 +59,8 @@ public class Skeleton : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag(PlayerCombat.PLAYER_TAG);
-        if (player == null)
+        playerTransform = GameObject.FindGameObjectWithTag(PlayerCombat.PLAYER_TAG).transform;
+        if (playerTransform == null)
         {
             Debug.LogError("Player instance can not be found.");
         }
@@ -83,15 +83,15 @@ public class Skeleton : MonoBehaviour
     {
         if (GetDistanceToPlayer() <= sightDistance)
         {
-            Vector3 playerDirection = player.transform.position - transform.position;
+            Vector3 playerDirection = playerTransform.position - transform.position;
             if (Vector3.Angle(playerDirection, transform.forward) <= fieldOfView)
             {
                 if (Physics.Raycast(transform.position + (Vector3.up * eyeLevel), playerDirection, out RaycastHit hitInfo, sightDistance, ignoreRaycastMask))
                 {
                     //Debug.Log(hitInfo.transform);
-                    if (hitInfo.transform.CompareTag(PlayerCombat.PLAYER_TAG))//(hitInfo.transform == player.transform)
+                    if (hitInfo.transform.CompareTag(PlayerCombat.PLAYER_TAG))//(hitInfo.transform == playerTransform)
                     {
-                        playerLastPosition = player.transform.position;
+                        playerLastPosition = playerTransform.position;
                         return true;
                     }
                 }
@@ -123,7 +123,7 @@ public class Skeleton : MonoBehaviour
 
     public Transform GetPlayerTransform()
     {
-        return player.transform;
+        return playerTransform;
     }
 
     // Called by the animation event on ranged skeletons.
@@ -189,6 +189,6 @@ public class Skeleton : MonoBehaviour
 
     public float GetDistanceToPlayer()
     {
-        return Vector3.Distance(player.transform.position, transform.position);
+        return Vector3.Distance(playerTransform.position, transform.position);
     }
 }

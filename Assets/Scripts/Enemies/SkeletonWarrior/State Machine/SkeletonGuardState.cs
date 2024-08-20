@@ -18,8 +18,8 @@ public class SkeletonGuardState : SkeletonBaseState
         guardPoint = skeleton.GetGuardPoint();
         agent.SetDestination(guardPoint.position);
 
-        //PlayerCombat.Instance.OnWallHit += PlayerCombat_OnWallHit;
-        SoundManager.Instance.OnAnySoundMade += PlayerCombat_OnWallHit;
+        //PlayerCombat.Instance.OnWallHit += SoundManager_OnAnySoundMade;
+        SoundManager.Instance.OnAnySoundMade += SoundManager_OnAnySoundMade;
     }
 
     public override void PerformState()
@@ -40,7 +40,7 @@ public class SkeletonGuardState : SkeletonBaseState
         }
     }
 
-    private void PlayerCombat_OnWallHit(Vector3 hitPosition)
+    private void SoundManager_OnAnySoundMade(Vector3 hitPosition)
     {
         if (skeleton != null && stateMachine.GetCurrentState() == stateMachine.guardState)
         {
