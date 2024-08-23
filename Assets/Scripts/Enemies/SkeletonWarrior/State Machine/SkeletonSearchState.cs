@@ -7,7 +7,6 @@ public class SkeletonSearchState : SkeletonBaseState
 {
     private NavMeshAgent agent;
 
-    //private Vector3 playerLastPosition;
     public float searchPlayerTimer;
     private float searchPlayerTimerMax = 8f;
     private float moveTimer;
@@ -19,7 +18,6 @@ public class SkeletonSearchState : SkeletonBaseState
 
         if (agent != null)
         {
-            //agent.stoppingDistance = 0.1f;
             agent.SetDestination(skeleton.GetPlayerTransform().position);
         }
     }
@@ -30,9 +28,7 @@ public class SkeletonSearchState : SkeletonBaseState
         {
             if (searchPlayerTimer >= searchPlayerTimerMax)
             {
-                if (skeleton.CompareTag(Skeleton.MELEE_SKELETON_TAG))
-                    stateMachine.SwitchState(stateMachine.patrolState);
-                else stateMachine.SwitchState(stateMachine.guardState);
+                stateMachine.SwitchState(stateMachine.guardState);
             }
 
             searchPlayerTimer += Time.deltaTime;

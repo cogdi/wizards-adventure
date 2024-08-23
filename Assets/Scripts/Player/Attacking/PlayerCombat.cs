@@ -115,7 +115,7 @@ public class PlayerCombat : MonoBehaviour
                 else
                 {
                     // TODO: Refactor this.
-                    Barbarian.Instance.TakeDamage(meleeDamage);
+                    Barbarian.Instance.TakeDamage(Barbarian.Instance, meleeDamage);
                 }
             }
 

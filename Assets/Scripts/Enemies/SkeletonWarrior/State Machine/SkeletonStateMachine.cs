@@ -7,10 +7,9 @@ using UnityEngine.XR;
 
 public class SkeletonStateMachine : MonoBehaviour
 {
-    public SkeletonPatrolState patrolState;
+    public SkeletonGuardState guardState;
     public SkeletonAttackState attackState;
     public SkeletonSearchState searchState;
-    public SkeletonGuardState guardState;
 
     private Skeleton skeleton;
 
@@ -20,16 +19,16 @@ public class SkeletonStateMachine : MonoBehaviour
 
     public void Initialise()
     {
-        // Initialized from SkeletonPatrolState.
+        // Initialized from Skeleton.cs.
         skeleton = GetComponent<Skeleton>();
-        patrolState = new SkeletonPatrolState();
+        guardState = new SkeletonGuardState();
         attackState = new SkeletonAttackState();
         searchState = new SkeletonSearchState();
-        guardState = new SkeletonGuardState();
 
-        if (skeleton.CompareTag(Skeleton.MELEE_SKELETON_TAG))
-            SwitchState(patrolState);
-        else SwitchState(guardState);
+        //if (skeleton.CompareTag(Skeleton.MELEE_SKELETON_TAG))
+        //    SwitchState(guardState);
+        //else SwitchState(guardState);
+        SwitchState(guardState);
     }
 
     private void Update()

@@ -33,7 +33,7 @@ public class BarbarianAnimations : MonoBehaviour
 
     private void HandleWalking()
     {
-        animator.SetBool(IS_WALKING, barbarian.IsWalking());
+        animator.SetBool(IS_WALKING, barbarian.IsMoving());
     }
 
     public void ReversePlayingAttackingAnimationFlag()

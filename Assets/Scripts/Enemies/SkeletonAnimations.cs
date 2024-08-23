@@ -20,10 +20,10 @@ public class SkeletonAnimations : MonoBehaviour
     }
     private void Start()
     {
-        skeleton.OnAttackingPlayer += Skeleton_OnAttackingPlayerEvent;
+        skeleton.OnAttackingPlayer += Skeleton_OnAttackingPlayer;
     }
 
-    private void Skeleton_OnAttackingPlayerEvent()
+    private void Skeleton_OnAttackingPlayer()
     {
         /* There's an animator event that triggers shooting
          * or DamageToPlayer() directly, in case if it's melee enemy. */
