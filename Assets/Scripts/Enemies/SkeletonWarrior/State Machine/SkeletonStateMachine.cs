@@ -25,9 +25,6 @@ public class SkeletonStateMachine : MonoBehaviour
         attackState = new SkeletonAttackState();
         searchState = new SkeletonSearchState();
 
-        //if (skeleton.CompareTag(Skeleton.MELEE_SKELETON_TAG))
-        //    SwitchState(guardState);
-        //else SwitchState(guardState);
         SwitchState(guardState);
     }
 

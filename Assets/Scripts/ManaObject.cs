@@ -6,7 +6,7 @@ public class ManaObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.CompareTag("Player"))
+        if (PlayerCombat.Instance.IsPlayerLayer(collider.gameObject.layer))
         {
             if (CharacterAttributes.Instance.Mana < CharacterAttributes.MAX_MANA)
             {

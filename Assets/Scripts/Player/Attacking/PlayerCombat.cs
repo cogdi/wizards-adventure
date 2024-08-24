@@ -18,6 +18,8 @@ public class PlayerCombat : MonoBehaviour
     public const string MEDIUM_MAGIC_CHARGE_TAG = "WizardMediumMagicCharge";
     public const string STRONG_MAGIC_CHARGE_TAG = "WizardStrongMagicCharge";
 
+    private int playerLayer;
+
     public enum MagicAttacks
     {
         Light,
@@ -61,6 +63,7 @@ public class PlayerCombat : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        playerLayer = gameObject.layer;
     }
 
     private void Start()
@@ -127,6 +130,11 @@ public class PlayerCombat : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool IsPlayerLayer(int layer)
+    {
+        return playerLayer == layer;
     }
 
     public bool IsEnemyLayer(int layer)

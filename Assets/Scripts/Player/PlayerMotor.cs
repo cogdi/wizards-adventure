@@ -168,7 +168,8 @@ public class PlayerMotor : MonoBehaviour
             foreach (Collider collider in colliders)
             {
                 // Делаем что-то с каждым столкновением, например, выводим информацию о столкновении
-                if (collider.CompareTag("Floor")) return;
+                if (collider.CompareTag("Floor")) 
+                    return;
                 Debug.Log("Player is on top of the Skeleton.");
                 isStandingOnTopOfEnemy = true;
             }

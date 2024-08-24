@@ -6,21 +6,21 @@ using UnityEngine.AI;
 
 public class SkeletonGuardState : SkeletonBaseState
 {
+    // This state is used both by melee and ranged skeletons.
+    // The difference is that melee's patrol and the other's don't.
+
     private NavMeshAgent agent;
     private List<Transform> patrolPointList;
     private int currentPatrolPoint;
     private float patrolStandTimer;
     private float patrolStandTimerMax = 2f;
 
-    private bool isMeleeSkeleton;
-    private bool isAtGuardPoint = false;
+    private bool isAtGuardPoint;
 
     public override void EnterState()
     {
         agent = skeleton.Agent;
         patrolPointList = skeleton.GetPatrolPointList();
-
-        isMeleeSkeleton = skeleton.CompareTag(Skeleton.MELEE_SKELETON_TAG);
 
         if (currentPatrolPoint < patrolPointList.Count)
         {
@@ -44,7 +44,7 @@ public class SkeletonGuardState : SkeletonBaseState
 
         else
         {
-            if (isMeleeSkeleton)
+            if (skeleton.IsMeleeSkeleton)
             {
                 PatrolCycle();
             }
@@ -96,7 +96,7 @@ public class SkeletonGuardState : SkeletonBaseState
 
     private void PlayerCombat_OnWallHit(Vector3 hitPosition)
     {
-        if (skeleton != null && stateMachine.GetCurrentState() == stateMachine.guardState)
+        if (skeleton != null && stateMachine.GetCurrentState() == stateMachine.guardState) // TODO: Check if this works with less checks.
         {
             if (Vector3.Distance(skeleton.transform.position, hitPosition) <= 13f)
             {

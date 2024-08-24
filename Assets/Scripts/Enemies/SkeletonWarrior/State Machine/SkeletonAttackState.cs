@@ -29,12 +29,9 @@ public class SkeletonAttackState : SkeletonBaseState
 
         playerTransform = skeleton.GetPlayerTransform();
 
-        if (skeleton.CompareTag(Skeleton.MELEE_SKELETON_TAG))
-            /* Melee Skeleton stops 2f away from player when attacking.
-             * Values different than 2f work poorly. */
+        if (skeleton.IsMeleeSkeleton)
             attackDistance = 2f;
         else
-            /* Ranged Skeleton keeps 6f distance when shooting. */
             attackDistance = 6f;
     }
 
@@ -51,47 +48,7 @@ public class SkeletonAttackState : SkeletonBaseState
         }
     }
 
-    // TODO: Moving aside while attacking.
-    //private void AttackPlayer()
-    //{
-    //    Vector3 directionToPlayer = playerTransform.position - skeleton.transform.position;
-    //    Quaternion rotiationToPlayer = Quaternion.LookRotation(directionToPlayer.normalized);
-    //    skeleton.gameObject.transform.rotation = Quaternion.RotateTowards(skeleton.transform.rotation, rotiationToPlayer, agent.angularSpeed * Time.deltaTime);
-
-    //    if (skeleton.GetDistanceToPlayer() > (1.5 * attackDistance))
-    //    {
-    //        agent.SetDestination(playerTransform.position);
-    //    }
-
-    //    else
-    //    {
-    //        agent.ResetPath();
-
-    //        if (skeleton.CompareTag(Skeleton.SKELETON_ARCHER_TAG) || skeleton.CompareTag(Skeleton.SKELETON_MAGE_TAG))
-    //        {
-    //            if (skeleton.GetDistanceToPlayer() < attackDistance)
-    //            {
-    //                // To make distance between a skeleton and the character
-    //                agent.SetDestination(skeleton.transform.position - directionToPlayer);
-    //                skeleton.transform.rotation = Quaternion.RotateTowards(skeleton.transform.rotation, rotiationToPlayer, agent.angularSpeed * Time.deltaTime);
-    //            }
-
-    //            shotTimer += Time.deltaTime;
-
-    //            if (shotTimer >= shotTimerMax)
-    //            {
-    //                /* This invokes an event from SkeletonAnimations.cs that plays attacking animation.
-    //                 * Then there's an animator event that calls DamageToPlayer() from CharacterAttributes.cs and causes damage to the character.*/
-    //                skeleton.InvokeOnAttackingPlayerEvent();
-
-    //                shotTimer = 0;
-    //            }
-    //        }
-
-    //        else skeleton.InvokeOnAttackingPlayerEvent();
-    //    }
-    //}
-
+    // TODO: Move aside while attacking.
     private void AttackPlayer()
     {
         Vector3 directionToPlayer = playerTransform.position - skeleton.transform.position;
@@ -107,7 +64,7 @@ public class SkeletonAttackState : SkeletonBaseState
         {
             agent.ResetPath(); // To prevent a skeleton going to the character though the distance is normal.
 
-            if (skeleton.CompareTag(MELEE_SKELETON_TAG))
+            if (skeleton.IsMeleeSkeleton)
                 // Melee skeletons' logic.
                 skeleton.InvokeOnAttackingPlayerEvent();
 
@@ -125,7 +82,7 @@ public class SkeletonAttackState : SkeletonBaseState
 
                 if (shotTimer >= shotTimerMax)
                 {
-                    /* This invokes an event from SkeletonAnimations.cs that plays attacking animation.
+                    /* This invokes the event for SkeletonAnimations.cs that plays attacking animation.
                     * Then there's an animator event that calls DamageToPlayer() from CharacterAttributes.cs and causes damage to the character.*/
                     skeleton.InvokeOnAttackingPlayerEvent();
 

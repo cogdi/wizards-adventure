@@ -9,7 +9,7 @@ public class Arrow : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.CompareTag(PlayerCombat.PLAYER_TAG))
+        if (PlayerCombat.Instance.IsPlayerLayer(collision.gameObject.layer))
         {
             OnPlayerShot?.Invoke(Skeleton.ARROW_DAMAGE);
         }

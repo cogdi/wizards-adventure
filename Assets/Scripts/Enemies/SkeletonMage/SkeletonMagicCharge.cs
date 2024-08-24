@@ -21,17 +21,14 @@ public class SkeletonMagicCharge : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.CompareTag(PlayerCombat.PLAYER_TAG))
+        if (PlayerCombat.Instance.IsPlayerLayer(collision.gameObject.layer))
         {
-            //collision.gameObject.GetComponent<CharacterAttributes>().TakeDamage(Skeleton.MAGIC_DAMAGE);
             OnPlayerHit?.Invoke(Skeleton.MAGIC_DAMAGE);
-
         }
 
-        // Experimental function.
+        // TODO: Do something with this experimental function.
         else if (PlayerCombat.Instance.IsEnemyLayer(collision.gameObject.layer))
         {
-            //OnPlayerHit?.Invoke(this, EventArgs.Empty);
             Debug.Log("Skeleton hit by a magic charge.");
         }
 

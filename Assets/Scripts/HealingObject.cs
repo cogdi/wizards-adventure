@@ -6,7 +6,7 @@ public class HealingObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.CompareTag("Player"))
+        if (PlayerCombat.Instance.IsPlayerLayer(collider.gameObject.layer))
         {
             if (CharacterAttributes.Instance.Health < CharacterAttributes.MAX_HEALTH)
             {
