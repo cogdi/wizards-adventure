@@ -24,7 +24,10 @@ public class CharacterAttributes : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
 
         health = MAX_HEALTH;
         mana = MAX_MANA;
@@ -40,7 +43,7 @@ public class CharacterAttributes : MonoBehaviour
         ManaObject.OnManaRestored += RestoreMana;
         HealingObject.OnHealthRestored+= Heal;
 
-        Barbarian.Instance.OnDamagingPlayer += TakeDamage;
+        Barbarian.OnDamagingPlayer += TakeDamage;
     }
 
     private void Update()
@@ -148,5 +151,6 @@ public class CharacterAttributes : MonoBehaviour
         PlayerCombat.Instance.OnManaSpent -= SpendMana;
         ManaObject.OnManaRestored -= RestoreMana;
         HealingObject.OnHealthRestored -= Heal;
+        Barbarian.OnDamagingPlayer -= TakeDamage;
     }
 }

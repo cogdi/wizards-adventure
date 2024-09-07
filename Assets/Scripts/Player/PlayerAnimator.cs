@@ -14,8 +14,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private PlayerInput playerInputInstance;
 
-    private Animator animator;
-
+    [SerializeField] private Animator animator;
     private float attackTimer;
     private float attackTimerMax = 1.5f;
 
@@ -23,7 +22,6 @@ public class PlayerAnimator : MonoBehaviour
     {
         playerInputInstance = PlayerInput.Instance;
 
-        animator = GetComponent<Animator>();
         attackTimer = attackTimerMax;
 
         PlayerCombat.Instance.OnChargingMagicAttack += HandleSpellcasting;

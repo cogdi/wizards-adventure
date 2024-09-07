@@ -11,8 +11,6 @@ using static Skeleton;
 
 public class SkeletonAttackState : SkeletonBaseState
 {
-    public event EventHandler OnAttackingPlayer;
-
     // Ranged skeleton.
     private float shotTimer;
     private float shotTimerMax = 3f; // Prev. value = 1.5f.

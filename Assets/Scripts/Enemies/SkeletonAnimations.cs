@@ -8,14 +8,11 @@ public class SkeletonAnimations : MonoBehaviour
     private const string IS_WALKING = "IsWalking";
     private const string TRIGGER_ATTACK = "Attack";
 
-    private Animator animator;
-    private Skeleton skeleton;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Skeleton skeleton;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        skeleton = animator.GetComponent<Skeleton>();
-
         animator.SetBool(IS_WALKING, false);
     }
     private void Start()

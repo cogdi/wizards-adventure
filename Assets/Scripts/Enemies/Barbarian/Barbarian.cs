@@ -6,7 +6,7 @@ public class Barbarian : Enemy
 {
     public static Barbarian Instance { get; private set; }
     private BarbarianAnimations barbarianAnimationsInstance;
-    public event Action<float> OnDamagingPlayer;
+    public static event Action<float> OnDamagingPlayer;
 
     private float patrolTime = 0f;
     private float meleeDamage = 15f;
@@ -15,7 +15,10 @@ public class Barbarian : Enemy
     {
         base.Awake();
 
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
     }
 
     protected override void Start()

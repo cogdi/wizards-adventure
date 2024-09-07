@@ -32,7 +32,7 @@ public class Skeleton : Enemy
     [SerializeField] private List<Transform> patrolPointsList;
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private Transform playerBody;
-    private SkeletonStateMachine stateMachine;
+    [SerializeField] private SkeletonStateMachine stateMachine;
 
     protected override void Awake()
     {
@@ -47,7 +47,6 @@ public class Skeleton : Enemy
     {
         base.Start();
 
-        stateMachine = GetComponent<SkeletonStateMachine>();
         stateMachine.Initialise();
 
         PlayerCombat.Instance.OnSkeletonDamaged += TakeDamage;
@@ -98,9 +97,9 @@ public class Skeleton : Enemy
         }
     }
 
-    private void MagicCharge_OnSkeletonDamaged(object sender, MagicCharge.OnSkeletonDamagedEventArgs e)
+    private void MagicCharge_OnSkeletonDamaged(Skeleton skeleton, float damage)
     {
-        TakeDamage(e.skeleton, e.damage);
+        TakeDamage(skeleton, damage);
     }
 
     private void OnDestroy()

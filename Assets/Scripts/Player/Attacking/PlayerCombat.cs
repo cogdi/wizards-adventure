@@ -49,7 +49,6 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Transform attackRangeSphere;
     [SerializeField] private float attackRangeSphereRadius = 0.5f;
     [SerializeField] private LayerMask enemyLayer;
-    public LayerMask SkeletonLayer { get => enemyLayer; } // Debug.
 
     // Magic attacks.
     private MagicAttacks currentAttackType; // To be used in ShootMagicCharge() that called by animation event.
@@ -62,7 +61,10 @@ public class PlayerCombat : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
         playerLayer = gameObject.layer;
     }
 
@@ -139,7 +141,7 @@ public class PlayerCombat : MonoBehaviour
 
     public bool IsEnemyLayer(int layer)
     {
-        return enemyLayer == (enemyLayer | (1 << layer));
+        return enemyLayer == (enemyLayer | 1 << layer);
     }
 
     private void HandleMagicAttacks()

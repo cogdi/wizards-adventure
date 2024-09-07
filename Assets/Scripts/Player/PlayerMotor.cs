@@ -10,7 +10,7 @@ public class PlayerMotor : MonoBehaviour
     private PlayerInput playerInputInstance;
 
     // Movement.
-    private CharacterController controller;
+    [SerializeField] private CharacterController controller;
     private float jumpHeight = 1.5f;
     private float gravity = -9.8f;
     private Vector3 velocity;
@@ -28,7 +28,10 @@ public class PlayerMotor : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -37,8 +40,6 @@ public class PlayerMotor : MonoBehaviour
 
     private void Start()
     {
-        controller = GetComponent<CharacterController>();
-
         interactableLayerMask = LayerMask.GetMask("Interactable");
 
         playerInputInstance = PlayerInput.Instance;

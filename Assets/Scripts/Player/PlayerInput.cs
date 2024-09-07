@@ -14,7 +14,10 @@ public class PlayerInput : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
 
         playerInputActions = new PlayerInputActions();
         playerInputActions.OnFoot.Enable();

@@ -13,10 +13,11 @@ public abstract class Enemy : MonoBehaviour
 
     public float Health => health;
     public NavMeshAgent Agent { get => agent; }
+    
     protected const float MAX_HEALTH = 100f;
 
+    [SerializeField] protected NavMeshAgent agent;
     protected float health = 0f;
-    protected NavMeshAgent agent;
     protected Transform playerTransform;
     protected Vector3 playerLastPosition;
     protected PlayerCombat playerCombatInstance;
@@ -26,13 +27,10 @@ public abstract class Enemy : MonoBehaviour
     protected float sightDistance = 15f;
     protected float fieldOfView = 100f;
     protected int ignoreRaycastMask;
-    //[SerializeField] protected LayerMask playerLayer;
-    protected LayerMask playerLayer;
 
     protected virtual void Awake()
     {
         health = MAX_HEALTH;
-        agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = 0.1f;
     }
 
@@ -47,8 +45,6 @@ public abstract class Enemy : MonoBehaviour
         }
 
         ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");
-
-        playerLayer = LayerMask.GetMask(PlayerCombat.PLAYER_TAG);
     }
 
     public virtual void TakeDamage(Enemy enemy, float damage) // TODO: Maybe I should make it abstract, or neither virtual or abstract. MAKE IT PROTECTED.
@@ -88,11 +84,6 @@ public abstract class Enemy : MonoBehaviour
 
         return false;
     }
-
-    //protected bool IsPlayerLayer(int layer)
-    //{
-    //    return playerLayer == (playerLayer | (1 << layer));
-    //}
 
     public Vector3 GetPlayerLastPosition()
     {

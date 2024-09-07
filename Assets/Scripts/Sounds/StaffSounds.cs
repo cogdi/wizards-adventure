@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class StaffSounds : MonoBehaviour
 {
-    private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip chargingSound;
     [SerializeField] private AudioClip firingSound;
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
         audioSource.volume = 0.3f;
     }
 

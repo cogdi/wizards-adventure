@@ -15,7 +15,10 @@ public class BarbarianAnimations : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
 
         animator.SetBool(IS_WALKING, false);
     }

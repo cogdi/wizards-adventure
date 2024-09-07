@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class DoorAnimations : MonoBehaviour
 {
-    private Door door;
-    private Animator animator;
+    [SerializeField] private Door door;
+    [SerializeField] private Animator animator;
 
     private const string IS_OPENING = "IsOpening";
 
     private void Awake()
     {
-        door = GetComponent<Door>();
-        animator = GetComponent<Animator>();
         animator.SetBool(IS_OPENING, false);
 
         door.OnDoorStateChanged += Door_OnDoorStateChanged;

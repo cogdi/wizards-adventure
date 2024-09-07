@@ -11,7 +11,10 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
     }
 
     private void Start()
@@ -24,14 +27,14 @@ public class SoundManager : MonoBehaviour
         CharacterAttributes.Instance.OnTakenBlockedHit += CharacterAttributes_OnTakenBlockedHit;
     }
 
-    private void MagicCharge_OnSkeletonHit(object sender, MagicCharge.OnAnyHitEventArgs e)
+    private void MagicCharge_OnSkeletonHit(Vector3 hitPosition)
     {
-        PlaySound(audioClipRefsSO.hitSkeletonByCharge, e.hitPosition, 1f);
+        PlaySound(audioClipRefsSO.hitSkeletonByCharge, hitPosition, 1f);
     }
 
-    private void MagicCharge_OnWallHit(object sender, MagicCharge.OnAnyHitEventArgs e)
+    private void MagicCharge_OnWallHit(Vector3 hitPosition)
     {
-        PlaySound(audioClipRefsSO.hitWallByCharge, e.hitPosition, 1f);
+        PlaySound(audioClipRefsSO.hitWallByCharge, hitPosition, 1f);
     }
 
     private void CharacterAttributes_OnTakenBlockedHit(Vector3 hitPosition)

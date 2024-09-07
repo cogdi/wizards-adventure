@@ -11,8 +11,7 @@ public class SkeletonStateMachine : MonoBehaviour
     public SkeletonAttackState attackState;
     public SkeletonSearchState searchState;
 
-    private Skeleton skeleton;
-
+    [SerializeField] private Skeleton skeleton;
     private SkeletonBaseState currentState;
     //private bool isSwitchingStates;
     //private SkeletonBaseState nextState;
@@ -20,7 +19,6 @@ public class SkeletonStateMachine : MonoBehaviour
     public void Initialise()
     {
         // Initialized from Skeleton.cs.
-        skeleton = GetComponent<Skeleton>();
         guardState = new SkeletonGuardState();
         attackState = new SkeletonAttackState();
         searchState = new SkeletonSearchState();

@@ -16,32 +16,37 @@ public class PlayerUI : MonoBehaviour
     [Header("Health bar")]
     [SerializeField] private Slider frontHealthBar;
     [SerializeField] private Slider backgroundHealthBar;
-    private Image frontHBImage;
-    private Image backgroundHBImage;
+    [SerializeField] private Image frontHBImage;
+    [SerializeField]private Image backgroundHBImage;
     private Color frontHealthBarColor = new Color(189, 0, 255);
     private Color damagedHealthBarColor = Color.red;
     private Color poisonedHealthBarColor = new Color(164, 255, 0);
     private Color healingHealthBarColor = new Color(0, 255, 255);
     private float lerpSpeed = 0.05f;
+    private float health;
 
     private void Start()
     {
         characterAttributesInstance = CharacterAttributes.Instance;
+        health = characterAttributesInstance.Health;
 
         frontHealthBar.value = CharacterAttributes.MAX_HEALTH;
         backgroundHealthBar.value = frontHealthBar.value;
 
-        frontHBImage = frontHealthBar.fillRect.GetComponent<Image>();
-        backgroundHBImage = backgroundHealthBar.fillRect.GetComponent<Image>();
+        //frontHBImage = frontHealthBar.fillRect.GetComponent<Image>();
+        //backgroundHBImage = backgroundHealthBar.fillRect.GetComponent<Image>();
     }
 
     private void Update()
     {
+        health = characterAttributesInstance.Health;
+
         UpdateCharacterAttributes();
         UpdateHealthBarUI();
     }
 
-    // TODO: Add more visuals.
+    // TODO: Add more visuals to character attributes' updating.
+    // Also remove string concatenations, they trigger garbage collector, use string builder in case you want to leave number HP visual.
     private void UpdateCharacterAttributes()
     {
         // Debug;
@@ -53,8 +58,6 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdateHealthBarUI()
     {
-        float health = characterAttributesInstance.Health;
-
         if (health < backgroundHealthBar.value)
         {
             backgroundHBImage.color = damagedHealthBarColor;
