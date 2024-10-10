@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SkeletonMagicCharge : MonoBehaviour
@@ -8,7 +6,7 @@ public class SkeletonMagicCharge : MonoBehaviour
     public static event Action<float> OnPlayerHit;
 
     private float time;
-
+    
     private void Update()
     {
         time += Time.deltaTime;

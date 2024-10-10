@@ -1,13 +1,5 @@
-using Microsoft.Win32.SafeHandles;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SocialPlatforms;
-using static Skeleton;
 
 public class SkeletonAttackState : SkeletonBaseState
 {

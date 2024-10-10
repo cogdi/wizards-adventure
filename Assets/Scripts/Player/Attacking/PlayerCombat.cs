@@ -84,25 +84,6 @@ public class PlayerCombat : MonoBehaviour
     // Animation event within Player object's "1H_Melee_Attack_Slice_Diagonal" calls it.
     public void AttackSkeleton() // TODO: rename? EXPERIMENTAL METHOD (Try to play the game and hit more than 100 colliders at all).
     {
-        //Collider[] hitEnemies = Physics.OverlapSphere(attackRangeSphere.position, attackRangeSphereRadius, enemyLayer);
-
-        //foreach (Collider enemy in hitEnemies)
-        //{
-        //    // TODO: Make checking on enemy type, when adding new.
-        //    Skeleton skeleton = enemy.GetComponent<Skeleton>();
-        //    OnSkeletonHit?.Invoke(enemy.ClosestPointOnBounds(attackRangeSphere.position));
-        //    OnSkeletonDamaged?.Invoke(skeleton, meleeDamage);
-        //}
-
-        //Collider[] antiHitEnemies = Physics.OverlapSphere(attackRangeSphere.position, attackRangeSphereRadius, ~enemyLayer);
-
-        //foreach (Collider enemy in antiHitEnemies)
-        //{
-        //    OnWallHit?.Invoke(enemy.ClosestPointOnBounds(attackRangeSphere.position));
-        //}
-
-
-        //Collider[] hitEnemies = Physics.OverlapSphere(attackRangeSphere.position, attackRangeSphereRadius);
         int numHitColliders = Physics.OverlapSphereNonAlloc(attackRangeSphere.position, attackRangeSphereRadius, hitColliders);
 
         for (int i = 0; i < numHitColliders; i++)
@@ -110,6 +91,7 @@ public class PlayerCombat : MonoBehaviour
             Collider collider = hitColliders[i];
             if (IsEnemyLayer(collider.gameObject.layer))
             {
+                // TODO: Check for enemy type.
                 collider.TryGetComponent<Skeleton>(out Skeleton skeleton);
                 if (skeleton != null)
                 {
@@ -224,48 +206,6 @@ public class PlayerCombat : MonoBehaviour
             Destroy(magicCharge);
         }
     }
-
-
-
-    //private void ShootMagicCharge(MagicAttacks attackType)
-    //{
-    //    OnMagicAttackProceed?.Invoke(true);
-
-    //    GameObject magicCharge = null;
-
-    //    if (CharacterAttributes.Instance.Mana < manaCostsArray[(int)attackType])
-    //    {
-    //        Debug.Log("Can't proceed attack! Not enough mana.");
-    //        return;
-    //    }
-
-    //    else
-    //    {
-    //        OnManaSpent?.Invoke(manaCostsArray[(int)attackType]);
-    //    }
-
-    //    switch(attackType)
-    //    {
-    //        case MagicAttacks.Light:
-    //            magicCharge = Instantiate(Resources.Load($"Prefabs/{LIGHT_MAGIC_CHARGE_TAG}") as GameObject, magicChargePosition.position, transform.rotation);
-    //            break;
-    //        case MagicAttacks.Medium:
-    //            magicCharge = Instantiate(Resources.Load($"Prefabs/{MEDIUM_MAGIC_CHARGE_TAG}") as GameObject, magicChargePosition.position, transform.rotation);
-    //            break;
-    //        case MagicAttacks.Strong:
-    //            magicCharge = Instantiate(Resources.Load($"Prefabs/{STRONG_MAGIC_CHARGE_TAG}") as GameObject, magicChargePosition.position, transform.rotation);
-    //            break;
-    //    }
-
-    //    Vector3 shootDirection = PlayerLook.Instance.GetCameraTransformForward().normalized;
-
-    //    magicCharge.GetComponent<Rigidbody>().velocity = shootDirection * 17.5f;
-
-    //    if (Vector3.Distance(magicChargePosition.position, magicCharge.transform.position) > 5f)
-    //    {
-    //        Destroy(magicCharge);
-    //    }
-    //}
 
     private void OnDrawGizmosSelected()
     {

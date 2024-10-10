@@ -8,6 +8,7 @@ public class PlayerMotor : MonoBehaviour
     public event Action<Transform> OnDoorInteracted;
 
     private PlayerInput playerInputInstance;
+    private PlayerLook playerLookInstance;
 
     // Movement.
     [SerializeField] private CharacterController controller;
@@ -25,6 +26,7 @@ public class PlayerMotor : MonoBehaviour
 
     // Interactables
     private int interactableLayerMask;
+    private int transitionableLayerMask;
 
     private void Awake()
     {
@@ -41,8 +43,10 @@ public class PlayerMotor : MonoBehaviour
     private void Start()
     {
         interactableLayerMask = LayerMask.GetMask("Interactable");
+        transitionableLayerMask = LayerMask.GetMask("Transitionable");
 
         playerInputInstance = PlayerInput.Instance;
+        playerLookInstance = PlayerLook.Instance;
         playerInputInstance.OnInteractPerformed += PlayerInput_OnInteractPerformed;
     }
 
@@ -51,15 +55,8 @@ public class PlayerMotor : MonoBehaviour
         Interact();
     }
 
-    //float time = 0f;
     private void Update()
     {
-        //time += Time.deltaTime;
-        //if (time >= 3f)
-        //{
-        //    time = 0f;
-        //}
-
 
         if (isStandingOnTopOfEnemy)
         {
@@ -82,8 +79,6 @@ public class PlayerMotor : MonoBehaviour
                 HandleRunning();
             }
         }
-
-        //HandleMagicAttacks();
     }
 
     private void Move()
@@ -149,9 +144,18 @@ public class PlayerMotor : MonoBehaviour
 
         Ray ray = new Ray(PlayerLook.Instance.GetCameraPosition(), PlayerLook.Instance.GetCameraTransformForward());
 
+
+        Debug.Log("Is it even going here?");
+        // TODO: Make it better (distinguishing different doors).
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 5f, interactableLayerMask))
         {
             OnDoorInteracted?.Invoke(hitInfo.transform);
+        }
+
+        else if (Physics.Raycast(ray, out RaycastHit hitInfo2, 5f, transitionableLayerMask))
+        {
+            Debug.Log("Changing scene...");
+            Loader.Instance.LoadScene(Loader.Scene.Dungeon);
         }
     }
 

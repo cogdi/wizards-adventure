@@ -4,7 +4,7 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
-
+    
     public event Action<Vector3> OnAnySoundMade;
 
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;

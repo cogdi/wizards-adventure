@@ -31,7 +31,7 @@ TagManager:
   - IgnoreSkeletonRaycast
   - Interactable
   - Torch
-  - 
+  - Transitionable
   - 
   - 
   - 

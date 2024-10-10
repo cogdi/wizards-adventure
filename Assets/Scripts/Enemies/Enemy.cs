@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public abstract class Enemy : MonoBehaviour
 {
