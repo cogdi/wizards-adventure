@@ -25,6 +25,20 @@ public class Barbarian : Enemy
         base.Start();
 
         barbarianAnimationsInstance = BarbarianAnimations.Instance;
+
+        PlayerCombat.Instance.OnEnemyDamaged += PlayerCombat_OnEnemyDamaged;
+
+        MagicCharge.OnEnemyDamaged += MagicCharge_OnEnemyDamaged;
+    }
+
+    private void PlayerCombat_OnEnemyDamaged(Enemy arg1, float arg2)
+    {
+        TakeDamage(arg1, arg2);
+    }
+
+    private void MagicCharge_OnEnemyDamaged(Enemy arg1, float arg2)
+    {
+        TakeDamage(arg1, arg2);
     }
 
     private void Update()
@@ -70,5 +84,11 @@ public class Barbarian : Enemy
     public void DamagePlayer()
     {
         OnDamagingPlayer?.Invoke(meleeDamage);
+    }
+
+    private void OnDestroy()
+    {
+        PlayerCombat.Instance.OnEnemyDamaged -= PlayerCombat_OnEnemyDamaged;
+        MagicCharge.OnEnemyDamaged -= MagicCharge_OnEnemyDamaged;
     }
 }

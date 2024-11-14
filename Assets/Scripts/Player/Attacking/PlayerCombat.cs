@@ -8,8 +8,9 @@ public class PlayerCombat : MonoBehaviour
 
     public event Action<float> OnManaSpent;
     public event Action<Vector3> OnWallHit;
-    public event Action<Vector3> OnSkeletonHit;
-    public event Action<Skeleton, float> OnSkeletonDamaged;
+    public event Action<Vector3> OnEnemyHit; /* TODO: It looks like a bad practice to have separate events for sound and for making damage. */
+    public event Action<Enemy, float> OnEnemyDamaged;
+
     public event Action<bool> OnChargingMagicAttack;
     public event Action<StaffState> OnStaffStateChanged;
 
@@ -82,7 +83,7 @@ public class PlayerCombat : MonoBehaviour
     }
 
     // Animation event within Player object's "1H_Melee_Attack_Slice_Diagonal" calls it.
-    public void AttackSkeleton() // TODO: rename? EXPERIMENTAL METHOD (Try to play the game and hit more than 100 colliders at all).
+    public void AttackEnemy() // TODO: rename? EXPERIMENTAL METHOD (Try to play the game and hit more than 100 colliders at all).
     {
         int numHitColliders = Physics.OverlapSphereNonAlloc(attackRangeSphere.position, attackRangeSphereRadius, hitColliders);
 
@@ -91,18 +92,11 @@ public class PlayerCombat : MonoBehaviour
             Collider collider = hitColliders[i];
             if (IsEnemyLayer(collider.gameObject.layer))
             {
-                // TODO: Check for enemy type.
-                collider.TryGetComponent<Skeleton>(out Skeleton skeleton);
-                if (skeleton != null)
+                collider.TryGetComponent<Enemy>(out Enemy enemy);
+                if (enemy != null)
                 {
-                    OnSkeletonHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
-                    OnSkeletonDamaged?.Invoke(skeleton, meleeDamage);
-                }
-
-                else
-                {
-                    // TODO: Refactor this.
-                    Barbarian.Instance.TakeDamage(Barbarian.Instance, meleeDamage);
+                    OnEnemyHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
+                    OnEnemyDamaged?.Invoke(enemy, meleeDamage);
                 }
             }
 

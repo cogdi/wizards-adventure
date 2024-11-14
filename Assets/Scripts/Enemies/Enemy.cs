@@ -34,17 +34,16 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void Start()
     {
         playerCombatInstance = PlayerCombat.Instance;
-        //playerTransform = GameObject.FindGameObjectWithTag(PlayerCombat.PLAYER_TAG).transform;
         playerTransform = playerCombatInstance.transform;
         if (playerTransform == null)
         {
             Debug.LogError("Player instance can not be found.");
         }
 
-        ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");
+        ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");       
     }
 
-    public virtual void TakeDamage(Enemy enemy, float damage) // TODO: Maybe I should make it abstract, or neither virtual or abstract. MAKE IT PROTECTED.
+    protected virtual void TakeDamage(Enemy enemy, float damage) // TODO: Maybe I should make it abstract, or neither virtual or abstract. MAKE IT PROTECTED.
     {
         if (enemy == this)
         {

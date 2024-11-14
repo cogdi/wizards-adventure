@@ -14,7 +14,7 @@ public class Arrow : MonoBehaviour
 
         else if (PlayerCombat.Instance.IsEnemyLayer(collision.gameObject.layer))
         {
-            Debug.Log("Skeleton hit by a magic charge.");
+            Debug.Log("Skeleton hit by another Skeleton's arrow.");
         }
 
         Destroy(gameObject);

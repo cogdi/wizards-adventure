@@ -20,14 +20,14 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         PlayerCombat.Instance.OnWallHit += PlayerCombat_OnWallHit;
-        PlayerCombat.Instance.OnSkeletonHit += PlayerCombat_OnSkeletonHit;
+        PlayerCombat.Instance.OnEnemyHit += PlayerCombat_OnEnemyHit;
         MagicCharge.OnWallHit += MagicCharge_OnWallHit;
-        MagicCharge.OnSkeletonHit += MagicCharge_OnSkeletonHit;
+        MagicCharge.OnEnemyHit += MagicCharge_OnEnemyHit;
         CharacterAttributes.Instance.OnTakenFullHit += CharacterAttributes_OnTakenFullHit;
         CharacterAttributes.Instance.OnTakenBlockedHit += CharacterAttributes_OnTakenBlockedHit;
     }
 
-    private void MagicCharge_OnSkeletonHit(Vector3 hitPosition)
+    private void MagicCharge_OnEnemyHit(Vector3 hitPosition)
     {
         PlaySound(audioClipRefsSO.hitSkeletonByCharge, hitPosition, 1f);
     }
@@ -47,7 +47,7 @@ public class SoundManager : MonoBehaviour
         PlaySoundArray(audioClipRefsSO.playerFullDamage, hitPosition, 1f);
     }
 
-    private void PlayerCombat_OnSkeletonHit(Vector3 hitPosition)
+    private void PlayerCombat_OnEnemyHit(Vector3 hitPosition)
     {
         PlaySoundArray(audioClipRefsSO.hitSkeleton, hitPosition, 1f);
     }
@@ -71,7 +71,11 @@ public class SoundManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        PlayerCombat.Instance.OnWallHit -= PlayerCombat_OnWallHit;
+        PlayerCombat.Instance.OnEnemyHit -= PlayerCombat_OnEnemyHit;
         MagicCharge.OnWallHit -= MagicCharge_OnWallHit;
-        MagicCharge.OnSkeletonHit -= MagicCharge_OnSkeletonHit;
+        MagicCharge.OnEnemyHit -= MagicCharge_OnEnemyHit;
+        CharacterAttributes.Instance.OnTakenFullHit -= CharacterAttributes_OnTakenFullHit;
+        CharacterAttributes.Instance.OnTakenBlockedHit -= CharacterAttributes_OnTakenBlockedHit;
     }
 }

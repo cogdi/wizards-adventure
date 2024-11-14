@@ -5,13 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/TavernDeprecated.unity
-    guid: 114c54629c882564dba2d709d09437ce
-  - enabled: 1
-    path: Assets/Scenes/Tavern.unity
-    guid: c0a22738aefaf3c4ea9e1ff6260db8c4
   - enabled: 1
     path: Assets/Scenes/Dungeon.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Tavern.unity
+    guid: c0a22738aefaf3c4ea9e1ff6260db8c4
   m_configObjects: {}

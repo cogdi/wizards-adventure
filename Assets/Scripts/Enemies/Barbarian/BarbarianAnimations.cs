@@ -21,15 +21,12 @@ public class BarbarianAnimations : MonoBehaviour
         animator.SetBool(IS_WALKING, false);
     }
 
-    private void Start()
-    {
-        //barbarian.OnAttackingPlayer += Barbarian_OnAttackingPlayer;
-    }
-
     private void Update()
     {
         if (!IsAttackingAnimationPlaying)
+        {
             HandleWalking();
+        }
     }
 
     private void HandleWalking()

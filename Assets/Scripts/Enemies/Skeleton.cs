@@ -47,8 +47,8 @@ public class Skeleton : Enemy
 
         stateMachine.Initialise();
 
-        PlayerCombat.Instance.OnSkeletonDamaged += TakeDamage;
-        MagicCharge.OnSkeletonDamaged += MagicCharge_OnSkeletonDamaged;
+        PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
+        MagicCharge.OnEnemyDamaged += MagicCharge_OnEnemyDamaged;
     }
 
     public void InvokeOnAttackingPlayerEvent()
@@ -95,13 +95,13 @@ public class Skeleton : Enemy
         }
     }
 
-    private void MagicCharge_OnSkeletonDamaged(Skeleton skeleton, float damage)
+    private void MagicCharge_OnEnemyDamaged(Enemy enemy, float damage)
     {
-        TakeDamage(skeleton, damage);
+        TakeDamage(enemy, damage);
     }
 
     private void OnDestroy()
     {
-        MagicCharge.OnSkeletonDamaged -= MagicCharge_OnSkeletonDamaged;
+        MagicCharge.OnEnemyDamaged -= MagicCharge_OnEnemyDamaged;
     }
 }

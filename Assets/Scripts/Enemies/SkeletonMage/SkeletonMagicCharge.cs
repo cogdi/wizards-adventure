@@ -27,7 +27,7 @@ public class SkeletonMagicCharge : MonoBehaviour
         // TODO: Do something with this experimental function.
         else if (PlayerCombat.Instance.IsEnemyLayer(collision.gameObject.layer))
         {
-            Debug.Log("Skeleton hit by a magic charge.");
+            Debug.Log("Skeleton hit by another Skeleton's magic charge.");
         }
 
         Destroy(gameObject);

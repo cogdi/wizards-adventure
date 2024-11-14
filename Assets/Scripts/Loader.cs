@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +10,8 @@ public class Loader : MonoBehaviour
 
     [SerializeField] private Animator tempAnimator;
     private float transitionTime = 3f;
+    
+    private Dictionary<Scene, int> sceneIndices = new Dictionary<Scene, int>();
 
     public enum Scene
     {
@@ -21,28 +25,37 @@ public class Loader : MonoBehaviour
         {
             Instance = this;
         }
+
+        CacheSceneIndices();
     }
 
-    private void Update()
+    private void CacheSceneIndices()
     {
-        if (Input.GetKeyDown(KeyCode.O))
+        foreach (Scene scene in Enum.GetValues(typeof(Scene)))
         {
-            Debug.Log("O pressed");
-            LoadScene(Scene.Tavern);
+            int index = SceneUtility.GetBuildIndexByScenePath(scene.ToString());
+            if (index != -1)
+            {
+                sceneIndices[scene] = index;
+            }
+            else
+            {
+                Debug.LogError($"Scene '{scene}' not found in build settings.");
+            }
         }
     }
 
     public void LoadScene(Scene scene)
     {
-        StartCoroutine(LoadSceneAsync(scene));
+        StartCoroutine(LoadSceneAsync(sceneIndices[scene]));
     }
 
-    private IEnumerator LoadSceneAsync(Scene scene)
+    private IEnumerator LoadSceneAsync(int buildIndex)
     {
         tempAnimator.SetTrigger("Crossfade");
 
         yield return new WaitForSeconds(transitionTime);
 
-        SceneManager.LoadScene(scene.ToString());
+        SceneManager.LoadScene(buildIndex);
     }
 }

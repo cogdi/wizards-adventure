@@ -140,12 +140,8 @@ public class PlayerMotor : MonoBehaviour
 
     private void Interact()
     {
-        Debug.Log("InteractionStarted");
-
         Ray ray = new Ray(PlayerLook.Instance.GetCameraPosition(), PlayerLook.Instance.GetCameraTransformForward());
 
-
-        Debug.Log("Is it even going here?");
         // TODO: Make it better (distinguishing different doors).
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 5f, interactableLayerMask))
         {
@@ -161,37 +157,24 @@ public class PlayerMotor : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        // Проверяем, столкнулись ли с каким-то объектом-противником
         if (isGrounded && PlayerCombat.Instance.IsEnemyLayer(hit.gameObject.layer))
         {
-            // Получаем все коллайдеры в радиусе вокруг игрока
             Collider[] colliders = Physics.OverlapSphere(transform.position, 1f);
 
-            DebugDrawSphere(transform.position, 1f, Color.green);
+            //DebugDrawSphere(transform.position, 1f, Color.green);
 
-            // Обрабатываем каждое столкновение в массиве
             foreach (Collider collider in colliders)
             {
-                // Делаем что-то с каждым столкновением, например, выводим информацию о столкновении
                 if (collider.CompareTag("Floor")) 
                     return;
                 Debug.Log("Player is on top of the Skeleton.");
                 isStandingOnTopOfEnemy = true;
             }
-
-            // colliders = null;
         }
 
         else
         {
             isStandingOnTopOfEnemy = false;
         }
-    }
-
-    private void DebugDrawSphere(Vector3 position, float radius, Color color)
-    {
-        Debug.DrawLine(position + Vector3.up * radius, position + Vector3.down * radius, color);
-        Debug.DrawLine(position + Vector3.left * radius, position + Vector3.right * radius, color);
-        Debug.DrawLine(position + Vector3.forward * radius, position + Vector3.back * radius, color);
     }
 }
