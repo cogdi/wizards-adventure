@@ -40,7 +40,10 @@ public abstract class Enemy : MonoBehaviour
             Debug.LogError("Player instance can not be found.");
         }
 
-        ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");       
+        ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");
+
+        PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
+        MagicCharge.OnEnemyDamaged += TakeDamage;
     }
 
     protected virtual void TakeDamage(Enemy enemy, float damage) // TODO: Maybe I should make it abstract, or neither virtual or abstract. MAKE IT PROTECTED.
@@ -99,6 +102,12 @@ public abstract class Enemy : MonoBehaviour
     public float GetDistanceToPlayer()
     {
         return Vector3.Distance(playerTransform.position, transform.position);
+    }
+
+    private void OnDestroy()
+    {
+        PlayerCombat.Instance.OnEnemyDamaged -= TakeDamage;
+        MagicCharge.OnEnemyDamaged -= TakeDamage;
     }
 }
 

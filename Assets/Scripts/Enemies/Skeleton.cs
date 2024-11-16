@@ -46,9 +46,6 @@ public class Skeleton : Enemy
         base.Start();
 
         stateMachine.Initialise();
-
-        PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
-        MagicCharge.OnEnemyDamaged += MagicCharge_OnEnemyDamaged;
     }
 
     public void InvokeOnAttackingPlayerEvent()
@@ -93,15 +90,5 @@ public class Skeleton : Enemy
         {
             OnPlayerHit?.Invoke(MELEE_DAMAGE);
         }
-    }
-
-    private void MagicCharge_OnEnemyDamaged(Enemy enemy, float damage)
-    {
-        TakeDamage(enemy, damage);
-    }
-
-    private void OnDestroy()
-    {
-        MagicCharge.OnEnemyDamaged -= MagicCharge_OnEnemyDamaged;
     }
 }
