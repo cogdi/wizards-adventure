@@ -17,6 +17,7 @@ public class Loader : MonoBehaviour
     {
         Tavern,
         Dungeon,
+        WitchLayer
     }
 
     private void Awake()
@@ -45,10 +46,33 @@ public class Loader : MonoBehaviour
         }
     }
 
-    public void LoadScene(Scene scene)
+    public void PerformSceneTransition()
     {
-        StartCoroutine(LoadSceneAsync(sceneIndices[scene]));
+        // This method performs logical transitions between scenes.
+        // I.e. it performs following one-way transitions: Tavern -> Dungeon -> WitchLayer.
+
+        //string currentScene = SceneManager.GetActiveScene().ToString();
+        //if (currentScene.Equals(Scene.Tavern.ToString()))
+        //{
+        //    StartCoroutine(LoadSceneAsync(sceneIndices[Scene.Dungeon]));
+        //}
+
+        //else if (currentScene.Equals(Scene.Dungeon.ToString()))
+        //{
+        //    StartCoroutine(LoadSceneAsync(sceneIndices[Scene.WitchLayer]));
+        //}
+
+        int buildIndex = SceneManager.GetActiveScene().buildIndex;
+        if (buildIndex < 2)
+        {
+            StartCoroutine(LoadSceneAsync(buildIndex + 1));
+        }
     }
+
+    //public void LoadScene(Scene scene)
+    //{
+    //    StartCoroutine(LoadSceneAsync(sceneIndices[scene]));
+    //}
 
     private IEnumerator LoadSceneAsync(int buildIndex)
     {
