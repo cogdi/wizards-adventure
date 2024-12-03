@@ -46,7 +46,7 @@ public abstract class Enemy : MonoBehaviour
         MagicCharge.OnEnemyDamaged += TakeDamage;
     }
 
-    protected virtual void TakeDamage(Enemy enemy, float damage) // TODO: Maybe I should make it abstract, or neither virtual or abstract. MAKE IT PROTECTED.
+    protected void TakeDamage(Enemy enemy, float damage) // TODO: Maybe make it abstract.
     {
         if (enemy == this)
         {
@@ -58,6 +58,7 @@ public abstract class Enemy : MonoBehaviour
 
             if (health <= 0f)
             {
+                // TODO: Make proper logic and visual.
                 Destroy(gameObject);
             }
         }

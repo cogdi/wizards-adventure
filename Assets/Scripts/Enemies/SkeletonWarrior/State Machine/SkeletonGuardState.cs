@@ -94,7 +94,7 @@ public class SkeletonGuardState : SkeletonBaseState
 
     private void PlayerCombat_OnWallHit(Vector3 hitPosition)
     {
-        if (skeleton != null && stateMachine.GetCurrentState() == stateMachine.guardState) // TODO: Check if this works with less checks.
+        if (stateMachine.GetCurrentState() == stateMachine.guardState)
         {
             if (Vector3.Distance(skeleton.transform.position, hitPosition) <= 13f)
             {

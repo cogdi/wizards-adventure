@@ -50,8 +50,6 @@ public class Barbarian : Enemy
 
     private void AttackPlayer()
     {
-        //agent.autoRepath // TODO: Check out what is this and other fields and methods of NavMeshAgent.
-
         if (!barbarianAnimationsInstance.IsAttackingAnimationPlaying)
         {
             if (GetDistanceToPlayer() >= 4f)
