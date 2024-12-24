@@ -142,8 +142,7 @@ public class PlayerMotor : MonoBehaviour
     {
         Ray ray = new Ray(PlayerLook.Instance.GetCameraPosition(), PlayerLook.Instance.GetCameraTransformForward());
 
-        /* TODO: Make system of distinguishing different doors.
-                 Also need to refactor calling LoadScene, because the game have not only two locations.*/
+        /* TODO: Make system of distinguishing different doors.*/
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 5f, interactableLayerMask))
         {
             OnDoorInteracted?.Invoke(hitInfo.transform);
