@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DoorAnimations : MonoBehaviour
 {
@@ -16,6 +16,11 @@ public class DoorAnimations : MonoBehaviour
 
     private void Door_OnDoorStateChanged(bool isOpening)
     {
+        // When IS_OPENING is true - door opens.
+        // When it's false - door closes.
+
+        // ¯\_ಠ_ಠ_/¯ - Dana is the author of this comment.
+
         Debug.Log("Door opens/closes");
 
         animator.SetBool(IS_OPENING, isOpening);

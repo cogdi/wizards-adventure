@@ -6,12 +6,18 @@ public class Door : MonoBehaviour
     public event Action<bool> OnDoorStateChanged;
 
     private bool isOpening;
-    private bool isClosedByKey;
-    private bool hasGotKey = true; // TODO: Make proper logic for doors' keys.
+    private bool isClosedByKey = true;
+    private bool hasGotKey; // TODO: Make proper logic for doors' keys.
 
     private void Start()
     {
         PlayerMotor.Instance.OnDoorInteracted += PlayerMotor_OnDoorInteracted;
+        PlayerMotor.Instance.OnPickingKeys += PlayerMotor_OnPickingKeys;
+    }
+
+    private void PlayerMotor_OnPickingKeys()
+    {
+        hasGotKey = true;
     }
 
     private void PlayerMotor_OnDoorInteracted(Transform door)
@@ -20,6 +26,14 @@ public class Door : MonoBehaviour
         {
             isOpening = !isOpening;
             OnDoorStateChanged?.Invoke(isOpening);
+
+            isClosedByKey = false;
+            hasGotKey = false;
+        }
+
+        else if (isClosedByKey && !hasGotKey)
+        {
+            Debug.Log("No keys!");
         }
     }
 }

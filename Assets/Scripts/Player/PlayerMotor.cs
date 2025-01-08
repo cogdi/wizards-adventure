@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class PlayerMotor : MonoBehaviour
 {
     public static PlayerMotor Instance { get; private set; }
 
     public event Action<Transform> OnDoorInteracted;
+    public event Action OnPickingKeys;
 
     private PlayerInput playerInputInstance;
     private PlayerLook playerLookInstance;
@@ -27,6 +29,7 @@ public class PlayerMotor : MonoBehaviour
     // Interactables
     private int interactableLayerMask;
     private int transitionableLayerMask;
+    private int keyLayerMask;
 
     private void Awake()
     {
@@ -44,6 +47,7 @@ public class PlayerMotor : MonoBehaviour
     {
         interactableLayerMask = LayerMask.GetMask("Interactable");
         transitionableLayerMask = LayerMask.GetMask("Transitionable");
+        keyLayerMask = LayerMask.GetMask("Key");
 
         playerInputInstance = PlayerInput.Instance;
         playerLookInstance = PlayerLook.Instance;
@@ -142,7 +146,11 @@ public class PlayerMotor : MonoBehaviour
     {
         Ray ray = new Ray(PlayerLook.Instance.GetCameraPosition(), PlayerLook.Instance.GetCameraTransformForward());
 
-        /* TODO: Make system of distinguishing different doors.*/
+        /* TODO: (High Priority) Make system of distinguishing different doors.
+         * and different objects, too.
+         * It can be reached through using interfaces, like IInteractable, for special potions, keys, doors.
+        */
+
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 5f, interactableLayerMask))
         {
             OnDoorInteracted?.Invoke(hitInfo.transform);
@@ -152,6 +160,12 @@ public class PlayerMotor : MonoBehaviour
         {
             Debug.Log("Changing scene...");
             Loader.Instance.PerformSceneTransition();
+        }
+
+        else if (Physics.Raycast(ray, out RaycastHit hitInfo3, 5f, keyLayerMask))
+        {
+            OnPickingKeys?.Invoke();
+            Destroy(hitInfo3.transform.gameObject);
         }
     }
 
