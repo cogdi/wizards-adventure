@@ -22,6 +22,13 @@ public class Door : MonoBehaviour
 
     private void PlayerMotor_OnDoorInteracted(Transform door)
     {
+        // if transitionable door...
+        // else
+        TryOpenDoor(door);
+    }
+
+    private void TryOpenDoor(Transform door)
+    {
         if ((!isClosedByKey || hasGotKey) && door == transform)
         {
             isOpening = !isOpening;
