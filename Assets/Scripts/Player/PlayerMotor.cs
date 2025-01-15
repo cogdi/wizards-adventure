@@ -27,8 +27,7 @@ public class PlayerMotor : MonoBehaviour
     private float runningSpeed = 6f;
 
     // Interactables
-    private int interactableLayerMask;
-    private int transitionableLayerMask;
+    private int doorLayerMask;
     private int keyLayerMask;
 
     private void Awake()
@@ -45,8 +44,7 @@ public class PlayerMotor : MonoBehaviour
 
     private void Start()
     {
-        interactableLayerMask = LayerMask.GetMask("Interactable");
-        transitionableLayerMask = LayerMask.GetMask("Transitionable");
+        doorLayerMask = LayerMask.GetMask("Door");
         keyLayerMask = LayerMask.GetMask("Key");
 
         playerInputInstance = PlayerInput.Instance;
@@ -151,15 +149,9 @@ public class PlayerMotor : MonoBehaviour
          * It can be reached through using interfaces, like IInteractable, for special potions, keys, doors.
         */
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 5f, interactableLayerMask))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 5f, doorLayerMask))
         {
             OnDoorInteracted?.Invoke(hitInfo.transform);
-        }
-
-        else if (Physics.Raycast(ray, out RaycastHit hitInfo2, 5f, transitionableLayerMask))
-        {
-            Debug.Log("Changing scene...");
-            Loader.Instance.PerformSceneTransition();
         }
 
         else if (Physics.Raycast(ray, out RaycastHit hitInfo3, 5f, keyLayerMask))

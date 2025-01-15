@@ -29,9 +29,9 @@ TagManager:
   - Skeleton
   - Mage_Staff
   - IgnoreSkeletonRaycast
-  - Interactable
+  - Door
   - Torch
-  - Transitionable
+  - 
   - Key
   - 
   - 

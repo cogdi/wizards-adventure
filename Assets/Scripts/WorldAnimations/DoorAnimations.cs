@@ -2,13 +2,14 @@
 
 public class DoorAnimations : MonoBehaviour
 {
-    [SerializeField] private Door door;
+    [SerializeField] private RegularDoor door;
     [SerializeField] private Animator animator;
 
     private const string IS_OPENING = "IsOpening";
 
     private void Awake()
     {
+        Debug.Log("Door anim awake()");
         animator.SetBool(IS_OPENING, false);
 
         door.OnDoorStateChanged += Door_OnDoorStateChanged;
