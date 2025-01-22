@@ -51,21 +51,10 @@ public class Loader : MonoBehaviour
         // This method performs logical transitions between scenes.
         // I.e. it performs following one-way transitions: Tavern -> Dungeon -> WitchLayer.
 
-        //string currentScene = SceneManager.GetActiveScene().ToString();
-        //if (currentScene.Equals(Scene.Tavern.ToString()))
-        //{
-        //    StartCoroutine(LoadSceneAsync(sceneIndices[Scene.Dungeon]));
-        //}
-
-        //else if (currentScene.Equals(Scene.Dungeon.ToString()))
-        //{
-        //    StartCoroutine(LoadSceneAsync(sceneIndices[Scene.WitchLayer]));
-        //}
-
         int buildIndex = SceneManager.GetActiveScene().buildIndex;
-        if (buildIndex < 2)
+        if (buildIndex < SceneManager.sceneCountInBuildSettings)
         {
-            StartCoroutine(LoadSceneAsync(buildIndex + 1));
+            StartCoroutine(LoadSceneAsync(++buildIndex));
         }
     }
 

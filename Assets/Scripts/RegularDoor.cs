@@ -17,8 +17,18 @@ public class RegularDoor : Door
         PlayerMotor.Instance.OnPickingKeys += PlayerMotor_OnPickingKeys;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            PlayerMotor_OnPickingKeys();
+        }
+    }
+
     private void PlayerMotor_OnPickingKeys()
     {
+        Debug.Log("You've got the doors' key!");
+
         hasGotKey = true;
     }
 
