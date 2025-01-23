@@ -10,15 +10,16 @@ public class Loader : MonoBehaviour
 
     [SerializeField] private Animator tempAnimator;
     private float transitionTime = 3f;
-    
-    private Dictionary<Scene, int> sceneIndices = new Dictionary<Scene, int>();
+    private int SCENE_COUNT;
 
-    public enum Scene
-    {
-        Tavern,
-        Dungeon,
-        WitchLayer
-    }
+    //private Dictionary<Scene, int> sceneIndices = new Dictionary<Scene, int>();
+
+    //public enum Scene // Is it necessary when scenes' path is already calculated?
+    //{
+    //    Tavern,
+    //    Dungeon,
+    //    WitchLayer
+    //}
 
     private void Awake()
     {
@@ -27,24 +28,34 @@ public class Loader : MonoBehaviour
             Instance = this;
         }
 
-        CacheSceneIndices();
+        SCENE_COUNT = SceneManager.sceneCountInBuildSettings;
+
+        //CacheSceneIndices();
     }
 
-    private void CacheSceneIndices()
-    {
-        foreach (Scene scene in Enum.GetValues(typeof(Scene)))
-        {
-            int index = SceneUtility.GetBuildIndexByScenePath(scene.ToString());
-            if (index != -1)
-            {
-                sceneIndices[scene] = index;
-            }
-            else
-            {
-                Debug.LogError($"Scene '{scene}' not found in build settings.");
-            }
-        }
-    }
+    //private void CacheSceneIndices()
+    //{
+    //    foreach (Scene scene in Enum.GetValues(typeof(Scene)))
+    //    {
+    //        int index = SceneUtility.GetBuildIndexByScenePath(scene.ToString());
+    //        if (index != -1)
+    //        {
+    //            sceneIndices[scene] = index;
+    //        }
+    //        else
+    //        {
+    //            Debug.LogError($"Scene '{scene}' not found in build settings.");
+    //        }
+    //    }
+
+    //    for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+    //    {
+    //        if (i != -1)
+    //        {
+    //            sceneIndices
+    //        }
+    //    }
+    //}
 
     public void PerformSceneTransition()
     {
@@ -52,16 +63,11 @@ public class Loader : MonoBehaviour
         // I.e. it performs following one-way transitions: Tavern -> Dungeon -> WitchLayer.
 
         int buildIndex = SceneManager.GetActiveScene().buildIndex;
-        if (buildIndex < SceneManager.sceneCountInBuildSettings)
+        if (buildIndex < SCENE_COUNT - 1)
         {
             StartCoroutine(LoadSceneAsync(++buildIndex));
         }
     }
-
-    //public void LoadScene(Scene scene)
-    //{
-    //    StartCoroutine(LoadSceneAsync(sceneIndices[scene]));
-    //}
 
     private IEnumerator LoadSceneAsync(int buildIndex)
     {
