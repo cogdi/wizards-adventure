@@ -11,7 +11,6 @@ public class TransitionableDoor : Door
     {
         if (door == transform)
         {
-            Debug.Log("Changing scene...");
             Loader.Instance.PerformSceneTransition();
         }
     }

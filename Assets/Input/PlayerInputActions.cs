@@ -98,6 +98,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fly"",
+                    ""type"": ""Value"",
+                    ""id"": ""81c4f17b-7747-4eed-b2d7-f19aa9a815dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -232,6 +241,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cbd464a6-50a9-460b-9a0c-1362aea85e1a"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fly"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -248,6 +268,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_OnFoot_MagicAttack = m_OnFoot.FindAction("MagicAttack", throwIfNotFound: true);
         m_OnFoot_Block = m_OnFoot.FindAction("Block", throwIfNotFound: true);
         m_OnFoot_Interact = m_OnFoot.FindAction("Interact", throwIfNotFound: true);
+        m_OnFoot_Fly = m_OnFoot.FindAction("Fly", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -317,6 +338,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_MagicAttack;
     private readonly InputAction m_OnFoot_Block;
     private readonly InputAction m_OnFoot_Interact;
+    private readonly InputAction m_OnFoot_Fly;
     public struct OnFootActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -329,6 +351,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @MagicAttack => m_Wrapper.m_OnFoot_MagicAttack;
         public InputAction @Block => m_Wrapper.m_OnFoot_Block;
         public InputAction @Interact => m_Wrapper.m_OnFoot_Interact;
+        public InputAction @Fly => m_Wrapper.m_OnFoot_Fly;
         public InputActionMap Get() { return m_Wrapper.m_OnFoot; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -362,6 +385,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @Fly.started += instance.OnFly;
+            @Fly.performed += instance.OnFly;
+            @Fly.canceled += instance.OnFly;
         }
 
         private void UnregisterCallbacks(IOnFootActions instance)
@@ -390,6 +416,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @Fly.started -= instance.OnFly;
+            @Fly.performed -= instance.OnFly;
+            @Fly.canceled -= instance.OnFly;
         }
 
         public void RemoveCallbacks(IOnFootActions instance)
@@ -417,5 +446,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMagicAttack(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnFly(InputAction.CallbackContext context);
     }
 }

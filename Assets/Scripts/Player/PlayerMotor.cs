@@ -7,7 +7,7 @@ public class PlayerMotor : MonoBehaviour
     public static PlayerMotor Instance { get; private set; }
 
     public event Action<Transform> OnDoorInteracted;
-    public event Action OnPickingKeys;
+    public event Action<int> OnPickingKeys;
 
     private PlayerInput playerInputInstance;
     private PlayerLook playerLookInstance;
@@ -20,6 +20,10 @@ public class PlayerMotor : MonoBehaviour
     private bool isGrounded;
     private bool isMoving;
     private bool isStandingOnTopOfEnemy;
+
+    // Flying
+    private bool isFlying; // Experiment.
+    [SerializeField] private float flyingVelocity = 4.5f;
 
     // Running.
     private float currentSpeed;
@@ -59,7 +63,6 @@ public class PlayerMotor : MonoBehaviour
 
     private void Update()
     {
-
         if (isStandingOnTopOfEnemy)
         {
             PushAwayFromEnemy();
@@ -81,6 +84,8 @@ public class PlayerMotor : MonoBehaviour
                 HandleRunning();
             }
         }
+
+        HandleFlying(); // Experiment.
     }
 
     private void Move()
@@ -103,6 +108,18 @@ public class PlayerMotor : MonoBehaviour
     private void Jump()
     {
         velocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
+    }
+
+    private void HandleFlying()
+    {
+        isFlying = playerInputInstance.IsFlyingPressed();
+        if (isFlying)
+        {
+            //velocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
+            velocity.y = flyingVelocity;
+        }
+
+        else velocity.y += gravity * Time.deltaTime;
     }
 
     private void HandleRunning()
@@ -156,7 +173,9 @@ public class PlayerMotor : MonoBehaviour
 
         else if (Physics.Raycast(ray, out RaycastHit hitInfo3, 5f, keyLayerMask))
         {
-            OnPickingKeys?.Invoke();
+            int keyID = hitInfo3.transform.GetComponent<Key>().keyID;
+            OnPickingKeys?.Invoke(keyID);
+            
             Destroy(hitInfo3.transform.gameObject);
         }
     }

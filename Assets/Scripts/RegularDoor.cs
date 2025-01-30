@@ -9,6 +9,8 @@ public class RegularDoor : Door
     private bool isClosedByKey = true;
     private bool hasGotKey; // TODO: Make proper logic for doors' keys.
 
+    [SerializeField] private int requiredKeyID;
+
     protected override void Start()
     {
         Debug.Log("Start()");
@@ -21,15 +23,18 @@ public class RegularDoor : Door
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            PlayerMotor_OnPickingKeys();
+            PlayerMotor_OnPickingKeys(requiredKeyID);
         }
     }
 
-    private void PlayerMotor_OnPickingKeys()
+    private void PlayerMotor_OnPickingKeys(int keyID)
     {
-        Debug.Log("You've got the doors' key!");
+        Debug.Log(keyID);
 
-        hasGotKey = true;
+        if (keyID == requiredKeyID)
+        {
+            hasGotKey = true;
+        }
     }
 
     public override void PlayerMotor_OnDoorInteracted(Transform door)

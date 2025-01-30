@@ -32,6 +32,11 @@ public class PlayerInput : MonoBehaviour
         playerInputActions.Dispose();
     }
 
+    public bool IsFlyingPressed()
+    {
+        return playerInputActions.OnFoot.Fly.IsPressed();
+    }
+
     public bool IsBlockingPressed()
     {
         return playerInputActions.OnFoot.Block.IsPressed();

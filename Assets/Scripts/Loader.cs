@@ -65,8 +65,11 @@ public class Loader : MonoBehaviour
         int buildIndex = SceneManager.GetActiveScene().buildIndex;
         if (buildIndex < SCENE_COUNT - 1)
         {
+            Debug.Log("Changing scene...");
             StartCoroutine(LoadSceneAsync(++buildIndex));
         }
+
+        Debug.Log("Currently this is the final scene!");
     }
 
     private IEnumerator LoadSceneAsync(int buildIndex)
