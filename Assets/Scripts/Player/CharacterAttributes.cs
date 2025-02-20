@@ -4,6 +4,7 @@ using UnityEngine;
 public class CharacterAttributes : MonoBehaviour
 {
     public static CharacterAttributes Instance { get; private set; }
+    public PlayerMotor playerMotorInstance;
 
     public event Action<Vector3> OnTakenFullHit;
     public event Action<Vector3> OnTakenBlockedHit;
@@ -44,6 +45,8 @@ public class CharacterAttributes : MonoBehaviour
         HealingObject.OnHealthRestored+= Heal;
 
         Barbarian.OnDamagingPlayer += TakeDamage;
+
+        playerMotorInstance = PlayerMotor.Instance;
     }
 
     private void Update()
@@ -60,6 +63,11 @@ public class CharacterAttributes : MonoBehaviour
         }
 
         HandleStamina();
+
+        if (playerMotorInstance.IsFlying)
+        {
+            SpendMana(Time.deltaTime);
+        }
     }
 
     public bool IsCharacterAbleToRun()

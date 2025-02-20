@@ -125,8 +125,8 @@ public class PlayerCombat : MonoBehaviour
         if (magicAttackIntervalTimer < magicAttackIntervalTimerMax)
             magicAttackIntervalTimer += Time.deltaTime;
 
-        else if (!PlayerMotor.Instance.IsCharacterRunning())
-        //else if (5 == 5)
+        //else if (!PlayerMotor.Instance.IsCharacterRunning())
+        else if (5 == 5) // Experimental.
         {
             if (playerInputInstance.IsMagicAttackTriggered())
             {

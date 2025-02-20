@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: dceb21cbf5970b64c80ef80740545e01, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: e0b8e0c7dc3e52b4e9e6ea5defd12f2b, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: a104d8e772d013b4d9d574bf40509890, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -3261,7 +3261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_RootOrder
@@ -9194,7 +9194,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_RootOrder
@@ -10554,7 +10554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d6d2f7aefe8e8cb4aac4725d78e70fde, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d6d2f7aefe8e8cb4aac4725d78e70fde, type: 3}
       propertyPath: m_RootOrder
@@ -16622,7 +16622,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_RootOrder
@@ -22955,7 +22955,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d6d2f7aefe8e8cb4aac4725d78e70fde, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d6d2f7aefe8e8cb4aac4725d78e70fde, type: 3}
       propertyPath: m_RootOrder
@@ -23536,7 +23536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d51ff80ee7d069542b138da061286520, type: 3}
       propertyPath: m_RootOrder

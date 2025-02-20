@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.InputSystem;
 
 public class PlayerMotor : MonoBehaviour
 {
@@ -14,14 +15,16 @@ public class PlayerMotor : MonoBehaviour
 
     // Movement.
     [SerializeField] private CharacterController controller;
-    private float jumpHeight = 1.5f;
-    private float gravity = -9.8f;
+    private float jumpHeight = 2f;
+    private float gravity = 9.8f;
     private Vector3 velocity;
     private bool isGrounded;
     private bool isMoving;
     private bool isStandingOnTopOfEnemy;
+    private float verticalVelocity = 0f;
 
-    // Flying
+    // Flying.
+    public bool IsFlying { get => isFlying; }
     private bool isFlying; // Experiment.
     [SerializeField] private float flyingVelocity = 4.5f;
 
@@ -29,8 +32,9 @@ public class PlayerMotor : MonoBehaviour
     private float currentSpeed;
     private float walkingSpeed = 3f;
     private float runningSpeed = 6f;
+    private bool isRunning;
 
-    // Interactables
+    // Interactables.
     private int doorLayerMask;
     private int keyLayerMask;
 
@@ -63,15 +67,15 @@ public class PlayerMotor : MonoBehaviour
 
     private void Update()
     {
+        //isGrounded = controller.isGrounded;
+
         if (isStandingOnTopOfEnemy)
         {
             PushAwayFromEnemy();
         }
-
+        
         else
         {
-            isGrounded = controller.isGrounded;
-
             Move();
 
             if (isGrounded)
@@ -81,11 +85,13 @@ public class PlayerMotor : MonoBehaviour
                     Jump();
                 }
 
-                HandleRunning();
+                //HandleRunning(); // To disable running while jumping.
             }
+            HandleRunning();
         }
 
         HandleFlying(); // Experiment.
+        Debug.Log(isGrounded);
     }
 
     private void Move()
@@ -95,7 +101,7 @@ public class PlayerMotor : MonoBehaviour
 
         controller.Move(transform.TransformDirection(moveDirection) * currentSpeed * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y -= gravity * Time.deltaTime;
 
         if (isGrounded && velocity.y < 0f)
         {
@@ -103,11 +109,13 @@ public class PlayerMotor : MonoBehaviour
         }
 
         controller.Move(velocity * Time.deltaTime);
+
+        isGrounded = controller.isGrounded;
     }
 
     private void Jump()
     {
-        velocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
+        velocity.y += Mathf.Sqrt(2 * gravity * jumpHeight);
     }
 
     private void HandleFlying()
@@ -115,11 +123,13 @@ public class PlayerMotor : MonoBehaviour
         isFlying = playerInputInstance.IsFlyingPressed();
         if (isFlying)
         {
+            //currentSpeed = walkingSpeed;
+
             //velocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
             velocity.y = flyingVelocity;
         }
 
-        else velocity.y += gravity * Time.deltaTime;
+        //else velocity.y += gravity * Time.deltaTime;
     }
 
     private void HandleRunning()
@@ -132,23 +142,26 @@ public class PlayerMotor : MonoBehaviour
             if (CharacterAttributes.Instance.IsCharacterAbleToRun())
             {
                 currentSpeed = runningSpeed;
+                isRunning = true;
             }
 
             else
             {
                 currentSpeed = walkingSpeed;
+                isRunning = false;
             }
         }
 
         else
         {
             currentSpeed = walkingSpeed;
+            isRunning = false;
         }
     }
 
     public bool IsCharacterRunning()
     {
-        return currentSpeed == runningSpeed;
+        return isRunning;
     }
 
     private void PushAwayFromEnemy()
