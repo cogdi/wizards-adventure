@@ -4,19 +4,18 @@ public class Witch : Enemy
 {
     private Vector3 playerPosition;
 
+    // Flying around.
     [SerializeField] private WitchRoute witchRoute;
-
     private float routeTimer;
     private float routeInterval = 5f;
-
-    private bool isInsideTrigger;
-
     private Vector3 currentRoute;
 
-    private void OnEnable()
-    {
-        agent.speed = 2.5f;
-    }
+    // Movement.
+    [SerializeField] private float speed = 4.5f;
+
+    private bool isInsideTrigger; // not realised yet.
+
+    private bool shield = true;
 
     protected override void Start()
     {
@@ -25,10 +24,14 @@ public class Witch : Enemy
 
     private void Update()
     {
-        //playerPosition = playerTransform.position;
-        //agent.SetDestination(playerPosition);
-
         // TODO: Need to do proper check if the Witch is not in the collider.
+
+        LookAt(PlayerMotor.Instance.transform.position);
+        GoToRandomPoint();
+    }
+
+    private void GoToRandomPoint()
+    {
         if (currentRoute != Vector3.zero)
         {
 
@@ -53,7 +56,11 @@ public class Witch : Enemy
 
     private void SetDestination(Vector3 position)
     {
-        transform.position = Vector3.MoveTowards(transform.position, position, agent.speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
+    }
+
+    private void LookAt(Vector3 position)
+    {
         Vector3 newRotation = Vector3.RotateTowards(transform.forward, position - transform.position, 1 * Time.deltaTime, 0.0f);
         transform.rotation = Quaternion.LookRotation(newRotation);
     }

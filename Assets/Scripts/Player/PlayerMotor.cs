@@ -91,7 +91,6 @@ public class PlayerMotor : MonoBehaviour
         }
 
         HandleFlying(); // Experiment.
-        Debug.Log(isGrounded);
     }
 
     private void Move()

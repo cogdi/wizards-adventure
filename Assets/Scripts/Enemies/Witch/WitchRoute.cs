@@ -6,7 +6,7 @@ public class WitchRoute : MonoBehaviour
 
     public Vector3 GetRandomPointInsideCollider()
     {
-        // TODO: If this method is keeped, then need to transform all the points within routePoints to WorldPosition.
+        // If this method is keeped, then need to transform all the points within routePoints to WorldPosition.
         // Also need to come up with an idea of how to transform them cheaply, if there'll be random points within unit sphere.
         //return routePoints[UnityEngine.Random.Range(0, routePoints.Length - 1)].localToWorldMatrix.GetPosition();
 

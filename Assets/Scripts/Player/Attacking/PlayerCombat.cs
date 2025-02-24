@@ -43,7 +43,7 @@ public class PlayerCombat : MonoBehaviour
 
     private PlayerInput playerInputInstance;
 
-    // Damaging enemies.
+    //// Damaging enemies.
     // Melee attacks.
     private Collider[] hitColliders = new Collider[10];
     private readonly float meleeDamage = 34f;
