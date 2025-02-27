@@ -1,8 +1,21 @@
 using UnityEngine;
 
-public class Witch : Enemy
+public class Witch : EnemyBase
 {
-    private Vector3 playerPosition;
+    //public float Health => health;
+
+    //protected const float MAX_HEALTH = 100f;
+
+    //protected float health = 0f;
+    //protected Transform playerTransform;
+    //protected Vector3 playerLastPosition;
+    //protected PlayerCombat playerCombatInstance;
+
+    // Raycast
+    protected float eyeLevel = 1.15f;
+    protected float sightDistance = 15f;
+    protected float fieldOfView = 100f;
+    //protected int ignoreRaycastMask;
 
     // Flying around.
     [SerializeField] private WitchRoute witchRoute;
@@ -17,16 +30,50 @@ public class Witch : Enemy
 
     private bool shield = true;
 
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
+        health = MAX_HEALTH;
+    }
+
+    //private void Start()
+    //{
+    //    playerCombatInstance = PlayerCombat.Instance;
+    //    playerTransform = playerCombatInstance.transform;
+    //    if (playerTransform == null)
+    //    {
+    //        Debug.LogError("Player instance can not be found.");
+    //    }
+
+    //    ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");
+
+    //    PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
+    //    MagicCharge.OnEnemyDamaged += TakeDamage;
+    //}
+
+    protected override void TakeDamage(EnemyBase enemy, float damage)
+    {
+        if (enemy == this)
+        {
+            health -= damage;
+            Debug.Log(health);
+
+            if (health <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    public override bool IsMoving()
+    {
+        throw new System.NotImplementedException();
     }
 
     private void Update()
     {
         // TODO: Need to do proper check if the Witch is not in the collider.
 
-        LookAt(PlayerMotor.Instance.transform.position);
+        LookAt(playerTransform.position);
         GoToRandomPoint();
     }
 
@@ -85,4 +132,10 @@ public class Witch : Enemy
             isInsideTrigger = false;
         }
     }
+
+    //private void OnDestroy()
+    //{
+    //    PlayerCombat.Instance.OnEnemyDamaged -= TakeDamage;
+    //    MagicCharge.OnEnemyDamaged -= TakeDamage;
+    //}
 }

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Skeleton : Enemy
+public class Skeleton : EnemyBase
 {
     // Skeleton class will be used for the next types of enemies, with almost exact same logic (except patroling and various attacks):
     // SkeletonMinion, SkeletonWarrior, SkeletonArcher, SkeletonMage.
@@ -15,6 +16,7 @@ public class Skeleton : Enemy
     public const float MELEE_DAMAGE = 10f;
 
     public SkeletonStateMachine StateMachine { get => stateMachine; }
+    public NavMeshAgent Agent { get => agent; }
     public bool IsMeleeSkeleton { get; private set; }
     public bool IsSkeletonArcher { get; private set; }
     public bool IsSkeletonMage { get; private set; }
@@ -31,11 +33,15 @@ public class Skeleton : Enemy
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private Transform playerBody;
     [SerializeField] private SkeletonStateMachine stateMachine;
+    [SerializeField] public NavMeshAgent agent;
 
-    protected override void Awake()
+    // Raycast
+    private float eyeLevel = 1.15f;
+    private float sightDistance = 15f;
+    private float fieldOfView = 100f;
+
+    private void Awake()
     {
-        base.Awake();
-
         IsMeleeSkeleton = CompareTag(MELEE_SKELETON_TAG);
         IsSkeletonArcher = CompareTag(SKELETON_ARCHER_TAG);
         IsSkeletonMage = CompareTag(SKELETON_MAGE_TAG);
@@ -46,6 +52,32 @@ public class Skeleton : Enemy
         base.Start();
 
         stateMachine.Initialise();
+    }
+
+    public bool CanSeePlayer()
+    {
+        if (GetDistanceToPlayer() <= sightDistance)
+        {
+            Vector3 playerDirection = playerTransform.position - transform.position;
+            if (Vector3.Angle(playerDirection, transform.forward) <= fieldOfView)
+            {
+                if (Physics.Raycast(transform.position + (Vector3.up * eyeLevel), playerDirection, out RaycastHit hitInfo, sightDistance, ignoreRaycastMask))
+                {
+                    if (playerCombatInstance.IsPlayerLayer(hitInfo.transform.gameObject.layer))
+                    {
+                        playerLastPosition = playerTransform.position;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public Vector3 GetPlayerLastPosition()
+    {
+        return playerLastPosition;
     }
 
     public void InvokeOnAttackingPlayerEvent()
@@ -90,5 +122,15 @@ public class Skeleton : Enemy
         {
             OnPlayerHit?.Invoke(MELEE_DAMAGE);
         }
+    }
+
+    protected override void TakeDamage(EnemyBase enemy, float damage)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool IsMoving()
+    {
+        throw new NotImplementedException();
     }
 }

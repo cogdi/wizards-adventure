@@ -1,20 +1,25 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class Enemy : MonoBehaviour
+public abstract class EnemyDeprecated : MonoBehaviour
 {
     /* 
      * This class is created to be used by all the types of enemies in the game. 
      * It contains all the mutual logic between enemy classes.
     */
 
-    public float Health => health;
-    public NavMeshAgent Agent { get => agent; }
     
+    // AI.
+    public NavMeshAgent Agent { get => agent; }
+    [SerializeField] protected NavMeshAgent agent;
+    
+
+    // Health.
+    protected float health = 0f;
+    public float Health => health;
     protected const float MAX_HEALTH = 100f;
 
-    [SerializeField] protected NavMeshAgent agent;
-    protected float health = 0f;
+    // Info about the main character.
     protected Transform playerTransform;
     protected Vector3 playerLastPosition;
     protected PlayerCombat playerCombatInstance;
@@ -42,11 +47,11 @@ public abstract class Enemy : MonoBehaviour
 
         ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");
 
-        PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
-        MagicCharge.OnEnemyDamaged += TakeDamage;
+        //PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
+        //MagicCharge.OnEnemyDamaged += TakeDamage;
     }
 
-    protected void TakeDamage(Enemy enemy, float damage) // TODO: Maybe make it abstract.
+    protected void TakeDamage(EnemyDeprecated enemy, float damage) // TODO: Maybe make it abstract.
     {
         if (enemy == this)
         {
@@ -107,8 +112,8 @@ public abstract class Enemy : MonoBehaviour
 
     private void OnDestroy()
     {
-        PlayerCombat.Instance.OnEnemyDamaged -= TakeDamage;
-        MagicCharge.OnEnemyDamaged -= TakeDamage;
+        //PlayerCombat.Instance.OnEnemyDamaged -= TakeDamage;
+        //MagicCharge.OnEnemyDamaged -= TakeDamage;
     }
 }
 

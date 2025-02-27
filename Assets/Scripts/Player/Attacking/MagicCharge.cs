@@ -8,7 +8,7 @@ public class MagicCharge : MonoBehaviour
     // TODO: Should it be static? Try to shoot one charge and immediately second, check if this will provide double damage.
     public static event Action<Vector3> OnWallHit;
     public static event Action<Vector3> OnEnemyHit;
-    public static event Action<Enemy, float> OnEnemyDamaged;
+    public static event Action<EnemyBase, float> OnEnemyDamaged;
 
     private float time;
 
@@ -27,7 +27,7 @@ public class MagicCharge : MonoBehaviour
         if (PlayerCombat.Instance.IsEnemyLayer(collision.gameObject.layer))
         {
             OnEnemyHit?.Invoke(collision.collider.ClosestPointOnBounds(transform.position));
-            OnEnemyDamaged?.Invoke(collision.gameObject.GetComponent<Enemy>(), PlayerCombat.Instance.MagicAttacksDamageDictionary[tag]);
+            OnEnemyDamaged?.Invoke(collision.gameObject.GetComponent<EnemyBase>(), PlayerCombat.Instance.MagicAttacksDamageDictionary[tag]);
         }
 
         else

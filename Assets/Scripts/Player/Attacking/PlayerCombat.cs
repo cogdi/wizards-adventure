@@ -9,7 +9,7 @@ public class PlayerCombat : MonoBehaviour
     public event Action<float> OnManaSpent;
     public event Action<Vector3> OnWallHit;
     public event Action<Vector3> OnEnemyHit; /* TODO: It looks like a bad practice to have separate events for sound and for making damage. */
-    public event Action<Enemy, float> OnEnemyDamaged;
+    public event Action<EnemyBase, float> OnEnemyDamaged;
 
     public event Action<bool> OnChargingMagicAttack;
     public event Action<StaffState> OnStaffStateChanged;
@@ -92,7 +92,7 @@ public class PlayerCombat : MonoBehaviour
             Collider collider = hitColliders[i];
             if (IsEnemyLayer(collider.gameObject.layer))
             {
-                collider.TryGetComponent<Enemy>(out Enemy enemy);
+                collider.TryGetComponent<EnemyBase>(out EnemyBase enemy);
                 if (enemy != null)
                 {
                     OnEnemyHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
