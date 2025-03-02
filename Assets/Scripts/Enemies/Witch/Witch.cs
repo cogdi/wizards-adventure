@@ -2,20 +2,10 @@ using UnityEngine;
 
 public class Witch : EnemyBase
 {
-    //public float Health => health;
-
-    //protected const float MAX_HEALTH = 100f;
-
-    //protected float health = 0f;
-    //protected Transform playerTransform;
-    //protected Vector3 playerLastPosition;
-    //protected PlayerCombat playerCombatInstance;
-
     // Raycast
     protected float eyeLevel = 1.15f;
     protected float sightDistance = 15f;
     protected float fieldOfView = 100f;
-    //protected int ignoreRaycastMask;
 
     // Flying around.
     [SerializeField] private WitchRoute witchRoute;
@@ -25,6 +15,7 @@ public class Witch : EnemyBase
 
     // Movement.
     [SerializeField] private float speed = 4.5f;
+    private bool isMoving;
 
     private bool isInsideTrigger; // not realised yet.
 
@@ -34,21 +25,6 @@ public class Witch : EnemyBase
     {
         health = MAX_HEALTH;
     }
-
-    //private void Start()
-    //{
-    //    playerCombatInstance = PlayerCombat.Instance;
-    //    playerTransform = playerCombatInstance.transform;
-    //    if (playerTransform == null)
-    //    {
-    //        Debug.LogError("Player instance can not be found.");
-    //    }
-
-    //    ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast");
-
-    //    PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
-    //    MagicCharge.OnEnemyDamaged += TakeDamage;
-    //}
 
     protected override void TakeDamage(EnemyBase enemy, float damage)
     {
@@ -66,7 +42,7 @@ public class Witch : EnemyBase
 
     public override bool IsMoving()
     {
-        throw new System.NotImplementedException();
+        return isMoving;
     }
 
     private void Update()
@@ -79,16 +55,22 @@ public class Witch : EnemyBase
 
     private void GoToRandomPoint()
     {
+        isMoving = true;
+
         if (currentRoute != Vector3.zero)
         {
 
             if (!IsRouteComplete(currentRoute))
             {
+                isMoving = true;
+
                 SetDestination(currentRoute);
             }
 
             else
             {
+                isMoving = false;
+
                 routeTimer += Time.deltaTime;
                 if (routeTimer >= routeInterval)
                 {
@@ -132,10 +114,4 @@ public class Witch : EnemyBase
             isInsideTrigger = false;
         }
     }
-
-    //private void OnDestroy()
-    //{
-    //    PlayerCombat.Instance.OnEnemyDamaged -= TakeDamage;
-    //    MagicCharge.OnEnemyDamaged -= TakeDamage;
-    //}
 }

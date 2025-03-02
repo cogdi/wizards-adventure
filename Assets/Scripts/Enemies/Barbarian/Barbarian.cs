@@ -99,11 +99,20 @@ public class Barbarian : EnemyBase
 
     protected override void TakeDamage(EnemyBase enemy, float damage)
     {
-        throw new NotImplementedException();
+        if (enemy == this)
+        {
+            health -= damage;
+            Debug.Log(health);
+
+            if (health <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     public override bool IsMoving()
     {
-        throw new NotImplementedException();
+        return agent.velocity.magnitude > 0.1f;
     }
 }

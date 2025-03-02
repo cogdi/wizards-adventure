@@ -31233,7 +31233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ae0bdc330082b4ca120fadfc0a00b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 0}
   witchRoute: {fileID: 2136317265}
   speed: 4.5
 --- !u!114 &5106823670603425260
