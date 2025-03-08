@@ -29205,7 +29205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5782024289354048995, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6
+      value: -39
       objectReference: {fileID: 0}
     - target: {fileID: 5782024289354048995, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -30382,6 +30382,7 @@ MonoBehaviour:
   - {fileID: 1640120492}
   - {fileID: 341000598}
   - {fileID: 375741328}
+  footPoints: []
 --- !u!65 &2136317266
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30742,7 +30743,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1978462779393320233}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -40.75, y: 6, z: 26.499998}
+  m_LocalPosition: {x: -50.94, y: -39, z: 29.88}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -31235,6 +31236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   witchRoute: {fileID: 2136317265}
   speed: 4.5
+  controller: {fileID: 5106823670603425261}
 --- !u!114 &5106823670603425260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31248,8 +31250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 5106823670603425257}
---- !u!136 &5106823670603425261
-CapsuleCollider:
+--- !u!143 &5106823670603425261
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -31258,10 +31260,14 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.655516
-  m_Height: 1.9695568
-  m_Direction: 1
-  m_Center: {x: -4.3334206e-17, y: 0.9936037, z: 0.11517691}
+  serializedVersion: 2
+  m_Height: 2.01
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!4 &5458771189421441947
 Transform:
   m_ObjectHideFlags: 0

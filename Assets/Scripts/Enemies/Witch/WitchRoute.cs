@@ -3,6 +3,7 @@ using UnityEngine;
 public class WitchRoute : MonoBehaviour
 {
     [SerializeField] private Transform[] routePoints;
+    [SerializeField] private Transform[] footPoints;
 
     public Vector3 GetRandomPointInsideCollider()
     {
@@ -12,4 +13,6 @@ public class WitchRoute : MonoBehaviour
 
         return routePoints[UnityEngine.Random.Range(0, routePoints.Length - 1)].position;
     }
+
+
 }
