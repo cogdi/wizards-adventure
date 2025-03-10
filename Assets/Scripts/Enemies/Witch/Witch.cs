@@ -5,10 +5,10 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Witch : EnemyBase
 {
-    // Raycast
-    protected float eyeLevel = 1.15f;
-    protected float sightDistance = 15f;
-    protected float fieldOfView = 100f;
+    [Header("Raycast")]
+    [SerializeField] protected float eyeLevel = 1.625f;
+    [SerializeField] protected float sightDistance = 15f;
+    [SerializeField] protected float fieldOfView = 90f;
 
     // Flying around.
     [SerializeField] private WitchRoute witchRoute;
@@ -69,7 +69,10 @@ public class Witch : EnemyBase
 
         //SetDestination(transform.position + Random.insideUnitSphere * 5f);
 
-        Debug.Log(IsMoving());
+        //Debug.Log("IsMoving = " + IsMoving());
+        //Debug.Log("IsGrounded = " + isGrounded);
+        Debug.Log("Can see player = " + CanSeePlayer());
+
         SetRandomGroundDestination();
     }
 
@@ -165,7 +168,7 @@ public class Witch : EnemyBase
 
     private Vector3 GetRandomGroundPoint()
     {
-        Vector3 randomPoint = transform.position + (Random.insideUnitSphere * 25f);
+        Vector3 randomPoint = transform.position + (Random.insideUnitSphere * 2f);
         randomPoint.y = transform.position.y;
 
         return randomPoint;
@@ -204,5 +207,27 @@ public class Witch : EnemyBase
         {
             //GetComponent<Rigidbody>().usegra
         }
+    }
+
+    private bool CanSeePlayer()
+    {
+        if (GetDistanceToPlayer() <= sightDistance)
+        {
+            Vector3 playerDirection = playerTransform.position - transform.position;
+            if (Vector3.Angle(playerDirection, transform.forward) <= fieldOfView)
+            {
+                Debug.DrawRay(transform.position + Vector3.up * eyeLevel, playerDirection, Color.red);
+                if (Physics.Raycast(transform.position + (Vector3.up * eyeLevel), playerDirection, out RaycastHit hitInfo, sightDistance, ignoreRaycastMask))
+                {
+                    if (playerCombatInstance.IsPlayerLayer(hitInfo.transform.gameObject.layer))
+                    {
+                        playerLastPosition = playerTransform.position;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
