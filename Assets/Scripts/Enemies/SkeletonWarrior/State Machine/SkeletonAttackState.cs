@@ -52,7 +52,7 @@ public class SkeletonAttackState : SkeletonBaseState
 
         else
         {
-            agent.ResetPath(); // To prevent a skeleton going to the character though the distance is normal.
+            agent.ResetPath(); // To prevent a skeleton going to the character while the distance is normal.
 
             if (skeleton.IsMeleeSkeleton)
                 // Melee skeletons' logic.
@@ -73,8 +73,8 @@ public class SkeletonAttackState : SkeletonBaseState
                 if (shotTimer >= shotTimerMax)
                 {
                     /* This invokes the event for SkeletonAnimations.cs that plays attacking animation.
-                    * Then there's an animator event that calls DamageToPlayer() from CharacterAttributes.cs and causes damage to the character.*/
-                    skeleton.InvokeOnAttackingPlayerEvent();
+                    * Then there's an animator event that calls TakeDamge() from CharacterAttributes.cs and causes damage to the main character.*/
+                    skeleton.InvokeOnAttackingPlayerEvent();    
 
                     shotTimer = 0;
                 }

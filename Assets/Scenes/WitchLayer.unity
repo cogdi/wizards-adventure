@@ -1121,6 +1121,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7969972704443486089, guid: 3ef94e73d5607784fbcbba8de4155b1e, type: 3}
   m_PrefabInstance: {fileID: 32724325}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &35507494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 35507495}
+  m_Layer: 0
+  m_Name: CHARGE_SPAWN_POSITION
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &35507495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35507494}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.00000009934108, y: 0.5, z: 0.83333343}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1170717954021687187}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &38168549
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29255,8 +29286,17 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8428007803962317466, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.463
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
+--- !u!4 &2090264231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8428007803962317466, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
+  m_PrefabInstance: {fileID: 2090264230}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2091540913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30748,6 +30788,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2743847165152315779}
+  - {fileID: 35507495}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -31239,7 +31280,10 @@ MonoBehaviour:
   fieldOfView: 90
   witchRoute: {fileID: 2136317265}
   speed: 4.5
+  angularSpeed: 120
   controller: {fileID: 5106823670603425261}
+  projectileSpawnPoint: {fileID: 35507495}
+  playerBody: {fileID: 2090264231}
 --- !u!114 &5106823670603425260
 MonoBehaviour:
   m_ObjectHideFlags: 0

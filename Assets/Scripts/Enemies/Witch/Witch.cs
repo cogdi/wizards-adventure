@@ -18,21 +18,47 @@ public class Witch : EnemyBase
 
     // Movement.
     [SerializeField] private float speed = 4.5f;
+    [SerializeField] private float angularSpeed = 120f;
+    [SerializeField] private CharacterController controller;
     private bool isMoving;
     private bool isFlying;
-
     private bool isInsideTrigger; // not realised yet.
-
-    private bool shield = true;
-
-    [SerializeField] private CharacterController controller;
-
     private Vector3 velocity;
     private bool isGrounded;
+
+    // Attacks.
+    private bool shield = true;
+    [SerializeField] private Transform projectileSpawnPoint;
+    [SerializeField] private Transform playerBody;
+    private const string SKELETON_MAGIC_CHARGE = "SkeletonMagicCharge";
+    private const float magicChargeSpeed = 10f;
+    private float magicAttackInterval;
+    private const float magicAttackIntervalMax = 3f;
 
     private void Awake()
     {
         health = MAX_HEALTH;
+    }
+
+    private void Update()
+    {
+        // TODO: Need to do proper check if the Witch is not in the collider.
+
+        //LookAt(playerTransform.position);
+        //FlyToRandomPoint();
+        //SetRandomGroundDestination();
+
+        //SetDestination(transform.position + Random.insideUnitSphere * 5f);
+
+        //Debug.Log("IsMoving = " + IsMoving());
+        //Debug.Log("IsGrounded = " + isGrounded);
+        //Debug.Log("Can see player = " + CanSeePlayer());
+
+        magicAttackInterval += Time.deltaTime;
+        if (CanSeePlayer())
+        {
+            AttackPlayer();
+        }
     }
 
     protected override void TakeDamage(EnemyBase enemy, float damage)
@@ -60,23 +86,7 @@ public class Witch : EnemyBase
         return isMoving;
     }
 
-    private void Update()
-    {
-        // TODO: Need to do proper check if the Witch is not in the collider.
-
-        //LookAt(playerTransform.position);
-        //GoToRandomPoint();
-
-        //SetDestination(transform.position + Random.insideUnitSphere * 5f);
-
-        //Debug.Log("IsMoving = " + IsMoving());
-        //Debug.Log("IsGrounded = " + isGrounded);
-        Debug.Log("Can see player = " + CanSeePlayer());
-
-        SetRandomGroundDestination();
-    }
-
-    private void GoToRandomPoint()
+    private void FlyToRandomPoint()
     {
         isMoving = true;
 
@@ -154,16 +164,44 @@ public class Witch : EnemyBase
         else currentRoute = GetRandomGroundPoint();
     }
 
+   private void AttackPlayer()
+    {
+        Vector3 directionToPlayer = GetNormalizedDirectionTo(playerTransform.position);
+        //Quaternion rotiationToPlayer = Quaternion.LookRotation(directionToPlayer);
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotiationToPlayer, angularSpeed * Time.deltaTime);
+
+        LookTowards(playerTransform.position);
+
+        if (magicAttackInterval <= magicAttackIntervalMax) return;
+
+        Vector3 chargeDirection = playerBody.position - projectileSpawnPoint.position;
+        Quaternion rotation = Quaternion.LookRotation(chargeDirection);
+
+        GameObject projectile;
+
+        /* 3f - Mistakes in archer's aim.
+            * 40f - Force added to velocity. */
+        projectile = Instantiate(Resources.Load($"Prefabs/{SKELETON_MAGIC_CHARGE}") as GameObject, projectileSpawnPoint.position, rotation);
+        projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * magicChargeSpeed;
+
+        magicAttackInterval = 0;
+    }
+
     private void LookTowards(Vector3 point)
     {
-        Vector3 lookDirection = (point - transform.position).normalized;
+        Vector3 lookDirection = GetNormalizedDirectionTo(point);
         lookDirection.y = 0f;
 
         if (lookDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, angularSpeed * Time.deltaTime);
         }
+    }
+
+    private Vector3 GetNormalizedDirectionTo(Vector3 point)
+    {
+        return (point - transform.position).normalized;
     }
 
     private Vector3 GetRandomGroundPoint()
@@ -183,6 +221,28 @@ public class Witch : EnemyBase
     private bool IsRouteComplete(Vector3 routeEnd)
     {
         return Vector3.Distance(transform.position, routeEnd) < 0.2f;
+    }
+
+    private bool CanSeePlayer()
+    {
+        if (GetDistanceToPlayer() <= sightDistance)
+        {
+            Vector3 playerDirection = playerTransform.position - transform.position;
+            if (Vector3.Angle(playerDirection, transform.forward) <= fieldOfView)
+            {
+                Debug.DrawRay(transform.position + Vector3.up * eyeLevel, playerDirection, Color.red);
+                if (Physics.Raycast(transform.position + (Vector3.up * eyeLevel), playerDirection, out RaycastHit hitInfo, sightDistance, ignoreRaycastMask))
+                {
+                    if (playerCombatInstance.IsPlayerLayer(hitInfo.transform.gameObject.layer))
+                    {
+                        playerLastPosition = playerTransform.position;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -207,27 +267,5 @@ public class Witch : EnemyBase
         {
             //GetComponent<Rigidbody>().usegra
         }
-    }
-
-    private bool CanSeePlayer()
-    {
-        if (GetDistanceToPlayer() <= sightDistance)
-        {
-            Vector3 playerDirection = playerTransform.position - transform.position;
-            if (Vector3.Angle(playerDirection, transform.forward) <= fieldOfView)
-            {
-                Debug.DrawRay(transform.position + Vector3.up * eyeLevel, playerDirection, Color.red);
-                if (Physics.Raycast(transform.position + (Vector3.up * eyeLevel), playerDirection, out RaycastHit hitInfo, sightDistance, ignoreRaycastMask))
-                {
-                    if (playerCombatInstance.IsPlayerLayer(hitInfo.transform.gameObject.layer))
-                    {
-                        playerLastPosition = playerTransform.position;
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 }
