@@ -1,10 +1,10 @@
-using TMPro;
+using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static UnityEngine.GraphicsBuffer;
 
 public class Witch : EnemyBase
 {
+    public event Action OnAttackingPlayer;
+
     [Header("Raycast")]
     [SerializeField] protected float eyeLevel = 1.625f;
     [SerializeField] protected float sightDistance = 15f;
@@ -166,14 +166,22 @@ public class Witch : EnemyBase
 
    private void AttackPlayer()
     {
-        Vector3 directionToPlayer = GetNormalizedDirectionTo(playerTransform.position);
-        //Quaternion rotiationToPlayer = Quaternion.LookRotation(directionToPlayer);
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotiationToPlayer, angularSpeed * Time.deltaTime);
-
         LookTowards(playerTransform.position);
 
         if (magicAttackInterval <= magicAttackIntervalMax) return;
+        else
+        {
+            Debug.Log("OnAttackingPlayer invoked with timer = " + magicAttackInterval);
 
+            OnAttackingPlayer?.Invoke();
+
+            magicAttackInterval = 0;
+        }
+    }
+
+    public void ShootProjectile()
+    {
+        Vector3 directionToPlayer = GetNormalizedDirectionTo(playerTransform.position);
         Vector3 chargeDirection = playerBody.position - projectileSpawnPoint.position;
         Quaternion rotation = Quaternion.LookRotation(chargeDirection);
 
@@ -184,7 +192,7 @@ public class Witch : EnemyBase
         projectile = Instantiate(Resources.Load($"Prefabs/{SKELETON_MAGIC_CHARGE}") as GameObject, projectileSpawnPoint.position, rotation);
         projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * magicChargeSpeed;
 
-        magicAttackInterval = 0;
+        //magicAttackInterval = 0;
     }
 
     private void LookTowards(Vector3 point)
@@ -206,7 +214,7 @@ public class Witch : EnemyBase
 
     private Vector3 GetRandomGroundPoint()
     {
-        Vector3 randomPoint = transform.position + (Random.insideUnitSphere * 2f);
+        Vector3 randomPoint = transform.position + (UnityEngine.Random.insideUnitSphere * 2f);
         randomPoint.y = transform.position.y;
 
         return randomPoint;
