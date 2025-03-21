@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Witch : EnemyBase
 {
@@ -44,16 +45,6 @@ public class Witch : EnemyBase
     {
         // TODO: Need to do proper check if the Witch is not in the collider.
 
-        //LookAt(playerTransform.position);
-        //FlyToRandomPoint();
-        //SetRandomGroundDestination();
-
-        //SetDestination(transform.position + Random.insideUnitSphere * 5f);
-
-        //Debug.Log("IsMoving = " + IsMoving());
-        //Debug.Log("IsGrounded = " + isGrounded);
-        //Debug.Log("Can see player = " + CanSeePlayer());
-
         magicAttackInterval += Time.deltaTime;
         if (CanSeePlayer())
         {
@@ -86,83 +77,6 @@ public class Witch : EnemyBase
         return isMoving;
     }
 
-    private void FlyToRandomPoint()
-    {
-        isMoving = true;
-
-        if (currentRoute != Vector3.zero)
-        {
-
-            if (!IsRouteComplete(currentRoute))
-            {
-                isMoving = true;
-
-                SetDestination(currentRoute);
-            }
-
-            else
-            {
-                isMoving = false;
-
-                routeTimer += Time.deltaTime;
-                if (routeTimer >= routeInterval)
-                {
-                    currentRoute = Vector3.zero;
-                    routeTimer = 0;
-                }
-            }
-        }
-
-        else currentRoute = witchRoute.GetRandomPointInsideCollider();
-    }
-
-    private void SetDestination(Vector3 position)
-    {
-        transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
-    }
-
-    private void SetRandomGroundDestination()
-    {
-        if (currentRoute != Vector3.zero)
-        {
-            if (!IsRouteComplete(currentRoute))
-            {
-                Vector3 direction = (currentRoute - transform.position).normalized;
-                controller.Move(direction * speed * Time.deltaTime);
-
-                isMoving = true;
-
-
-                velocity.y -= 9.8f * Time.deltaTime;
-
-                if (isGrounded && velocity.y < 0f)
-                {
-                    velocity.y = -1f;
-                }
-
-                controller.Move(velocity * Time.deltaTime);
-
-
-                LookTowards(currentRoute);
-
-                isGrounded = controller.isGrounded;
-            }
-
-            else
-            {
-                isMoving = false;
-
-                routeTimer += Time.deltaTime;
-                if (routeTimer >= routeInterval)
-                {
-                    currentRoute = Vector3.zero;
-                    routeTimer = 0;
-                }
-            }
-        }
-
-        else currentRoute = GetRandomGroundPoint();
-    }
 
    private void AttackPlayer()
     {
@@ -212,23 +126,11 @@ public class Witch : EnemyBase
         return (point - transform.position).normalized;
     }
 
-    private Vector3 GetRandomGroundPoint()
-    {
-        Vector3 randomPoint = transform.position + (UnityEngine.Random.insideUnitSphere * 2f);
-        randomPoint.y = transform.position.y;
-
-        return randomPoint;
-    }
 
     private void CompletelyTurnOn(Vector3 position)
     {
         Vector3 newRotation = Vector3.RotateTowards(transform.forward, position - transform.position, 1 * Time.deltaTime, 0.0f);
         transform.rotation = Quaternion.LookRotation(newRotation);
-    }
-
-    private bool IsRouteComplete(Vector3 routeEnd)
-    {
-        return Vector3.Distance(transform.position, routeEnd) < 0.2f;
     }
 
     private bool CanSeePlayer()
@@ -251,29 +153,5 @@ public class Witch : EnemyBase
         }
 
         return false;
-    }
-
-    private void OnTriggerEnter(Collider collider)
-    {
-        if (collider.Equals(witchRoute))
-        {
-            isInsideTrigger = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider collider)
-    {
-        if (collider.Equals(witchRoute))
-        {
-            isInsideTrigger = false;
-        }
-    }
-
-    private void OnTriggerStay(Collider collider)
-    {
-        if (collider.CompareTag("Floor"))
-        {
-            //GetComponent<Rigidbody>().usegra
-        }
     }
 }
