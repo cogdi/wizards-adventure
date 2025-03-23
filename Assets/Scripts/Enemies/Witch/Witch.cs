@@ -12,20 +12,19 @@ public class Witch : EnemyBase
     [SerializeField] protected float fieldOfView = 90f;
 
     // Flying around.
-    [SerializeField] private WitchRoute witchRoute;
+    //[SerializeField] private WitchRoute witchRoute;
     private float routeTimer;
-    private float routeInterval = 5f;
-    private Vector3 currentRoute;
+    private float routeInterval = 6f;
 
     // Movement.
     [SerializeField] private float speed = 4.5f;
     [SerializeField] private float angularSpeed = 120f;
     [SerializeField] private CharacterController controller;
+
     private bool isMoving;
-    private bool isFlying;
-    private bool isInsideTrigger; // not realised yet.
     private Vector3 velocity;
     private bool isGrounded;
+    private Vector3 route;
 
     // Attacks.
     private bool shield = true;
@@ -44,6 +43,21 @@ public class Witch : EnemyBase
     private void Update()
     {
         // TODO: Need to do proper check if the Witch is not in the collider.
+
+        //routeTimer += Time.deltaTime;
+        //if (routeTimer >= routeInterval)
+        //{
+        //}
+
+        SetGroundDestination(route);
+
+        if (Vector3.Distance(transform.position, route) < 0.2f || route == Vector3.zero)
+        {
+            Vector3 randomPoint = transform.position + (UnityEngine.Random.insideUnitSphere * 5f);
+            randomPoint.y = transform.position.y;
+
+            route = randomPoint;
+        }
 
         magicAttackInterval += Time.deltaTime;
         if (CanSeePlayer())
@@ -70,6 +84,26 @@ public class Witch : EnemyBase
                 Destroy(gameObject);
             }
         }
+    }
+
+    private void SetGroundDestination(Vector3 destination)
+    {
+        Vector3 direction = (destination - transform.position).normalized;
+        controller.Move(direction * speed * Time.deltaTime);
+        routeTimer = 0f;
+
+        isMoving = true;
+
+        velocity.y -= 9.8f * Time.deltaTime;
+        if (isGrounded && velocity.y < 0f)
+        {
+            velocity.y = -1f;
+        }
+
+        controller.Move(velocity * Time.deltaTime);
+        LookTowards(destination);
+
+        isGrounded = controller.isGrounded;
     }
 
     public override bool IsMoving()
