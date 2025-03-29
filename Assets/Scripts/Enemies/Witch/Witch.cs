@@ -1,10 +1,13 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Witch : EnemyBase
 {
     public event Action OnAttackingPlayer;
+
+    private const string WITCH_BOX_COLLIDER_NAME = "WitchBox";
 
     [Header("Raycast")]
     [SerializeField] protected float eyeLevel = 1.625f;
@@ -15,6 +18,7 @@ public class Witch : EnemyBase
     //[SerializeField] private WitchRoute witchRoute;
     private float routeTimer;
     private float routeInterval = 6f;
+    private bool isInsideCollider;
 
     // Movement.
     [SerializeField] private float speed = 4.5f;
@@ -44,26 +48,34 @@ public class Witch : EnemyBase
     {
         // TODO: Need to do proper check if the Witch is not in the collider.
 
-        //routeTimer += Time.deltaTime;
-        //if (routeTimer >= routeInterval)
+        #region Testing ground movement.
+        //if (Vector3.Distance(transform.position, route) < 0.2f || route == Vector3.zero)
         //{
+        //    route = GetRandomGroundRoute();
         //}
 
-        SetGroundDestination(route);
+        //SetGroundDestination(route);
+        #endregion
+
+
+        #region Testing flying.
 
         if (Vector3.Distance(transform.position, route) < 0.2f || route == Vector3.zero)
         {
-            Vector3 randomPoint = transform.position + (UnityEngine.Random.insideUnitSphere * 5f);
-            randomPoint.y = transform.position.y;
-
-            route = randomPoint;
+            route = transform.position + UnityEngine.Random.insideUnitSphere * 5f;
         }
+
+        FlyTo(route);
+
+        #endregion
 
         magicAttackInterval += Time.deltaTime;
         if (CanSeePlayer())
         {
             AttackPlayer();
         }
+
+        //Debug.Log(isInsideCollider);
     }
 
     protected override void TakeDamage(EnemyBase enemy, float damage)
@@ -86,6 +98,13 @@ public class Witch : EnemyBase
         }
     }
 
+    private void FlyTo(Vector3 destination)
+    {
+        Debug.Log("Flying to " + route);
+        CompletelyTurnOn(destination);
+        transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
+    }
+
     private void SetGroundDestination(Vector3 destination)
     {
         Vector3 direction = (destination - transform.position).normalized;
@@ -106,6 +125,14 @@ public class Witch : EnemyBase
         isGrounded = controller.isGrounded;
     }
 
+    private Vector3 GetRandomGroundRoute()
+    {
+        Vector3 randomPoint = transform.position + (UnityEngine.Random.insideUnitSphere * 5f);
+        randomPoint.y = transform.position.y;
+
+        return randomPoint;
+    }
+
     public override bool IsMoving()
     {
         return isMoving;
@@ -114,13 +141,12 @@ public class Witch : EnemyBase
 
    private void AttackPlayer()
     {
-        LookTowards(playerTransform.position);
+        //LookTowards(playerTransform.position);
+        CompletelyTurnOn(playerTransform.position);
 
         if (magicAttackInterval <= magicAttackIntervalMax) return;
         else
         {
-            Debug.Log("OnAttackingPlayer invoked with timer = " + magicAttackInterval);
-
             OnAttackingPlayer?.Invoke();
 
             magicAttackInterval = 0;
@@ -163,8 +189,13 @@ public class Witch : EnemyBase
 
     private void CompletelyTurnOn(Vector3 position)
     {
-        Vector3 newRotation = Vector3.RotateTowards(transform.forward, position - transform.position, 1 * Time.deltaTime, 0.0f);
-        transform.rotation = Quaternion.LookRotation(newRotation);
+        // Turn on smoothly.
+        //Vector3 newRotation = Vector3.RotateTowards(transform.forward, position - transform.position, 1 * Time.deltaTime, 0.0f);
+        //transform.rotation = Quaternion.LookRotation(newRotation);
+
+        // Turn on instantly.
+        Vector3 direction = (position - transform.position).normalized;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     private bool CanSeePlayer()
@@ -187,5 +218,25 @@ public class Witch : EnemyBase
         }
 
         return false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("OnTriggerEnter");
+
+        if (other.gameObject.CompareTag(WITCH_BOX_COLLIDER_NAME))
+        {
+            isInsideCollider = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log("OnTriggerExit");
+
+        if (other.gameObject.CompareTag(WITCH_BOX_COLLIDER_NAME))
+        {
+            isInsideCollider = false;
+        }
     }
 }

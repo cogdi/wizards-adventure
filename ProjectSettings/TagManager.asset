@@ -16,6 +16,7 @@ TagManager:
   - MediumMagicCharge
   - StrongMagicCharge
   - SkeletonMage
+  - WitchBox
   layers:
   - Default
   - TransparentFX

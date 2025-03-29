@@ -29468,11 +29468,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5782024289354048995, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35
+      value: -33
       objectReference: {fileID: 0}
     - target: {fileID: 5782024289354048995, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -39
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5782024289354048995, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -30800,7 +30800,7 @@ GameObject:
   - component: {fileID: 2136317265}
   m_Layer: 0
   m_Name: WitchRoute
-  m_TagString: Untagged
+  m_TagString: WitchBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31183,7 +31183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1978462779393320233}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -50.94, y: -39, z: 29.88}
+  m_LocalPosition: {x: -41.19, y: 6, z: 26.880001}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -31678,7 +31678,6 @@ MonoBehaviour:
   eyeLevel: 1.625
   sightDistance: 15
   fieldOfView: 90
-  witchRoute: {fileID: 2136317265}
   speed: 4.5
   angularSpeed: 120
   controller: {fileID: 5106823670603425261}
