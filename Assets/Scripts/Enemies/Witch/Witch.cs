@@ -100,7 +100,7 @@ public class Witch : EnemyBase
 
     private void FlyTo(Vector3 destination)
     {
-        Debug.Log("Flying to " + route);
+        //Debug.Log("Flying to " + route);
         CompletelyTurnOn(destination);
         transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
     }

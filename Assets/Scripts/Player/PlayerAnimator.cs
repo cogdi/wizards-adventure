@@ -37,7 +37,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleSpellcasting(bool isSpellcasting)
     {
-        // // There's animation event inside Spellcasting animation, that triggers attack.
+        // There's animation event inside Spellcasting animation, that triggers attack.
         animator.SetBool(IS_SPELLCASTING, isSpellcasting);
     }
 

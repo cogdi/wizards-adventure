@@ -9,6 +9,7 @@ public class PlayerMotor : MonoBehaviour
 
     public event Action<Transform> OnDoorInteracted;
     public event Action<int> OnPickingKeys;
+    public event Action<bool> OnThirdPersonModeStateChanged;
 
     private PlayerInput playerInputInstance;
     private PlayerLook playerLookInstance;
@@ -22,6 +23,8 @@ public class PlayerMotor : MonoBehaviour
     private bool isMoving;
     private bool isStandingOnTopOfEnemy;
     private float verticalVelocity = 0f;
+    private bool thirdPersonMode = false;
+    [SerializeField] private float rotationSpeed = 10f;
 
     // Flying.
     public bool IsFlying { get => isFlying; }
@@ -45,8 +48,6 @@ public class PlayerMotor : MonoBehaviour
             Instance = this;
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-
         currentSpeed = walkingSpeed;
     }
 
@@ -69,6 +70,13 @@ public class PlayerMotor : MonoBehaviour
     {
         //isGrounded = controller.isGrounded;
 
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            thirdPersonMode = !thirdPersonMode;
+
+            OnThirdPersonModeStateChanged?.Invoke(thirdPersonMode);
+        }
+
         if (isStandingOnTopOfEnemy)
         {
             PushAwayFromEnemy();
@@ -76,7 +84,8 @@ public class PlayerMotor : MonoBehaviour
         
         else
         {
-            Move();
+            if (thirdPersonMode) MoveThirdPerson();
+            else Move();
 
             if (isGrounded)
             {
@@ -108,6 +117,30 @@ public class PlayerMotor : MonoBehaviour
         }
 
         controller.Move(velocity * Time.deltaTime);
+
+        isGrounded = controller.isGrounded;
+    }
+
+    private void MoveThirdPerson()
+    {
+        Vector2 inputVector = playerInputInstance.GetMovementVectorNormalized();
+        Vector3 moveDirection = new Vector3(inputVector.y, 0f, -inputVector.x); // 3rd-person movement from above.
+
+        controller.Move(moveDirection * currentSpeed * Time.deltaTime);
+
+        velocity.y -= gravity * Time.deltaTime;
+
+        if (isGrounded && velocity.y < 0f)
+        {
+            velocity.y = -2f;
+        }
+
+        controller.Move(velocity * Time.deltaTime);
+
+        //if (moveDirection != Vector3.zero) // Looking at the moving direction.
+        //    transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotationSpeed * Time.deltaTime); // 3rd-person movement.
+        
+
 
         isGrounded = controller.isGrounded;
     }
@@ -156,11 +189,6 @@ public class PlayerMotor : MonoBehaviour
             currentSpeed = walkingSpeed;
             isRunning = false;
         }
-    }
-
-    public bool IsCharacterRunning()
-    {
-        return isRunning;
     }
 
     private void PushAwayFromEnemy()
@@ -213,5 +241,20 @@ public class PlayerMotor : MonoBehaviour
         {
             isStandingOnTopOfEnemy = false;
         }
+    }
+
+    public bool IsThirdPersonModeActive()
+    {
+        return thirdPersonMode;
+    }
+
+    public bool IsRunning()
+    {
+        return isRunning;
+    }
+
+    public bool IsMoving()
+    {
+        return isMoving;
     }
 }

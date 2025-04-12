@@ -22659,6 +22659,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1676609100239073865, guid: 0d780173c250d334f80c9061373c8e4f, type: 3}
   m_PrefabInstance: {fileID: 1504034166}
   m_PrefabAsset: {fileID: 0}
+--- !u!20 &1510801650 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 517459407091806851, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
+  m_PrefabInstance: {fileID: 2090264230}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1512942491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29258,6 +29263,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1441973177345891995, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
+      propertyPath: thirdPersonCamera
+      value: 
+      objectReference: {fileID: 1510801650}
     - target: {fileID: 2333057718005507717, guid: 613dca2d87a51b8478cd74a6e146b5a2, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.13413222

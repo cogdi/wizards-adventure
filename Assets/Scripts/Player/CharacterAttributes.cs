@@ -128,7 +128,7 @@ public class CharacterAttributes : MonoBehaviour
 
     private void HandleStamina()
     {
-        if (PlayerMotor.Instance.IsCharacterRunning())
+        if (PlayerMotor.Instance.IsRunning())
         {
             if (IsCharacterAbleToRun())
             {
