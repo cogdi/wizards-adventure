@@ -4,23 +4,6 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
-    public static PlayerCombat Instance { get; private set; }
-
-    public event Action<float> OnManaSpent;
-    public event Action<Vector3> OnWallHit;
-    public event Action<Vector3> OnEnemyHit; /* TODO: It looks like a bad practice to have separate events for sound and for making damage. */
-    public event Action<EnemyBase, float> OnEnemyDamaged;
-
-    public event Action<bool> OnChargingMagicAttack;
-    public event Action<StaffState> OnStaffStateChanged;
-
-    public const string PLAYER_TAG = "Player";
-    public const string LIGHT_MAGIC_CHARGE_TAG = "WizardLightMagicCharge";
-    public const string MEDIUM_MAGIC_CHARGE_TAG = "WizardMediumMagicCharge";
-    public const string STRONG_MAGIC_CHARGE_TAG = "WizardStrongMagicCharge";
-
-    private int playerLayer;
-
     public enum MagicAttacks
     {
         Light,
@@ -41,7 +24,28 @@ public class PlayerCombat : MonoBehaviour
         { STRONG_MAGIC_CHARGE_TAG, 100 } // Debug value. To be returned to 50.
     };
 
+    public static PlayerCombat Instance { get; private set; }
+
+    public event Action<float> OnManaSpent;
+    public event Action<Vector3> OnWallHit;
+    public event Action<Vector3> OnEnemyHit; /* TODO: It looks like a bad practice to have separate events for sound and for making damage. */
+    public event Action<EnemyBase, float> OnEnemyDamaged;
+
+    public event Action<bool> OnChargingMagicAttack;
+    public event Action<StaffState> OnStaffStateChanged;
+
+    public const string PLAYER_TAG = "Player";
+    public const string LIGHT_MAGIC_CHARGE_TAG = "WizardLightMagicCharge";
+    public const string MEDIUM_MAGIC_CHARGE_TAG = "WizardMediumMagicCharge";
+    public const string STRONG_MAGIC_CHARGE_TAG = "WizardStrongMagicCharge";
+
+    // Handling damage
+    public Transform PlayerBody { get; private set; }
+    [SerializeField] private Transform playerBody;
+    private int playerLayer;
+
     private PlayerInput playerInputInstance;
+    
 
     //// Damaging enemies.
     // Melee attacks.
@@ -60,12 +64,14 @@ public class PlayerCombat : MonoBehaviour
     private StaffState currentStaffState;
     [SerializeField] private Transform magicChargePosition;
 
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
         }
+        PlayerBody = playerBody;
         playerLayer = gameObject.layer;
     }
 

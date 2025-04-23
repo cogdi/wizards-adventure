@@ -18,16 +18,20 @@ public class SkeletonGuardState : SkeletonBaseState
     public override void EnterState()
     {
         agent = skeleton.Agent;
-        patrolPointList = skeleton.GetPatrolPointList();
 
-        if (currentPatrolPoint < patrolPointList.Count)
+        if (patrolPointList != null)
         {
-            agent.SetDestination(patrolPointList[currentPatrolPoint].position);
-        }
+            patrolPointList = skeleton.GetPatrolPointList();
 
-        else
-        {
-            agent.SetDestination(patrolPointList[0].position);
+            if (currentPatrolPoint < patrolPointList.Count)
+            {
+                agent.SetDestination(patrolPointList[currentPatrolPoint].position);
+            }
+
+            else
+            {
+                agent.SetDestination(patrolPointList[0].position);
+            }
         }
 
         SoundManager.Instance.OnAnySoundMade += PlayerCombat_OnWallHit;
@@ -40,7 +44,7 @@ public class SkeletonGuardState : SkeletonBaseState
             stateMachine.SwitchState(stateMachine.attackState);
         }
 
-        else
+        else if (patrolPointList != null)
         {
             if (skeleton.IsMeleeSkeleton)
             {

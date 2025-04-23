@@ -31,7 +31,6 @@ public class Skeleton : EnemyBase
 
     [SerializeField] private List<Transform> patrolPointsList;
     [SerializeField] private Transform projectileSpawnPoint;
-    [SerializeField] private Transform playerBody;
     [SerializeField] private SkeletonStateMachine stateMachine;
     [SerializeField] public NavMeshAgent agent;
 

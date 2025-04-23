@@ -33,7 +33,6 @@ public class Witch : EnemyBase
     // Attacks.
     private bool shield = true;
     [SerializeField] private Transform projectileSpawnPoint;
-    [SerializeField] private Transform playerBody;
     private const string SKELETON_MAGIC_CHARGE = "SkeletonMagicCharge";
     private const float magicChargeSpeed = 10f;
     private float magicAttackInterval;
@@ -138,7 +137,6 @@ public class Witch : EnemyBase
         return isMoving;
     }
 
-
    private void AttackPlayer()
     {
         //LookTowards(playerTransform.position);
@@ -169,22 +167,22 @@ public class Witch : EnemyBase
         //magicAttackInterval = 0;
     }
 
-    private void LookTowards(Vector3 point)
-    {
-        Vector3 lookDirection = GetNormalizedDirectionTo(point);
-        lookDirection.y = 0f;
+    //private void LookTowards(Vector3 point)
+    //{
+    //    Vector3 lookDirection = GetNormalizedDirectionTo(point);
+    //    lookDirection.y = 0f;
 
-        if (lookDirection != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, angularSpeed * Time.deltaTime);
-        }
-    }
+    //    if (lookDirection != Vector3.zero)
+    //    {
+    //        Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+    //        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, angularSpeed * Time.deltaTime);
+    //    }
+    //}
 
-    private Vector3 GetNormalizedDirectionTo(Vector3 point)
-    {
-        return (point - transform.position).normalized;
-    }
+    //private Vector3 GetNormalizedDirectionTo(Vector3 point)
+    //{
+    //    return (point - transform.position).normalized;
+    //}
 
 
     private void CompletelyTurnOn(Vector3 position)
@@ -198,7 +196,7 @@ public class Witch : EnemyBase
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
-    private bool CanSeePlayer()
+    private bool CanSeePlayer() // Most likely won't be used in this class.
     {
         if (GetDistanceToPlayer() <= sightDistance)
         {
