@@ -44,7 +44,7 @@ public class CharacterAttributes : MonoBehaviour
         ManaObject.OnManaRestored += RestoreMana;
         HealingObject.OnHealthRestored+= Heal;
 
-        Barbarian.OnDamagingPlayer += TakeDamage;
+        //Barbarian.OnDamagingPlayer += TakeDamage;
 
         playerMotorInstance = PlayerMotor.Instance;
     }
@@ -159,6 +159,7 @@ public class CharacterAttributes : MonoBehaviour
         PlayerCombat.Instance.OnManaSpent -= SpendMana;
         ManaObject.OnManaRestored -= RestoreMana;
         HealingObject.OnHealthRestored -= Heal;
-        Barbarian.OnDamagingPlayer -= TakeDamage;
+        
+        //Barbarian.OnDamagingPlayer -= TakeDamage;
     }
 }

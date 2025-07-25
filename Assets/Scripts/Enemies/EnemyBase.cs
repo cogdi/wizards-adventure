@@ -9,7 +9,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     // Health.
     public float Health => health;
-    protected const float MAX_HEALTH = 100f;
+    protected static float MAX_HEALTH = 100f;
     protected float health = MAX_HEALTH;
     protected float angularSpeed = 120f;
 

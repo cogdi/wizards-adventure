@@ -29458,9 +29458,9 @@ GameObject:
   - component: {fileID: 581694904}
   - component: {fileID: 581694903}
   - component: {fileID: 581694902}
-  - component: {fileID: 581694901}
-  - component: {fileID: 581694905}
   - component: {fileID: 581694906}
+  - component: {fileID: 581694907}
+  - component: {fileID: 581694908}
   m_Layer: 9
   m_Name: Barbarian
   m_TagString: Untagged
@@ -29468,24 +29468,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &581694901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581694900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3c46802fc4c90247a1c49bde613b162, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agent: {fileID: 581694902}
-  attackRangeSphere: {fileID: 1394915090}
-  attackRangeSphereRadius: 0.96
-  skeletonsSpawnPoints:
-  - {fileID: 125198445}
-  - {fileID: 289789598}
 --- !u!195 &581694902
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -29552,20 +29534,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &581694905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581694900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30db69ca573bef24089bb9f4023068fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 581694903}
-  barbarian: {fileID: 581694901}
 --- !u!65 &581694906
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29579,6 +29547,32 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.4545658, z: 1}
   m_Center: {x: 0, y: 1.2272829, z: 0}
+--- !u!114 &581694907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581694900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c46802fc4c90247a1c49bde613b162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 581694902}
+  stateMachine: {fileID: 581694908}
+--- !u!114 &581694908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581694900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575277711e0d2cf4387eded750e7d452, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &581886118
 GameObject:
   m_ObjectHideFlags: 0
