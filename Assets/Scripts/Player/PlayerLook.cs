@@ -21,8 +21,8 @@ public class PlayerLook : MonoBehaviour
             Instance = this;
         }
 
-        //Cursor.lockState = CursorLockMode.Locked;
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void Start()

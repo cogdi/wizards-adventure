@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public abstract class BarbarianBaseState : MonoBehaviour
+public abstract class BarbarianBaseState
 {
+    private BarbarianStateMachine stateMachine;
 
     public abstract void EnterState();
 

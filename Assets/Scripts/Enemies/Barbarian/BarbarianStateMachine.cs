@@ -5,7 +5,7 @@ public class BarbarianStateMachine : MonoBehaviour
 {
     public event Action<BarbarianBaseState> OnStateChanged;
     public BarbarianFirstPhaseState firstPhase;
-
+    
     public void Initialize()
     {
         firstPhase = new BarbarianFirstPhaseState();

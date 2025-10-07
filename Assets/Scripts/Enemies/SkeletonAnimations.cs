@@ -12,6 +12,7 @@ public class SkeletonAnimations : MonoBehaviour
     {
         animator.SetBool(IS_WALKING, false);
     }
+    
     private void Start()
     {
         skeleton.OnAttackingPlayer += Skeleton_OnAttackingPlayer;
@@ -19,8 +20,8 @@ public class SkeletonAnimations : MonoBehaviour
 
     private void Skeleton_OnAttackingPlayer()
     {
-        /* There's an animator event that triggers shooting
-         * or DamageToPlayer() directly, in case if it's melee enemy. */
+        /* There's an animator event that triggers ShootProjectile()
+         * or DamageToPlayer(), depending on whether it's a ranged or melee skeleton. */
         animator.SetTrigger(TRIGGER_ATTACK);
     }
 

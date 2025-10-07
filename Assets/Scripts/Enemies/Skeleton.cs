@@ -29,7 +29,11 @@ public class Skeleton : EnemyBase
     private const float arrowSpeed = 40f;
     private const float magicChargeSpeed = 10f;
 
-    [SerializeField] private List<Transform> patrolPointsList;
+    [SerializeField] private List<Transform> patrolPointsList; 
+    /* This is used by both melee and ranged types of skeletons.
+       Difference is that first ones use them to travel between points, and the others to stay at one place.
+    */
+
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private SkeletonStateMachine stateMachine;
     [SerializeField] public NavMeshAgent agent;
@@ -123,19 +127,19 @@ public class Skeleton : EnemyBase
         }
     }
 
-    protected override void TakeDamage(EnemyBase enemy, float damage)
-    {
-        if (enemy == this)
-        {
-            health -= damage;
-            Debug.Log(health);
+    // protected override void TakeDamage(EnemyBase enemy, float damage)
+    // {
+    //     if (enemy == this)
+    //     {
+    //         health -= damage;
+    //         Debug.Log(health);
 
-            if (health <= 0f)
-            {
-                Destroy(gameObject);
-            }
-        }
-    }
+    //         if (health <= 0f)
+    //         {
+    //             Destroy(gameObject);
+    //         }
+    //     }
+    // }
 
     public override bool IsMoving()
     {

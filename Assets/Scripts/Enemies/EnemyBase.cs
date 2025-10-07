@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class EnemyBase : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     // Health.
     public float Health => health;
-    protected static float MAX_HEALTH = 100f;
+    protected static float MAX_HEALTH = 100f; // It's mutable on Awake() on some enemies (Barbarian, Witch).
     protected float health = MAX_HEALTH;
     protected float angularSpeed = 120f;
 
@@ -18,11 +19,24 @@ public abstract class EnemyBase : MonoBehaviour
     protected Transform playerBody;
     protected Vector3 playerLastPosition;
     protected PlayerCombat playerCombatInstance;
-    protected int ignoreRaycastMask; // It is for the character's shield, clothes, etc.
+    protected int ignoreRaycastMask; // It is for the main character's shield, clothes, etc.
 
-
-    protected abstract void TakeDamage(EnemyBase enemy, float damage);
+    // protected abstract void TakeDamage(EnemyBase enemy, float damage);
     public abstract bool IsMoving();
+
+    protected virtual void TakeDamage(EnemyBase enemy, float damage)
+    {
+        if (enemy == this)
+        {
+            health -= damage;
+            Debug.Log(health);
+
+            if (health <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
 
     protected virtual void Start()
     {
@@ -38,7 +52,7 @@ public abstract class EnemyBase : MonoBehaviour
         PlayerCombat.Instance.OnEnemyDamaged += TakeDamage;
         MagicCharge.OnEnemyDamaged += TakeDamage;
 
-        ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast"); // Rename this.
+        ignoreRaycastMask = ~LayerMask.GetMask("IgnoreSkeletonRaycast"); // TODO: Rename this.
     }
     private void OnDestroy()
     {

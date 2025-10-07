@@ -1,27 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class SkeletonGuardState : SkeletonBaseState
+public class SkeletonPatrolState : SkeletonBaseState
 {
-    // This state is used both by melee and ranged skeletons.
-    // The difference is that melee's patrol and the other's don't.
-
-    private NavMeshAgent agent;
+    private UnityEngine.AI.NavMeshAgent agent;
     private List<Transform> patrolPointList;
     private int currentPatrolPoint;
     private float patrolStandTimer;
     private float patrolStandTimerMax = 2f;
 
-    private bool isAtGuardPoint;
-
     public override void EnterState()
     {
         agent = skeleton.Agent;
 
+        patrolPointList = skeleton.GetPatrolPointList();
+        
         if (patrolPointList != null)
         {
-            patrolPointList = skeleton.GetPatrolPointList();
 
             if (currentPatrolPoint < patrolPointList.Count)
             {
@@ -46,29 +41,7 @@ public class SkeletonGuardState : SkeletonBaseState
 
         else if (patrolPointList != null)
         {
-            if (skeleton.IsMeleeSkeleton)
-            {
-                PatrolCycle();
-            }
-
-            else if (!isAtGuardPoint)
-            {
-                SendAgentToGuardPost();
-            }
-        }
-    }
-
-    private void SendAgentToGuardPost()
-    {
-        agent.SetDestination(patrolPointList[0].position);
-
-        if (agent.remainingDistance <= agent.stoppingDistance)
-        {
-            agent.ResetPath();
-            skeleton.transform.rotation = Quaternion.Lerp(skeleton.transform.rotation, patrolPointList[0].rotation, Time.deltaTime * 10f);
-
-            if (skeleton.transform.rotation == patrolPointList[0].rotation)
-                isAtGuardPoint = true;
+            PatrolCycle();
         }
     }
 
@@ -98,17 +71,9 @@ public class SkeletonGuardState : SkeletonBaseState
 
     private void PlayerCombat_OnWallHit(Vector3 hitPosition)
     {
-        if (stateMachine.GetCurrentState() == stateMachine.guardState)
+        if (Vector3.Distance(skeleton.transform.position, hitPosition) <= 13f)
         {
-            if (Vector3.Distance(skeleton.transform.position, hitPosition) <= 13f)
-            {
-                stateMachine.SwitchState(stateMachine.searchState);
-            }
+            stateMachine.SwitchState(stateMachine.searchState);
         }
-    }
-
-    public override void ExitState()
-    {
-        isAtGuardPoint = false;
     }
 }

@@ -26,7 +26,10 @@ public class SkeletonSearchState : SkeletonBaseState
         {
             if (searchPlayerTimer >= searchPlayerTimerMax)
             {
-                stateMachine.SwitchState(stateMachine.guardState);
+                // TODO: Make proper API to switch states instead of changing it anywhere besides StateMachine itself.
+                if (skeleton.IsMeleeSkeleton)
+                    stateMachine.SwitchState(stateMachine.patrolState);
+                else stateMachine.SwitchState(stateMachine.guardState);
             }
 
             searchPlayerTimer += Time.deltaTime;
