@@ -23,6 +23,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     // protected abstract void TakeDamage(EnemyBase enemy, float damage);
     public abstract bool IsMoving();
+    public abstract void DamageToPlayer();
 
     protected virtual void TakeDamage(EnemyBase enemy, float damage)
     {

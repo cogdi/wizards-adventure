@@ -237,4 +237,9 @@ public class Witch : EnemyBase
             isInsideCollider = false;
         }
     }
+
+    public override void DamageToPlayer()
+    {
+        throw new NotImplementedException();
+    }
 }

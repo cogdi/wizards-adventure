@@ -228,11 +228,19 @@ public class PlayerMotor : MonoBehaviour
 
             //DebugDrawSphere(transform.position, 1f, Color.green);
 
-            foreach (Collider collider in colliders)
+            // foreach (Collider collider in colliders)
+            // {
+            //     if (collider.CompareTag("Floor")) 
+            //         return;
+            //     //Debug.Log("Player is on top of the Skeleton.");
+            //     isStandingOnTopOfEnemy = true;
+            // }
+
+            for (int i = 0; i < colliders.Length; i++)
             {
-                if (collider.CompareTag("Floor")) 
+                if (colliders[i].CompareTag("Floor")) 
                     return;
-                Debug.Log("Player is on top of the Skeleton.");
+                // Debug.Log("Player is on top of the Skeleton.");
                 isStandingOnTopOfEnemy = true;
             }
         }

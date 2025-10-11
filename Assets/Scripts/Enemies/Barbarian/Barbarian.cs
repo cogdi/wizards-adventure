@@ -1,15 +1,32 @@
+using System;
 using System.Resources;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Barbarian : EnemyBase
 {
+    public static event Action<float> OnPlayerHit;
+    public event Action OnCloseAttack;
+    public event Action OnEarthquakeTriggered;
+    
+    public event Action OnEarthquakeHitPlayer;
+
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private BarbarianStateMachine stateMachine;
 
-    private float closeDistance = 2f;
-    private float mediumDistance = 10f;
-    private float farDistance = 20f;
+    // Damage.
+    private const float CLOSE_DISTANCE_DAMAGE = 15f;
+
+    // Distances.
+    //private float closeAttackDistance = 3f;
+    private float closeDistance = 5.5f;
+    private float earthquakeDistance = 8f;
+    private float mediumDistance = 12f;
+    //private float farDistance = 12f;
+
+    // Timings.
+    private float closeAttackTimer;
+    private float closeAttackTimerMax = 3f;
 
     public override bool IsMoving()
     {
@@ -68,26 +85,60 @@ public class Barbarian : EnemyBase
 
     private void Update()
     {
-        CheckDistanceToPlayer();
-    }
+        LookTowards(playerTransform.position);
 
-    private void CheckDistanceToPlayer()
-    {
-        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        float distance = GetDistanceToPlayer();
 
         if (distance <= closeDistance)
         {
-            Debug.Log("The player is on close distance");
+            Debug.Log("Close distance");
+            CloseDistanceAttack();
         }
 
         else if (distance <= mediumDistance)
         {
-            Debug.Log("The player is on MeDiUm distance");
+            Debug.Log("Medium distance");
+            MediumDistanceAttack();
         }
 
-        else if (distance <= farDistance)
+        else
         {
             Debug.Log("The player is on FAAAAAAAR distance");
+        }
+    }
+
+    public override void DamageToPlayer()
+    {
+        if (GetDistanceToPlayer() <= 2f)
+        {
+            OnPlayerHit?.Invoke(CLOSE_DISTANCE_DAMAGE);
+        }
+    }
+
+    private void CloseDistanceAttack()
+    {
+        closeAttackTimer += Time.deltaTime;
+
+        agent.SetDestination(playerTransform.position);
+        
+        if (agent.remainingDistance <= agent.stoppingDistance && closeAttackTimer >= closeAttackTimerMax)
+        {
+            OnCloseAttack?.Invoke();
+            closeAttackTimer = 0f;
+        }
+
+    }
+
+    private void MediumDistanceAttack()
+    {
+        OnEarthquakeTriggered?.Invoke();
+    }
+
+    private void Earthquake()
+    {
+        if (GetDistanceToPlayer() <= earthquakeDistance)
+        {
+            OnEarthquakeHitPlayer?.Invoke();
         }
     }
 }
