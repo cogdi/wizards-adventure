@@ -23,6 +23,8 @@ public class CharacterAttributes : MonoBehaviour
     private float staminaRecoveryTimer;
     private float staminaRecoveryTimerMax = 3f;
 
+    private bool isStunned;
+
     private void Awake()
     {
         if (Instance == null)
@@ -45,6 +47,7 @@ public class CharacterAttributes : MonoBehaviour
         HealingObject.OnHealthRestored+= Heal;
 
         Barbarian.OnPlayerHit += TakeDamage;
+        Barbarian.OnEarthquakeHitPlayer += TakeStun;
 
         playerMotorInstance = PlayerMotor.Instance;
     }
@@ -98,6 +101,12 @@ public class CharacterAttributes : MonoBehaviour
         }
     }
 
+    private void TakeStun(float damage)
+    {
+        isStunned = true;
+        TakeDamage(damage);
+    }
+
     private void Heal(float hp)
     {
         if (health + hp < MAX_HEALTH)
@@ -126,29 +135,54 @@ public class CharacterAttributes : MonoBehaviour
         else mana = MAX_MANA;
     }
 
+
+    private float stunTimer;
+    private float stunTimerMax = 5f;
+
     private void HandleStamina()
     {
-        if (PlayerMotor.Instance.IsRunning())
+        if (!isStunned)
         {
-            if (IsCharacterAbleToRun())
+            if (PlayerMotor.Instance.IsRunning())
             {
-                staminaRecoveryTimer = 0f;
+                if (IsCharacterAbleToRun())
+                {
+                    staminaRecoveryTimer = 0f;
 
-                stamina -= 10 * Time.deltaTime;
+                    stamina -= 10 * Time.deltaTime;
+                }
             }
+
+            else if (stamina < MAX_STAMINA)
+            {
+                staminaRecoveryTimer += Time.deltaTime;
+
+                if (staminaRecoveryTimer >= staminaRecoveryTimerMax)
+                {
+                    stamina += 50 * Time.deltaTime; // 20 is okay.
+                }
+            }
+
+            else staminaRecoveryTimer = 0f;
         }
 
-        else if (stamina < MAX_STAMINA)
+        else
         {
-            staminaRecoveryTimer += Time.deltaTime;
+            // The Wizard is stunned.
+            stunTimer += Time.deltaTime;
 
-            if (staminaRecoveryTimer >= staminaRecoveryTimerMax)
+            if (stunTimer <= stunTimerMax)
             {
-                stamina += 50 * Time.deltaTime; // 20 is okay.
+                playerMotorInstance.ApplyStunnedSpeed();
+            }
+
+            else
+            {
+                isStunned = false;
+                playerMotorInstance.ApplyNormalSpeed();
+                stunTimer = 0f;
             }
         }
-
-        else staminaRecoveryTimer = 0f;
     }
 
     private void OnDestroy()

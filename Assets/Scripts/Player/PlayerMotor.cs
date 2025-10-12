@@ -265,4 +265,14 @@ public class PlayerMotor : MonoBehaviour
     {
         return isMoving;
     }
+
+    public void ApplyStunnedSpeed()
+    {
+        currentSpeed = walkingSpeed / 2;
+    }
+
+    public void ApplyNormalSpeed()
+    {
+        currentSpeed = walkingSpeed;
+    }
 }

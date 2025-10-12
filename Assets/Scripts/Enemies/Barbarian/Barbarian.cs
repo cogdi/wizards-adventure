@@ -6,16 +6,18 @@ using UnityEngine.AI;
 public class Barbarian : EnemyBase
 {
     public static event Action<float> OnPlayerHit;
+    public static event Action<float> OnEarthquakeHitPlayer;
+
     public event Action OnCloseAttack;
     public event Action OnEarthquakeTriggered;
     
-    public event Action OnEarthquakeHitPlayer;
 
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private BarbarianStateMachine stateMachine;
 
     // Damage.
     private const float CLOSE_DISTANCE_DAMAGE = 15f;
+    private const float STUN_DAMAGE = 5f;
 
     // Distances.
     //private float closeAttackDistance = 3f;
@@ -134,11 +136,11 @@ public class Barbarian : EnemyBase
         OnEarthquakeTriggered?.Invoke();
     }
 
-    private void Earthquake()
+    public void Earthquake()
     {
         if (GetDistanceToPlayer() <= earthquakeDistance)
         {
-            OnEarthquakeHitPlayer?.Invoke();
+            OnEarthquakeHitPlayer?.Invoke(STUN_DAMAGE);
         }
     }
 }
