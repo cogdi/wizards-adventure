@@ -53,6 +53,8 @@ public class SkeletonSearchState : SkeletonBaseState
 
     public override void ExitState()
     {
+        base.ExitState();
+
         agent.ResetPath();
         searchPlayerTimer = 0f;
     }

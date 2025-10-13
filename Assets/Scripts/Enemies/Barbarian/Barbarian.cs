@@ -15,6 +15,12 @@ public class Barbarian : EnemyBase
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private BarbarianStateMachine stateMachine;
 
+    // Weapons.
+    [SerializeField] private GameObject leftHandWeapon;
+    [SerializeField] private GameObject rightHandWeapon;
+    [SerializeField] private GameObject twoHandedWeapon;
+    [SerializeField] private Transform rockSpawnPoint;
+
     // Damage.
     private const float CLOSE_DISTANCE_DAMAGE = 15f;
     private const float STUN_DAMAGE = 5f;
@@ -29,50 +35,16 @@ public class Barbarian : EnemyBase
     // Timings.
     private float closeAttackTimer;
     private float closeAttackTimerMax = 3f;
+    private float earthquakeTimer;
+    private float earthquakeTimerMax = 4f;
+
+    // Throwing rocks.
+    private bool isRockEquipped;
 
     public override bool IsMoving()
     {
         return agent.velocity.magnitude > 0.1f;
     }
-
-    // protected override void TakeDamage(EnemyBase enemy, float damage)
-    // {
-    //     if (enemy == this)
-    //     {
-    //         health -= damage;
-    //         Debug.Log(health);
-
-    //         if (health <= 0f)
-    //         {
-    //             Destroy(gameObject);
-    //         }
-    //     }
-    // }
-    
-    
-    // public bool CanSeePlayer() // This doesn't need to be here. Remove it as debug is finished.
-    // {
-    // float eyeLevel = 1.15f;
-    // float sightDistance = 15f;
-    // float fieldOfView = 100f;
-    //     if (GetDistanceToPlayer() <= sightDistance)
-    //     {
-    //         Vector3 playerDirection = playerTransform.position - transform.position;
-    //         if (Vector3.Angle(playerDirection, transform.forward) <= fieldOfView)
-    //         {
-    //             if (Physics.Raycast(transform.position + (Vector3.up * eyeLevel), playerDirection, out RaycastHit hitInfo, sightDistance, ignoreRaycastMask))
-    //             {
-    //                 if (playerCombatInstance.IsPlayerLayer(hitInfo.transform.gameObject.layer))
-    //                 {
-    //                     playerLastPosition = playerTransform.position;
-    //                     return true;
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return false;
-    // }
 
     private void Awake()
     {
@@ -83,6 +55,8 @@ public class Barbarian : EnemyBase
     protected override void Start()
     {
         base.Start();
+
+        
     }
 
     private void Update()
@@ -105,7 +79,8 @@ public class Barbarian : EnemyBase
 
         else
         {
-            Debug.Log("The player is on FAAAAAAAR distance");
+            Debug.Log("Far distance");
+            LongDistanceAttack();
         }
     }
 
@@ -133,7 +108,27 @@ public class Barbarian : EnemyBase
 
     private void MediumDistanceAttack()
     {
-        OnEarthquakeTriggered?.Invoke();
+        earthquakeTimer += Time.deltaTime;
+
+        if (earthquakeTimer >= earthquakeTimerMax)
+        {
+            OnEarthquakeTriggered?.Invoke();
+            earthquakeTimer = 0f;
+            
+            agent.SetDestination(playerTransform.position);
+        }
+    }
+
+    private void LongDistanceAttack()
+    {
+        if (!isRockEquipped)
+        {
+            GameObject projectile;
+
+            projectile = Instantiate(Resources.Load($"Prefabs/Barbarian_Rock") as GameObject, rockSpawnPoint.position, transform.rotation);
+            isRockEquipped = true;
+        //projectile.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(UnityEngine.Random.Range(-3f, 3f), Vector3.up) * directionToPlayer * arrowSpeed;   
+        }
     }
 
     public void Earthquake()

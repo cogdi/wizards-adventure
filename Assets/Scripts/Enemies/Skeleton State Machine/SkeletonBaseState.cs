@@ -9,8 +9,13 @@ public abstract class SkeletonBaseState
 
     public abstract void PerformState();
 
-    public virtual void ExitState()
+    public virtual void UnsubscribeFromEvents()
     {
 
+    }
+
+    public virtual void ExitState()
+    {
+        UnsubscribeFromEvents();
     }
 }

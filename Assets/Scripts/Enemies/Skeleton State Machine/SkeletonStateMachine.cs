@@ -54,4 +54,9 @@ public class SkeletonStateMachine : MonoBehaviour
     {
         return currentState;
     }
+
+    public void OnDestroy()
+    {
+        currentState.ExitState();
+    }
 }

@@ -76,4 +76,9 @@ public class SkeletonPatrolState : SkeletonBaseState
             stateMachine.SwitchState(stateMachine.searchState);
         }
     }
+
+    public override void UnsubscribeFromEvents()
+    {
+        SoundManager.Instance.OnAnySoundMade -= PlayerCombat_OnWallHit;
+    }
 }

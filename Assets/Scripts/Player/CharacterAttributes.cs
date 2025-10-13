@@ -23,7 +23,10 @@ public class CharacterAttributes : MonoBehaviour
     private float staminaRecoveryTimer;
     private float staminaRecoveryTimerMax = 3f;
 
+    // Handling stunning.
     private bool isStunned;
+    private float stunTimer;
+    private float stunTimerMax = 8f;
 
     private void Awake()
     {
@@ -134,10 +137,6 @@ public class CharacterAttributes : MonoBehaviour
 
         else mana = MAX_MANA;
     }
-
-
-    private float stunTimer;
-    private float stunTimerMax = 5f;
 
     private void HandleStamina()
     {

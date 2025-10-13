@@ -77,8 +77,15 @@ public class SkeletonGuardState : SkeletonBaseState
         }
     }
 
+    public override void UnsubscribeFromEvents()
+    {
+        SoundManager.Instance.OnAnySoundMade -= PlayerCombat_OnWallHit;
+    }
+
     public override void ExitState()
     {
+        base.ExitState();
+        
         isAtGuardPoint = false;
     }
 }
