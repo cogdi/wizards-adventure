@@ -52,6 +52,8 @@ public class CharacterAttributes : MonoBehaviour
         Barbarian.OnPlayerHit += TakeDamage;
         Barbarian.OnEarthquakeHitPlayer += TakeStun;
 
+        BarbarianRock.OnPlayerHit += TakeDamage;
+
         playerMotorInstance = PlayerMotor.Instance;
     }
 

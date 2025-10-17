@@ -22,6 +22,7 @@ public class Barbarian : EnemyBase
     [SerializeField] private Transform rockSpawnPoint;
 
     // Damage.
+    public const float STONES_DAMAGE = 30f;
     private const float CLOSE_DISTANCE_DAMAGE = 15f;
     private const float STUN_DAMAGE = 5f;
 
@@ -39,7 +40,16 @@ public class Barbarian : EnemyBase
     private float earthquakeTimerMax = 4f;
 
     // Throwing rocks.
-    private bool isRockEquipped;
+    private const string BARBARIAN_ROCK = "Barbarian_Rock";
+    private bool isRockThrowed;
+
+    // Rush.
+    [SerializeField] private LayerMask floorLayer;
+    private bool isRushing;
+    private float regularSpeed = 1.75f;
+    private float rushSpeed = 5f;
+    private float rushTimer;
+    private float rushTimerMax = 7f;
 
     public override bool IsMoving()
     {
@@ -49,7 +59,7 @@ public class Barbarian : EnemyBase
     private void Awake()
     {
         MAX_HEALTH = 300f;
-        
+        agent.speed = regularSpeed;
     }
 
     protected override void Start()
@@ -121,13 +131,15 @@ public class Barbarian : EnemyBase
 
     private void LongDistanceAttack()
     {
-        if (!isRockEquipped)
+        if (!isRockThrowed)
         {
-            GameObject projectile;
+            ShootProjectile();
+            isRockThrowed = true;
+        }
 
-            projectile = Instantiate(Resources.Load($"Prefabs/Barbarian_Rock") as GameObject, rockSpawnPoint.position, transform.rotation);
-            isRockEquipped = true;
-        //projectile.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(UnityEngine.Random.Range(-3f, 3f), Vector3.up) * directionToPlayer * arrowSpeed;   
+        else
+        {
+            Rush();
         }
     }
 
@@ -136,6 +148,98 @@ public class Barbarian : EnemyBase
         if (GetDistanceToPlayer() <= earthquakeDistance)
         {
             OnEarthquakeHitPlayer?.Invoke(STUN_DAMAGE);
+        }
+    }
+
+    public void ShootProjectile()
+    {
+        Vector3 direction = playerBody.position - rockSpawnPoint.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        Vector3 directionToPlayer = (playerBody.position - transform.position).normalized;
+
+        GameObject projectile;
+
+        /* |3f| - Mistake in throwing the stone. 
+        40f - speed of the projectile. */
+        
+        projectile = Instantiate(Resources.Load($"Prefabs/{BARBARIAN_ROCK}") as GameObject, rockSpawnPoint.position, rotation, parent: this.transform);
+        projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * 40f;
+    }
+
+    public void Rush()
+    {
+        rushTimer += Time.deltaTime;
+
+        if (rushTimer >= rushTimerMax)
+        {
+            agent.speed = rushSpeed;
+
+            //Vector3 directionToPlayer = (playerBody.position - transform.position).normalized;
+            LookTowards(playerTransform.position);
+            agent.SetDestination(playerTransform.position);
+            isRushing = true;
+            // //int numHitColliders = Physics.OverlapSphereNonAlloc(attackRangeSphere.position, attackRangeSphereRadius, hitColliders);
+            // int numHitColliders = Physics.OverlapSphereNonAlloc(transform.position, 0.5f, hitColliders);
+            // for (int i = 0; i < numHitColliders; i++)
+            // {
+            //     Collider collider = hitColliders[i];
+            //     if (playerCombatInstance.IsPlayerLayer(collider.gameObject.layer))
+            //     {
+            //         // collider.TryGetComponent<EnemyBase>(out EnemyBase enemy);
+            //         // if (enemy != null)
+            //         // {
+            //         //     OnEnemyHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
+            //         //     OnEnemyDamaged?.Invoke(enemy, meleeDamage);
+            //         // }
+
+            //         Debug.Log("Hit player");
+            //         agent.speed = 0.1f;
+            //     }
+
+            //     else if (!IsFloorLayer())
+            //     {
+            //         // if (collider != null)
+            //         // {
+            //         //     OnWallHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
+            //         // }
+            //         Debug.Log("Hit wall");
+            //         agent.speed = 0.1f;
+            //     }
+            // }
+        }
+    }
+
+    public bool IsFloorLayer(int layer)
+    {
+        return floorLayer == (floorLayer | 1 << layer);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isRushing)
+        {
+            if (playerCombatInstance.IsPlayerLayer(collision.collider.gameObject.layer))
+            {
+                Debug.Log("Hit player");
+                agent.speed = 0.1f;
+
+                isRushing = false;
+                rushTimer = 0f;
+
+            }
+
+            else if (!IsFloorLayer(collision.gameObject.layer))
+            {
+                // if (collider != null)
+                // {
+                //     OnWallHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
+                // }
+                Debug.Log("Hit wall");
+                agent.speed = 0.1f;
+
+                isRushing = false;
+                rushTimer = 0f;
+            }
         }
     }
 }

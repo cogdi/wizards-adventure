@@ -29566,6 +29566,9 @@ MonoBehaviour:
   rightHandWeapon: {fileID: 540112582}
   twoHandedWeapon: {fileID: 0}
   rockSpawnPoint: {fileID: 1236062605}
+  floorLayer:
+    serializedVersion: 2
+    m_Bits: 16384
 --- !u!114 &581694908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39102,7 +39105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 769197911}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Floor(1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84811,7 +84814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1701036984}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
