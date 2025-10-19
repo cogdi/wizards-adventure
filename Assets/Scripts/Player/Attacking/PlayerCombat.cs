@@ -42,7 +42,7 @@ public class PlayerCombat : MonoBehaviour
     // Handling damage
     public Transform PlayerBody { get; private set; }
     [SerializeField] private Transform playerBody;
-    //public int PlayerLayer { get => playerLayer; }
+    public int PlayerLayer { get => playerLayer; }
     private int playerLayer;
 
     private PlayerInput playerInputInstance;

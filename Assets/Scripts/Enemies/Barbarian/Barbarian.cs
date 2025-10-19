@@ -1,5 +1,6 @@
 using System;
 using System.Resources;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,15 +42,19 @@ public class Barbarian : EnemyBase
 
     // Throwing rocks.
     private const string BARBARIAN_ROCK = "Barbarian_Rock";
+    private const float rockThrowingSpeed = 40f;
     private bool isRockThrowed;
 
     // Rush.
     [SerializeField] private LayerMask floorLayer;
+    [SerializeField] private LayerMask wallLayer;
     private bool isRushing;
+    private bool isDestinationSet;
     private float regularSpeed = 1.75f;
     private float rushSpeed = 5f;
-    private float rushTimer;
-    private float rushTimerMax = 7f;
+    private const float rushTimerMax = 4f;
+    private float rushTimer = rushTimerMax;
+    private bool lookingAtPlayerDirection;
 
     public override bool IsMoving()
     {
@@ -71,27 +76,38 @@ public class Barbarian : EnemyBase
 
     private void Update()
     {
-        LookTowards(playerTransform.position);
-
         float distance = GetDistanceToPlayer();
 
-        if (distance <= closeDistance)
+        if (!isRushing)
         {
-            Debug.Log("Close distance");
-            CloseDistanceAttack();
-        }
+            if (distance <= closeDistance)
+            {
+                //Debug.Log("Close distance");
+                CloseDistanceAttack();
+            }
 
-        else if (distance <= mediumDistance)
-        {
-            Debug.Log("Medium distance");
-            MediumDistanceAttack();
+            else if (distance <= mediumDistance)
+            {
+                //Debug.Log("Medium distance");
+                MediumDistanceAttack();
+            }
+
+            else
+            {
+                Debug.Log("Long-dist 1111");
+                //Debug.Log("Far distance");
+                LongDistanceAttack();
+            }
         }
 
         else
         {
-            Debug.Log("Far distance");
+            Debug.Log("Long-dist 2222");
+            //Debug.Log("Far distance");
             LongDistanceAttack();
         }
+
+        Debug.Log(isRushing);
     }
 
     public override void DamageToPlayer()
@@ -139,7 +155,7 @@ public class Barbarian : EnemyBase
 
         else
         {
-            Rush();
+            StartCoroutine(Rush());
         }
     }
 
@@ -157,56 +173,53 @@ public class Barbarian : EnemyBase
         Quaternion rotation = Quaternion.LookRotation(direction);
         Vector3 directionToPlayer = (playerBody.position - transform.position).normalized;
 
-        GameObject projectile;
-
-        /* |3f| - Mistake in throwing the stone. 
-        40f - speed of the projectile. */
-        
-        projectile = Instantiate(Resources.Load($"Prefabs/{BARBARIAN_ROCK}") as GameObject, rockSpawnPoint.position, rotation, parent: this.transform);
-        projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * 40f;
+        GameObject projectile = Instantiate(Resources.Load($"Prefabs/{BARBARIAN_ROCK}") as GameObject, rockSpawnPoint.position, rotation, parent: this.transform);
+        projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * rockThrowingSpeed;
     }
 
-    public void Rush()
+    public IEnumerator Rush()
     {
+        if (!lookingAtPlayerDirection)
+        {
+            LookTowards(playerTransform.position);
+            
+            yield return new WaitForSeconds(5);
+
+            lookingAtPlayerDirection = true;
+        }
+
         rushTimer += Time.deltaTime;
 
         if (rushTimer >= rushTimerMax)
         {
             agent.speed = rushSpeed;
-
-            //Vector3 directionToPlayer = (playerBody.position - transform.position).normalized;
-            LookTowards(playerTransform.position);
-            agent.SetDestination(playerTransform.position);
             isRushing = true;
-            // //int numHitColliders = Physics.OverlapSphereNonAlloc(attackRangeSphere.position, attackRangeSphereRadius, hitColliders);
-            // int numHitColliders = Physics.OverlapSphereNonAlloc(transform.position, 0.5f, hitColliders);
-            // for (int i = 0; i < numHitColliders; i++)
-            // {
-            //     Collider collider = hitColliders[i];
-            //     if (playerCombatInstance.IsPlayerLayer(collider.gameObject.layer))
-            //     {
-            //         // collider.TryGetComponent<EnemyBase>(out EnemyBase enemy);
-            //         // if (enemy != null)
-            //         // {
-            //         //     OnEnemyHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
-            //         //     OnEnemyDamaged?.Invoke(enemy, meleeDamage);
-            //         // }
 
-            //         Debug.Log("Hit player");
-            //         agent.speed = 0.1f;
-            //     }
+            // Точка впереди по направлению агента
+            Vector3 targetPoint = transform.position + transform.forward * 5f;
 
-            //     else if (!IsFloorLayer())
-            //     {
-            //         // if (collider != null)
-            //         // {
-            //         //     OnWallHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
-            //         // }
-            //         Debug.Log("Hit wall");
-            //         agent.speed = 0.1f;
-            //     }
-            // }
+            // Проверим, есть ли под ней NavMesh
+            if (NavMesh.SamplePosition(targetPoint, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            {
+                agent.SetDestination(hit.position);
+            }
+            else
+            {
+                // Если NavMesh закончился — можно, например, остановиться
+                Debug.Log("Navmesh ended");
+
+                StopRushing();
+            }
         }
+    }
+
+    public void StopRushing()
+    {
+        agent.ResetPath();
+        agent.speed = regularSpeed;
+        isRushing = false;
+        lookingAtPlayerDirection = false;
+        rushTimer = 0f;
     }
 
     public bool IsFloorLayer(int layer)
@@ -214,31 +227,31 @@ public class Barbarian : EnemyBase
         return floorLayer == (floorLayer | 1 << layer);
     }
 
+    public bool IsWallLayer(int layer)
+    {
+        return wallLayer == (wallLayer | 1 << layer);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("OnCollisionEnter");
+
         if (isRushing)
         {
             if (playerCombatInstance.IsPlayerLayer(collision.collider.gameObject.layer))
             {
-                Debug.Log("Hit player");
-                agent.speed = 0.1f;
-
-                isRushing = false;
-                rushTimer = 0f;
-
+                Debug.Log("Hit player: " + collision.collider.gameObject.layer + " " + playerCombatInstance.PlayerLayer);
+                
+                StopRushing();
             }
 
-            else if (!IsFloorLayer(collision.gameObject.layer))
+            //else if (!IsFloorLayer(collision.collider.gameObject.layer))
+            else if (IsWallLayer(collision.collider.gameObject.layer))
             {
-                // if (collider != null)
-                // {
-                //     OnWallHit?.Invoke(collider.ClosestPointOnBounds(attackRangeSphere.position));
-                // }
-                Debug.Log("Hit wall");
-                agent.speed = 0.1f;
+                Debug.Log("Hit wall: " + collision.collider.gameObject.layer + " " + collision.collider.gameObject.name);
 
-                isRushing = false;
-                rushTimer = 0f;
+                StopRushing();
+
             }
         }
     }
