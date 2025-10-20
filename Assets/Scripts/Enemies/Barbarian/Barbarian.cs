@@ -14,7 +14,6 @@ public class Barbarian : EnemyBase
     
 
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private BarbarianStateMachine stateMachine;
 
     // Weapons.
     [SerializeField] private GameObject leftHandWeapon;
@@ -28,11 +27,9 @@ public class Barbarian : EnemyBase
     private const float STUN_DAMAGE = 5f;
 
     // Distances.
-    //private float closeAttackDistance = 3f;
     private float closeDistance = 5.5f;
     private float earthquakeDistance = 8f;
     private float mediumDistance = 12f;
-    //private float farDistance = 12f;
 
     // Timings.
     private float closeAttackTimer;
@@ -70,8 +67,6 @@ public class Barbarian : EnemyBase
     protected override void Start()
     {
         base.Start();
-
-        
     }
 
     private void Update()
@@ -82,20 +77,17 @@ public class Barbarian : EnemyBase
         {
             if (distance <= closeDistance)
             {
-                //Debug.Log("Close distance");
                 CloseDistanceAttack();
             }
 
             else if (distance <= mediumDistance)
             {
-                //Debug.Log("Medium distance");
                 MediumDistanceAttack();
             }
 
             else
             {
                 Debug.Log("Long-dist 1111");
-                //Debug.Log("Far distance");
                 LongDistanceAttack();
             }
         }
@@ -103,7 +95,6 @@ public class Barbarian : EnemyBase
         else
         {
             Debug.Log("Long-dist 2222");
-            //Debug.Log("Far distance");
             LongDistanceAttack();
         }
 
@@ -183,7 +174,7 @@ public class Barbarian : EnemyBase
         {
             LookTowards(playerTransform.position);
             
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(2);
 
             lookingAtPlayerDirection = true;
         }
@@ -245,8 +236,8 @@ public class Barbarian : EnemyBase
                 StopRushing();
             }
 
-            //else if (!IsFloorLayer(collision.collider.gameObject.layer))
-            else if (IsWallLayer(collision.collider.gameObject.layer))
+            else if (!IsFloorLayer(collision.collider.gameObject.layer))
+            // else if (IsWallLayer(collision.collider.gameObject.layer))
             {
                 Debug.Log("Hit wall: " + collision.collider.gameObject.layer + " " + collision.collider.gameObject.name);
 
