@@ -15,6 +15,11 @@ public class BarbarianAnimations : MonoBehaviour
 
         barbarian.OnCloseAttack += Barbarian_OnCloseAttack;
         barbarian.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
+
+        
+        BarbarianCloseDistanceState.OnCloseAttack += Barbarian_OnCloseAttack;
+        BarbarianMediumDistanceState.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
+
     }
 
     private void Barbarian_OnCloseAttack()

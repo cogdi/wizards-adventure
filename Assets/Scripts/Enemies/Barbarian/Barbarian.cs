@@ -14,6 +14,7 @@ public class Barbarian : EnemyBase
     
 
     [SerializeField] private NavMeshAgent agent;
+    public NavMeshAgent Agent { get => agent; }
 
     // Weapons.
     [SerializeField] private GameObject leftHandWeapon;
@@ -27,9 +28,9 @@ public class Barbarian : EnemyBase
     private const float STUN_DAMAGE = 5f;
 
     // Distances.
-    private float closeDistance = 5.5f;
-    private float earthquakeDistance = 8f;
-    private float mediumDistance = 12f;
+    public const float CLOSE_DISTANCE = 5.5f;
+    public const float MEDIUM_DISTANCE = 12f;
+    public const float earthquakeDistance = 8f;
 
     // Timings.
     private float closeAttackTimer;
@@ -75,12 +76,12 @@ public class Barbarian : EnemyBase
 
         if (!isRushing)
         {
-            if (distance <= closeDistance)
+            if (distance <= CLOSE_DISTANCE)
             {
                 CloseDistanceAttack();
             }
 
-            else if (distance <= mediumDistance)
+            else if (distance <= MEDIUM_DISTANCE)
             {
                 MediumDistanceAttack();
             }
