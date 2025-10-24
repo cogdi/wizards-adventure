@@ -14,7 +14,10 @@ public class Barbarian : EnemyBase
     
 
     [SerializeField] private NavMeshAgent agent;
-    public NavMeshAgent Agent { get => agent; }
+    public NavMeshAgent Agent { get => agent; set 
+    {
+        agent = value; // Debug.
+    }}
 
     // Weapons.
     [SerializeField] private GameObject leftHandWeapon;
@@ -54,6 +57,9 @@ public class Barbarian : EnemyBase
     private float rushTimer = rushTimerMax;
     private bool lookingAtPlayerDirection;
 
+    // State Machine.
+    [SerializeField] private BarbarianStateMachine stateMachine;
+
     public override bool IsMoving()
     {
         return agent.velocity.magnitude > 0.1f;
@@ -68,43 +74,46 @@ public class Barbarian : EnemyBase
     protected override void Start()
     {
         base.Start();
+
+        stateMachine.Initialise();
+        BarbarianLongDistanceState.OnRockThrowned += ShootProjectile;
     }
 
-    private void Update()
+    // private void Update()
+    // {
+    //     float distance = GetDistanceToPlayer();
+
+    //     if (!isRushing)
+    //     {
+    //         if (distance <= CLOSE_DISTANCE)
+    //         {
+    //             CloseDistanceAttack();
+    //         }
+
+    //         else if (distance <= MEDIUM_DISTANCE)
+    //         {
+    //             MediumDistanceAttack();
+    //         }
+
+    //         else
+    //         {
+    //             Debug.Log("Long-dist 1111");
+    //             LongDistanceAttack();
+    //         }
+    //     }
+
+    //     else
+    //     {
+    //         Debug.Log("Long-dist 2222");
+    //         LongDistanceAttack();
+    //     }
+
+    //     Debug.Log(isRushing);
+    // }
+
+    public void MeleeDamageToPlayer()
     {
-        float distance = GetDistanceToPlayer();
-
-        if (!isRushing)
-        {
-            if (distance <= CLOSE_DISTANCE)
-            {
-                CloseDistanceAttack();
-            }
-
-            else if (distance <= MEDIUM_DISTANCE)
-            {
-                MediumDistanceAttack();
-            }
-
-            else
-            {
-                Debug.Log("Long-dist 1111");
-                LongDistanceAttack();
-            }
-        }
-
-        else
-        {
-            Debug.Log("Long-dist 2222");
-            LongDistanceAttack();
-        }
-
-        Debug.Log(isRushing);
-    }
-
-    public override void DamageToPlayer()
-    {
-        if (GetDistanceToPlayer() <= 2f)
+        if (GetDistanceToPlayer() <= 2.25f)
         {
             OnPlayerHit?.Invoke(CLOSE_DISTANCE_DAMAGE);
         }
@@ -153,6 +162,8 @@ public class Barbarian : EnemyBase
 
     public void Earthquake()
     {
+        // Called by an animation event.
+
         if (GetDistanceToPlayer() <= earthquakeDistance)
         {
             OnEarthquakeHitPlayer?.Invoke(STUN_DAMAGE);
@@ -224,27 +235,27 @@ public class Barbarian : EnemyBase
         return wallLayer == (wallLayer | 1 << layer);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("OnCollisionEnter");
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     Debug.Log("OnCollisionEnter");
 
-        if (isRushing)
-        {
-            if (playerCombatInstance.IsPlayerLayer(collision.collider.gameObject.layer))
-            {
-                Debug.Log("Hit player: " + collision.collider.gameObject.layer + " " + playerCombatInstance.PlayerLayer);
+    //     if (isRushing)
+    //     {
+    //         if (playerCombatInstance.IsPlayerLayer(collision.collider.gameObject.layer))
+    //         {
+    //             Debug.Log("Hit player: " + collision.collider.gameObject.layer + " " + playerCombatInstance.PlayerLayer);
                 
-                StopRushing();
-            }
+    //             StopRushing();
+    //         }
 
-            else if (!IsFloorLayer(collision.collider.gameObject.layer))
-            // else if (IsWallLayer(collision.collider.gameObject.layer))
-            {
-                Debug.Log("Hit wall: " + collision.collider.gameObject.layer + " " + collision.collider.gameObject.name);
+    //         else if (!IsFloorLayer(collision.collider.gameObject.layer))
+    //         // else if (IsWallLayer(collision.collider.gameObject.layer))
+    //         {
+    //             Debug.Log("Hit wall: " + collision.collider.gameObject.layer + " " + collision.collider.gameObject.name);
 
-                StopRushing();
+    //             StopRushing();
 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 }

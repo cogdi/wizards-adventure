@@ -119,7 +119,7 @@ public class Skeleton : EnemyBase
     }
 
     // Called by the animation event on SkeletonMinion.
-    public override void DamageToPlayer()
+    public void DamageToPlayer()
     {
         if (GetDistanceToPlayer() <= 2f)
         {

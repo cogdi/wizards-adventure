@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BarbarianMediumDistanceState : BarbarianBaseState
 {
+    public static event Action OnStateChanged;
     public static event Action OnEarthquakeTriggered;
 
     private float earthquakeTimer;
@@ -12,11 +13,18 @@ public class BarbarianMediumDistanceState : BarbarianBaseState
 
     public override void EnterState()
     {
-        earthquakeTimer = earthquakeTimerMax;
+        // earthquakeTimer = earthquakeTimerMax;
     }
     
     public override void PerformState()
     {
+        if (stateMachine.Barbarian.GetDistanceToPlayer() <= Barbarian.CLOSE_DISTANCE ||
+        stateMachine.Barbarian.GetDistanceToPlayer() > Barbarian.MEDIUM_DISTANCE)
+        {
+            // The distance got out of the boundaries of medium-distance attacks.
+            OnStateChanged?.Invoke();
+        }
+
         earthquakeTimer += Time.deltaTime;
 
         if (earthquakeTimer >= earthquakeTimerMax)

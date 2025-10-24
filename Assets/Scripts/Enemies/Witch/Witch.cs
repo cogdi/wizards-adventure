@@ -238,7 +238,7 @@ public class Witch : EnemyBase
         }
     }
 
-    public override void DamageToPlayer()
+    public void DamagePlayer()
     {
         throw new NotImplementedException();
     }

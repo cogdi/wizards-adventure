@@ -23,7 +23,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     // protected abstract void TakeDamage(EnemyBase enemy, float damage);
     public abstract bool IsMoving();
-    public abstract void DamageToPlayer();
+    //public abstract void DamageToPlayer();
 
     protected virtual void TakeDamage(EnemyBase enemy, float damage)
     {
@@ -61,7 +61,7 @@ public abstract class EnemyBase : MonoBehaviour
         MagicCharge.OnEnemyDamaged -= TakeDamage;
     }
 
-    protected void LookTowards(Vector3 point)
+    public void LookTowards(Vector3 point)
     {
         Vector3 lookDirection = GetNormalizedDirectionTo(point);
         lookDirection.y = 0f;
