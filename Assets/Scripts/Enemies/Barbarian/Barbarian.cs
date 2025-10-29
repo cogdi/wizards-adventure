@@ -8,6 +8,11 @@ public class Barbarian : EnemyBase
 {
     public static event Action<float> OnPlayerHit;
     public static event Action<float> OnEarthquakeHitPlayer;
+    
+    public event Action OnPlayerHitInRush;
+    public event Action OnWallHitInRush;
+
+
 
     public event Action OnCloseAttack;
     public event Action OnEarthquakeTriggered;
@@ -119,46 +124,46 @@ public class Barbarian : EnemyBase
         }
     }
 
-    private void CloseDistanceAttack()
-    {
-        closeAttackTimer += Time.deltaTime;
+    // private void CloseDistanceAttack()
+    // {
+    //     closeAttackTimer += Time.deltaTime;
 
-        agent.SetDestination(playerTransform.position);
+    //     agent.SetDestination(playerTransform.position);
         
-        if (agent.remainingDistance <= agent.stoppingDistance && closeAttackTimer >= closeAttackTimerMax)
-        {
-            OnCloseAttack?.Invoke();
-            closeAttackTimer = 0f;
-        }
+    //     if (agent.remainingDistance <= agent.stoppingDistance && closeAttackTimer >= closeAttackTimerMax)
+    //     {
+    //         OnCloseAttack?.Invoke();
+    //         closeAttackTimer = 0f;
+    //     }
 
-    }
+    // }
 
-    private void MediumDistanceAttack()
-    {
-        earthquakeTimer += Time.deltaTime;
+    // private void MediumDistanceAttack()
+    // {
+    //     earthquakeTimer += Time.deltaTime;
 
-        if (earthquakeTimer >= earthquakeTimerMax)
-        {
-            OnEarthquakeTriggered?.Invoke();
-            earthquakeTimer = 0f;
+    //     if (earthquakeTimer >= earthquakeTimerMax)
+    //     {
+    //         OnEarthquakeTriggered?.Invoke();
+    //         earthquakeTimer = 0f;
             
-            agent.SetDestination(playerTransform.position);
-        }
-    }
+    //         agent.SetDestination(playerTransform.position);
+    //     }
+    // }
 
-    private void LongDistanceAttack()
-    {
-        if (!isRockThrowed)
-        {
-            ShootProjectile();
-            isRockThrowed = true;
-        }
+    // private void LongDistanceAttack()
+    // {
+    //     if (!isRockThrowed)
+    //     {
+    //         ShootProjectile();
+    //         isRockThrowed = true;
+    //     }
 
-        else
-        {
-            StartCoroutine(Rush());
-        }
-    }
+    //     else
+    //     {
+    //         StartCoroutine(Rush());
+    //     }
+    // }
 
     public void Earthquake()
     {
@@ -180,50 +185,46 @@ public class Barbarian : EnemyBase
         projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * rockThrowingSpeed;
     }
 
-    public IEnumerator Rush()
-    {
-        if (!lookingAtPlayerDirection)
-        {
-            LookTowards(playerTransform.position);
+    // public IEnumerator Rush()
+    // {
+    //     if (!lookingAtPlayerDirection)
+    //     {
+    //         LookTowards(playerTransform.position);
             
-            yield return new WaitForSeconds(2);
+    //         yield return new WaitForSeconds(2);
 
-            lookingAtPlayerDirection = true;
-        }
+    //         lookingAtPlayerDirection = true;
+    //     }
 
-        rushTimer += Time.deltaTime;
+    //     rushTimer += Time.deltaTime;
 
-        if (rushTimer >= rushTimerMax)
-        {
-            agent.speed = rushSpeed;
-            isRushing = true;
+    //     if (rushTimer >= rushTimerMax)
+    //     {
+    //         agent.speed = rushSpeed;
+    //         isRushing = true;
 
-            // Точка впереди по направлению агента
-            Vector3 targetPoint = transform.position + transform.forward * 5f;
+    //         Vector3 targetPoint = transform.position + transform.forward * 5f;
+    //         if (NavMesh.SamplePosition(targetPoint, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+    //         {
+    //             agent.SetDestination(hit.position);
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("Navmesh ended");
 
-            // Проверим, есть ли под ней NavMesh
-            if (NavMesh.SamplePosition(targetPoint, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-            {
-                agent.SetDestination(hit.position);
-            }
-            else
-            {
-                // Если NavMesh закончился — можно, например, остановиться
-                Debug.Log("Navmesh ended");
+    //             StopRushing();
+    //         }
+    //     }
+    // }
 
-                StopRushing();
-            }
-        }
-    }
-
-    public void StopRushing()
-    {
-        agent.ResetPath();
-        agent.speed = regularSpeed;
-        isRushing = false;
-        lookingAtPlayerDirection = false;
-        rushTimer = 0f;
-    }
+    // public void StopRushing()
+    // {
+    //     agent.ResetPath();
+    //     agent.speed = regularSpeed;
+    //     isRushing = false;
+    //     lookingAtPlayerDirection = false;
+    //     rushTimer = 0f;
+    // }
 
     public bool IsFloorLayer(int layer)
     {
@@ -235,27 +236,19 @@ public class Barbarian : EnemyBase
         return wallLayer == (wallLayer | 1 << layer);
     }
 
-    // private void OnCollisionEnter(Collision collision)
-    // {
-    //     Debug.Log("OnCollisionEnter");
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (BarbarianLongDistanceState.IsRushing)
+        {
+            if (playerCombatInstance.IsPlayerLayer(collision.collider.gameObject.layer))
+            {
+                OnPlayerHitInRush?.Invoke();
+            }
 
-    //     if (isRushing)
-    //     {
-    //         if (playerCombatInstance.IsPlayerLayer(collision.collider.gameObject.layer))
-    //         {
-    //             Debug.Log("Hit player: " + collision.collider.gameObject.layer + " " + playerCombatInstance.PlayerLayer);
-                
-    //             StopRushing();
-    //         }
-
-    //         else if (!IsFloorLayer(collision.collider.gameObject.layer))
-    //         // else if (IsWallLayer(collision.collider.gameObject.layer))
-    //         {
-    //             Debug.Log("Hit wall: " + collision.collider.gameObject.layer + " " + collision.collider.gameObject.name);
-
-    //             StopRushing();
-
-    //         }
-    //     }
-    // }
+            else if (!IsFloorLayer(collision.collider.gameObject.layer))
+            {
+                OnWallHitInRush?.Invoke();
+            }
+        }
+    }
 }

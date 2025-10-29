@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,10 +18,11 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     // Rush.
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask wallLayer;
-    private bool isRushing;
+    public static bool IsRushing { get; private set; }
+
     private bool isDestinationSet;
     private float regularSpeed = 1.75f;
-    private float rushSpeed = 5f;
+    private float rushSpeed = 7f;
     private float rushTimer;
     private const float rushTimerMax = 4f;
     private bool lookingAtPlayerDirection;
@@ -37,11 +39,17 @@ public class BarbarianLongDistanceState : BarbarianBaseState
         barbarian = stateMachine.Barbarian;
         agent = stateMachine.Agent;
         playerTransform = PlayerCombat.Instance.transform;
+
+        agent.areaMask = 1 << NavMesh.GetAreaFromName("Walkable");
+
+        stateMachine.Barbarian.OnPlayerHitInRush += OnPlayerHitInRush;
+        stateMachine.Barbarian.OnWallHitInRush += OnWallHitInRush;
     }
     
     public override void PerformState()
     {
-        if (barbarian.GetDistanceToPlayer() <= Barbarian.MEDIUM_DISTANCE)
+        if (barbarian.GetDistanceToPlayer() <= Barbarian.MEDIUM_DISTANCE &&
+        IsRushing == false)
         {
             // The distance got out of the boundaries of long-distance attacks.
             OnStateChanged?.Invoke();
@@ -49,7 +57,6 @@ public class BarbarianLongDistanceState : BarbarianBaseState
 
         if (!isRockThrowed)
         {
-            //ShootProjectile();
             OnRockThrowned?.Invoke();
 
             isRockThrowed = true;
@@ -57,93 +64,38 @@ public class BarbarianLongDistanceState : BarbarianBaseState
 
         else
         {
-            // Find an alternative way to start a coroutine, that doesn't need MonoBehaviour in this class.
-            //StartCoroutine(Rush());
             Rush();
         }
     }
-    
-    // public void Rush() // IEnumerator
-    // {
-    //     if (!lookingAtPlayerDirection)
-    //     {
-    //         stateMachine.Barbarian.LookTowards(PlayerCombat.Instance.transform.position);
-            
-    //         //yield return new WaitForSeconds(2);
 
-    //         lookingAtPlayerDirection = true;
-    //     }
-
-    //     rushTimer += Time.deltaTime;
-
-    //     if (rushTimer >= rushTimerMax)
-    //     {
-    //         stateMachine.Agent.speed = rushSpeed;
-    //         isRushing = true;
-
-    //         // Точка впереди по направлению агента
-    //         Vector3 targetPoint = stateMachine.Barbarian.transform.position + stateMachine.Barbarian.transform.forward * 5f;
-
-    //         // Проверим, есть ли под ней NavMesh
-    //         if (NavMesh.SamplePosition(targetPoint, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-    //         {
-    //             stateMachine.Agent.SetDestination(hit.position);
-    //         }
-    //         else
-    //         {
-    //             // Если NavMesh закончился — можно, например, остановиться
-    //             Debug.Log("Navmesh ended");
-
-    //             StopRushing();
-    //         }
-    //     }
-    // }
-
-    // public void StopRushing()
-    // {
-    //     stateMachine.Agent.ResetPath();
-    //     stateMachine.Agent.speed = regularSpeed;
-    //     isRushing = false;
-    //     lookingAtPlayerDirection = false;
-    //     rushTimer = 0f;
-    // }
-
-    public void Rush() // IEnumerator
+    private void Rush()
     {
-        if (!lookingAtPlayerDirection)
-        {
+        // agent.updateRotation = false;
+        if (!IsRushing)
             barbarian.LookTowards(playerTransform.position);
-            
-            // Vector3 direction = playerTransform.position - barbarian.transform.position; // направление к цели
-            // direction.y = 0; // игнорируем высоту, чтобы смотреть только по горизонту
-            // barbarian.transform.rotation = Quaternion.LookRotation(direction);
 
-            //yield return new WaitForSeconds(2);
-
-            lookingAtPlayerDirection = true;
-        }
 
         rushTimer += Time.deltaTime;
-        // Debug.Log(rushTimer);
+        
         if (rushTimer >= rushTimerMax)
         {
-            // Debug.Log(rushTimer);
+            if (!lookingAtPlayerDirection)
+            {
+                agent.updateRotation = false;
+                barbarian.LookTowards(playerTransform.position);
+
+                lookingAtPlayerDirection = true;
+            }
 
             agent.speed = rushSpeed;
-            isRushing = true;
+            IsRushing = true;
 
-            // Точка впереди по направлению агента
-            Vector3 targetPoint = barbarian.transform.position + barbarian.transform.forward * 5f;
-
-            // Проверим, есть ли под ней NavMesh
-            if (NavMesh.SamplePosition(targetPoint, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(barbarian.transform.position + barbarian.transform.forward * 5f, out NavMeshHit hit, 2.0f, NavMesh.AllAreas))
             {
-                // Debug.Log(hit.position);
                 agent.SetDestination(hit.position);
             }
             else
             {
-                // Если NavMesh закончился — можно, например, остановиться
                 Debug.Log("Navmesh ended");
 
                 StopRushing();
@@ -154,36 +106,28 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     public void StopRushing()
     {
         agent.ResetPath();
+        agent.updateRotation = true;
+        
         agent.speed = regularSpeed;
-        isRushing = false;
+        IsRushing = false;
         lookingAtPlayerDirection = false;
         rushTimer = 0f;
+    }
+
+    private void OnPlayerHitInRush()
+    {
+        Debug.Log("Hit player: ");
+        StopRushing();
+    }
+
+    private void OnWallHitInRush()
+    {
+        Debug.Log("Hit wall: ");
+        StopRushing();
     }
 
     public override void ExitState()
     {
         StopRushing();
     }
-
-
-
-    // // TODO: Make access to this methods using EnemyBase class later.
-    // /* Also cache some fields/properties of the states. */
-    // private float angularSpeed = 120f;
-    // protected void LookTowards(Vector3 point)
-    // {
-    //     Vector3 lookDirection = GetNormalizedDirectionTo(point);
-    //     lookDirection.y = 0f;
-
-    //     if (lookDirection != Vector3.zero)
-    //     {
-    //         Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-    //         stateMachine.Barbarian.transform.rotation = Quaternion.Slerp(stateMachine.Barbarian.transform.rotation, targetRotation, angularSpeed * Time.deltaTime);
-    //     }
-    // }
-
-    // protected Vector3 GetNormalizedDirectionTo(Vector3 point)
-    // {
-    //     return (point - stateMachine.Barbarian.transform.position).normalized;
-    // }
 }
