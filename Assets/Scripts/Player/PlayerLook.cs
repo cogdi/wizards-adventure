@@ -21,8 +21,7 @@ public class PlayerLook : MonoBehaviour
             Instance = this;
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void Start()
@@ -63,6 +62,8 @@ public class PlayerLook : MonoBehaviour
 
     private void ActivateThirdPersonCamera()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+
         cam.gameObject.SetActive(false);
         thirdPersonCamera.gameObject.SetActive(true);
     }

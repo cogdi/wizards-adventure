@@ -11,9 +11,7 @@ public class BarbarianObjectPool<T> where T : Component
         this.prefab = prefab;
         for (int i = 0; i < initialSize; i++)
         {
-            T newObj = GameObject.Instantiate(prefab);
-            newObj.gameObject.SetActive(false);
-            objects.Enqueue(newObj);
+            AddObject();
         }
     }
 

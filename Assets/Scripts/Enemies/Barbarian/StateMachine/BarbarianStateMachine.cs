@@ -70,19 +70,22 @@ public class BarbarianStateMachine : MonoBehaviour
 
     private void OnStateChanged()
     {
-        if (Barbarian.GetDistanceToPlayer() <= Barbarian.CLOSE_DISTANCE)
+        if (!BarbarianLongDistanceState.IsRushing)
         {
-            SwitchState(BarbarianCloseDistanceState);
-        }
+            if (Barbarian.GetDistanceToPlayer() <= Barbarian.CLOSE_DISTANCE)
+            {
+                SwitchState(BarbarianCloseDistanceState);
+            }
 
-        else if (Barbarian.GetDistanceToPlayer() <= Barbarian.MEDIUM_DISTANCE)
-        {
-            SwitchState(BarbarianMediumDistanceState);
-        }
+            else if (Barbarian.GetDistanceToPlayer() <= Barbarian.MEDIUM_DISTANCE)
+            {
+                SwitchState(BarbarianMediumDistanceState);
+            }
 
-        else
-        {
-            SwitchState(BarbarianLongDistanceState);
+            else
+            {
+                SwitchState(BarbarianLongDistanceState);
+            }
         }
     }
 
