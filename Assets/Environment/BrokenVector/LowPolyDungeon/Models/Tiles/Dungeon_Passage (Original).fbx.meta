@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 49fcc1a1bf581d4489a835b31d909c9c
+guid: 3118dd6a1b8048868b875b7892070fcf
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
@@ -11,10 +11,7 @@ ModelImporter:
     second: //RootNode
   - first:
       21: 2100000
-    second: Wall Stone
-  - first:
-      21: 2100002
-    second: Floor
+    second: Wall Stone.001
   - first:
       23: 2300000
     second: //RootNode
@@ -23,7 +20,10 @@ ModelImporter:
     second: //RootNode
   - first:
       43: 4300000
-    second: Stairs_Low
+    second: Dungeon Passage
+  - first:
+      43: 4300002
+    second: Dungeon_Passage
   - first:
       64: 6400000
     second: //RootNode

@@ -6,9 +6,19 @@ public class CharacterAttributes : MonoBehaviour
     public static CharacterAttributes Instance { get; private set; }
     public PlayerMotor playerMotorInstance;
 
+    // Events to handle in the sounds' class. They send the position where the sound happened.
     public event Action<Vector3> OnTakenFullHit;
     public event Action<Vector3> OnTakenBlockedHit;
+    
+    // Events to handle in UI.
+    public event Action OnHealthChanged;
+    public event Action OnManaChanged;
+    
+    /* When stamina starts to reduce or restore this event fires True.
+     * When it stops - False. */
+    public event Action<bool> OnStaminaStateChanged;  
 
+    
     public const float MAX_HEALTH = 100F;
     public const float MAX_MANA = 100F;
     public const float MAX_STAMINA = 100F;    
@@ -16,7 +26,7 @@ public class CharacterAttributes : MonoBehaviour
     public float Health { get => health; }
     public float Mana { get => mana; }
     public float Stamina { get => stamina; }
-
+    
     private float health;
     private float mana;
     private float stamina;
@@ -104,6 +114,8 @@ public class CharacterAttributes : MonoBehaviour
             health = 0;
             // character dies.
         }
+
+        // OnHealthChanged?.Invoke();
     }
 
     private void TakeStun(float damage)
@@ -120,6 +132,8 @@ public class CharacterAttributes : MonoBehaviour
         }
 
         else health = MAX_HEALTH;
+
+        // OnHealthChanged?.Invoke();
     }
 
     private void SpendMana(float amount)
@@ -128,6 +142,8 @@ public class CharacterAttributes : MonoBehaviour
         {
             mana -= amount;
         }
+        
+        // OnManaChanged?.Invoke();
     }
 
     private void RestoreMana(float manaAmount)
@@ -138,6 +154,8 @@ public class CharacterAttributes : MonoBehaviour
         }
 
         else mana = MAX_MANA;
+        
+        // OnManaChanged?.Invoke();
     }
 
     private void HandleStamina()
@@ -148,6 +166,8 @@ public class CharacterAttributes : MonoBehaviour
             {
                 if (IsCharacterAbleToRun())
                 {
+                    // OnStaminaStateChanged?.Invoke(true);
+                    
                     staminaRecoveryTimer = 0f;
 
                     stamina -= 10 * Time.deltaTime;
@@ -164,9 +184,14 @@ public class CharacterAttributes : MonoBehaviour
                 }
             }
 
-            else staminaRecoveryTimer = 0f;
+            else
+            {
+                // OnStaminaStateChanged?.Invoke(false);
+                staminaRecoveryTimer = 0f;
+            }
         }
 
+        // TODO: Send the next block to a separate method.
         else
         {
             // The Wizard is stunned.

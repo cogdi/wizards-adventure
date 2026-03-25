@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4c4fe4f8da5fdef4eb5aa36563046edc
+guid: 7b2f632fea1379f43a3c9f1ab642463c
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
@@ -11,13 +11,10 @@ ModelImporter:
     second: //RootNode
   - first:
       21: 2100000
-    second: Walls Muddy
+    second: Wood
   - first:
       21: 2100002
-    second: Wall Stone
-  - first:
-      21: 2100004
-    second: Floor
+    second: Wall Stone.001
   - first:
       23: 2300000
     second: //RootNode
@@ -26,10 +23,7 @@ ModelImporter:
     second: //RootNode
   - first:
       43: 4300000
-    second: ' Basement Wall Var3'
-  - first:
-      43: 4300002
-    second: Basement Wall Var3
+    second: Dungeon_Passage_Wood
   - first:
       64: 6400000
     second: //RootNode

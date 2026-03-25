@@ -1,38 +1,8 @@
 fileFormatVersion: 2
-guid: 5bfb915843a9ff74d9bea72ce38a0a89
+guid: 522c5e3ce7c6825febb90919dd1d31cd
 ModelImporter:
   serializedVersion: 21202
-  internalIDToNameTable:
-  - first:
-      1: 100000
-    second: //RootNode
-  - first:
-      4: 400000
-    second: //RootNode
-  - first:
-      21: 2100000
-    second: Wall Stone
-  - first:
-      21: 2100002
-    second: Wood
-  - first:
-      21: 2100004
-    second: Walls Muddy
-  - first:
-      23: 2300000
-    second: //RootNode
-  - first:
-      33: 3300000
-    second: //RootNode
-  - first:
-      43: 4300000
-    second: ' Basement Wall Var2'
-  - first:
-      43: 4300002
-    second: Basement Wall Var2
-  - first:
-      64: 6400000
-    second: //RootNode
+  internalIDToNameTable: []
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -90,7 +60,7 @@ ModelImporter:
     importCameras: 0
     importLights: 0
     nodeNameCollisionStrategy: 0
-    fileIdsGeneration: 1
+    fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1

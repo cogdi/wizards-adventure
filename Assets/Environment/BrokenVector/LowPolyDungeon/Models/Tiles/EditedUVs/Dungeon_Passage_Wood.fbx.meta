@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: 357387220f229a64f8e35720e9d0d121
+guid: 410dccb5046b05b47adeaff09f5d9369
 ModelImporter:
-  serializedVersion: 21202
+  serializedVersion: 21300
   internalIDToNameTable:
   - first:
       1: 100000
@@ -11,6 +11,9 @@ ModelImporter:
     second: //RootNode
   - first:
       21: 2100000
+    second: Wood
+  - first:
+      21: 2100002
     second: Wall Stone.001
   - first:
       23: 2300000
@@ -20,10 +23,7 @@ ModelImporter:
     second: //RootNode
   - first:
       43: 4300000
-    second: Dungeon Passage
-  - first:
-      43: 4300002
-    second: Dungeon_Passage
+    second: Dungeon_Passage_Wood
   - first:
       64: 6400000
     second: //RootNode
@@ -99,13 +99,14 @@ ModelImporter:
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
-    secondaryUVAreaDistortion: 15.000001
+    secondaryUVAreaDistortion: 15
     secondaryUVHardAngle: 88
-    secondaryUVMarginMethod: 0
-    secondaryUVMinLightmapResolution: 40
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 10
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -138,6 +139,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
