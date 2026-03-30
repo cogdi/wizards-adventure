@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-public class DoorAnimations : MonoBehaviour
+public class InteractiveDoorAnimations : MonoBehaviour
 {
+    // [SerializeField] private RegularDoor door;
     [SerializeField] private RegularDoor door;
     [SerializeField] private Animator animator;
 

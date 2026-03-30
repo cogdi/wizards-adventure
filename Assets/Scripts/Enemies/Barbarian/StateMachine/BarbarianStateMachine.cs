@@ -52,7 +52,8 @@ public class BarbarianStateMachine : MonoBehaviour
         // }
 
         //DistanceToPlayer = barbarian.GetDistanceToPlayer();
-        Debug.Log(currentState);
+        
+        //Debug.Log(currentState);
         currentState.PerformState();
     }
 

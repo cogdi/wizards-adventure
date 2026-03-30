@@ -34,6 +34,8 @@ public class SkeletonGuardState : SkeletonBaseState
         }
 
         SoundManager.Instance.OnAnySoundMade += PlayerCombat_OnWallHit;
+        
+        //BossFightTrigger.OnBossFightTriggered += 
     }
 
     public override void PerformState()
@@ -45,7 +47,7 @@ public class SkeletonGuardState : SkeletonBaseState
 
         else if (patrolPointList != null)
         {
-           if (!isAtGuardPoint)
+            if (!isAtGuardPoint)
             {
                 SendAgentToGuardPost();
             }

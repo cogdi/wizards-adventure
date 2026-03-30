@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TransitionableDoor : Door
+public class TransitionableDoor : InteractiveDoor
 {
     protected override void Start()
     {

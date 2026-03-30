@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Door : MonoBehaviour
+public abstract class InteractiveDoor : MonoBehaviour
 {
     protected virtual void Start()
     {

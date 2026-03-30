@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class RegularDoor : Door
+public class RegularDoor : InteractiveDoor
 {
     public event Action<bool> OnDoorStateChanged;
 
@@ -16,18 +16,19 @@ public class RegularDoor : Door
         Debug.Log("Start()");
         base.Start();
 
-        PlayerMotor.Instance.OnPickingKeys += PlayerMotor_OnPickingKeys;
+        PlayerMotor.Instance.OnPickingKeys += PickKey;
     }
 
     private void Update()
     {
+        // Debug.
         if (Input.GetKeyDown(KeyCode.K))
         {
-            PlayerMotor_OnPickingKeys(requiredKeyID);
+            PickKey(requiredKeyID);
         }
     }
 
-    private void PlayerMotor_OnPickingKeys(int keyID)
+    private void PickKey(int keyID)
     {
         Debug.Log(keyID);
 
