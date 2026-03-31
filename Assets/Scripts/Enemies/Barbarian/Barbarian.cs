@@ -11,9 +11,7 @@ public class Barbarian : EnemyBase
     
     public event Action OnPlayerHitInRush;
     public event Action OnWallHitInRush;
-
-
-
+    
     public event Action OnCloseAttack;
     public event Action OnEarthquakeTriggered;
     
@@ -84,38 +82,6 @@ public class Barbarian : EnemyBase
         BarbarianLongDistanceState.OnRockThrowned += ShootProjectile;
     }
 
-    // private void Update()
-    // {
-    //     float distance = GetDistanceToPlayer();
-
-    //     if (!isRushing)
-    //     {
-    //         if (distance <= CLOSE_DISTANCE)
-    //         {
-    //             CloseDistanceAttack();
-    //         }
-
-    //         else if (distance <= MEDIUM_DISTANCE)
-    //         {
-    //             MediumDistanceAttack();
-    //         }
-
-    //         else
-    //         {
-    //             Debug.Log("Long-dist 1111");
-    //             LongDistanceAttack();
-    //         }
-    //     }
-
-    //     else
-    //     {
-    //         Debug.Log("Long-dist 2222");
-    //         LongDistanceAttack();
-    //     }
-
-    //     Debug.Log(isRushing);
-    // }
-
     public void MeleeDamageToPlayer()
     {
         if (GetDistanceToPlayer() <= 2.25f)
@@ -123,48 +89,7 @@ public class Barbarian : EnemyBase
             OnPlayerHit?.Invoke(CLOSE_DISTANCE_DAMAGE);
         }
     }
-
-    // private void CloseDistanceAttack()
-    // {
-    //     closeAttackTimer += Time.deltaTime;
-
-    //     agent.SetDestination(playerTransform.position);
-        
-    //     if (agent.remainingDistance <= agent.stoppingDistance && closeAttackTimer >= closeAttackTimerMax)
-    //     {
-    //         OnCloseAttack?.Invoke();
-    //         closeAttackTimer = 0f;
-    //     }
-
-    // }
-
-    // private void MediumDistanceAttack()
-    // {
-    //     earthquakeTimer += Time.deltaTime;
-
-    //     if (earthquakeTimer >= earthquakeTimerMax)
-    //     {
-    //         OnEarthquakeTriggered?.Invoke();
-    //         earthquakeTimer = 0f;
-            
-    //         agent.SetDestination(playerTransform.position);
-    //     }
-    // }
-
-    // private void LongDistanceAttack()
-    // {
-    //     if (!isRockThrowed)
-    //     {
-    //         ShootProjectile();
-    //         isRockThrowed = true;
-    //     }
-
-    //     else
-    //     {
-    //         StartCoroutine(Rush());
-    //     }
-    // }
-
+    
     public void Earthquake()
     {
         // Called by an animation event.
@@ -184,47 +109,6 @@ public class Barbarian : EnemyBase
         GameObject projectile = Instantiate(Resources.Load($"Prefabs/{BARBARIAN_ROCK}") as GameObject, rockSpawnPoint.position, rotation, parent: this.transform);
         projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * rockThrowingSpeed;
     }
-
-    // public IEnumerator Rush()
-    // {
-    //     if (!lookingAtPlayerDirection)
-    //     {
-    //         LookTowards(playerTransform.position);
-            
-    //         yield return new WaitForSeconds(2);
-
-    //         lookingAtPlayerDirection = true;
-    //     }
-
-    //     rushTimer += Time.deltaTime;
-
-    //     if (rushTimer >= rushTimerMax)
-    //     {
-    //         agent.speed = rushSpeed;
-    //         isRushing = true;
-
-    //         Vector3 targetPoint = transform.position + transform.forward * 5f;
-    //         if (NavMesh.SamplePosition(targetPoint, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-    //         {
-    //             agent.SetDestination(hit.position);
-    //         }
-    //         else
-    //         {
-    //             Debug.Log("Navmesh ended");
-
-    //             StopRushing();
-    //         }
-    //     }
-    // }
-
-    // public void StopRushing()
-    // {
-    //     agent.ResetPath();
-    //     agent.speed = regularSpeed;
-    //     isRushing = false;
-    //     lookingAtPlayerDirection = false;
-    //     rushTimer = 0f;
-    // }
 
     public bool IsFloorLayer(int layer)
     {

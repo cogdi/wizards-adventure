@@ -4,8 +4,7 @@ using UnityEngine.AI;
 public abstract class EnemyDeprecated : MonoBehaviour
 {
     /* 
-     * This class is created to be used by all the types of enemies in the game. 
-     * It contains all the mutual logic between enemy classes.
+     Unused class of Enemies' mutual behaviour.
     */
 
     

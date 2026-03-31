@@ -3,20 +3,19 @@ using UnityEngine;
 
 public class MagicCharge : MonoBehaviour
 {
-    // This GO can have one of these three tags: WizardLightMagicCharge, WizardMediumMagicCharge, WizardStrongMagicCharge.
+    // This GO shall have one of these three tags: WizardLightMagicCharge, WizardMediumMagicCharge, WizardStrongMagicCharge.
 
-    // TODO: Should it be static? Try to shoot one charge and immediately second, check if this will provide double damage.
     public static event Action<Vector3> OnWallHit;
     public static event Action<Vector3> OnEnemyHit;
     public static event Action<EnemyBase, float> OnEnemyDamaged;
 
-    private float time;
+    private float flyTime;
 
     private void Update()
     {
-        time += Time.deltaTime;
+        flyTime += Time.deltaTime;
 
-        if (time > 2f)
+        if (flyTime > 2f)
         {
             Destroy(gameObject);
         }

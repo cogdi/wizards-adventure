@@ -31,7 +31,7 @@ public class Skeleton : EnemyBase
 
     [SerializeField] private List<Transform> patrolPointsList; 
     /* This is used by both melee and ranged types of skeletons.
-       Difference is that first ones use them to travel between points, and the others to stay at one place.
+       Difference is that first ones use them to travel between points, and the others to guard the one place.
     */
 
     [SerializeField] private Transform projectileSpawnPoint;
@@ -126,20 +126,6 @@ public class Skeleton : EnemyBase
             OnPlayerHit?.Invoke(MELEE_DAMAGE);
         }
     }
-
-    // protected override void TakeDamage(EnemyBase enemy, float damage)
-    // {
-    //     if (enemy == this)
-    //     {
-    //         health -= damage;
-    //         Debug.Log(health);
-
-    //         if (health <= 0f)
-    //         {
-    //             Destroy(gameObject);
-    //         }
-    //     }
-    // }
 
     public override bool IsMoving()
     {

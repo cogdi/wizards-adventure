@@ -36,24 +36,6 @@ public class BarbarianStateMachine : MonoBehaviour
 
     private void Update()
     {
-        // if (Barbarian.GetDistanceToPlayer() <= Barbarian.CLOSE_DISTANCE)
-        // {
-        //     SwitchState(BarbarianCloseDistanceState);
-        // }
-
-        // else if (Barbarian.GetDistanceToPlayer() <= Barbarian.MEDIUM_DISTANCE)
-        // {
-        //     SwitchState(BarbarianMediumDistanceState);
-        // }
-
-        // else
-        // {
-        //     SwitchState(BarbarianLongDistanceState);
-        // }
-
-        //DistanceToPlayer = barbarian.GetDistanceToPlayer();
-        
-        //Debug.Log(currentState);
         currentState.PerformState();
     }
 

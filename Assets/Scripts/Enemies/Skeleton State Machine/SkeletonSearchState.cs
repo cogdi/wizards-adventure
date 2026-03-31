@@ -14,7 +14,7 @@ public class SkeletonSearchState : SkeletonBaseState
     {
         agent = skeleton.Agent;
 
-        if (agent != null)
+        if (agent)
         {
             agent.SetDestination(skeleton.GetPlayerTransform().position);
         }

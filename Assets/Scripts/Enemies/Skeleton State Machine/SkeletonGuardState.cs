@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class SkeletonGuardState : SkeletonBaseState
 {
     // This state is used both by melee and ranged skeletons.
-    // The difference is that melee's patrol and the others don't.
+    // The difference is that melee skeletons do patrolling and the others don't.
 
     private NavMeshAgent agent;
     private List<Transform> patrolPointList;
@@ -56,8 +56,8 @@ public class SkeletonGuardState : SkeletonBaseState
 
     private void SendAgentToGuardPost()
     {
-        // This method is mostly needed to make Skeletons look at the right directions when they come back
-        //  to their posts.
+        /* This method is mostly needed to make Skeletons look at the right directions when they come back
+           to their posts. */
 
         agent.SetDestination(patrolPointList[0].position);
 

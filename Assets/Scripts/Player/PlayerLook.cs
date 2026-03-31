@@ -20,8 +20,8 @@ public class PlayerLook : MonoBehaviour
         {
             Instance = this;
         }
-
-        Cursor.lockState = CursorLockMode.Confined;
+        
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Start()
@@ -34,12 +34,14 @@ public class PlayerLook : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!playerMotorInstance.IsThirdPersonModeActive())
-            FirstPersonLook();
+        if (playerMotorInstance.IsThirdPersonModeActive())
+        {
+            LookAtMousePosition();
+        }
 
         else
         {
-            LookAtMousePosition();
+            FirstPersonLook();
         }
     }
 
@@ -70,6 +72,8 @@ public class PlayerLook : MonoBehaviour
 
     private void ActivateFirstPersonCamera()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        
         thirdPersonCamera.gameObject.SetActive(false);
         cam.gameObject.SetActive(true);
     }

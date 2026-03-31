@@ -68,8 +68,7 @@ public class PlayerMotor : MonoBehaviour
 
     private void Update()
     {
-        //isGrounded = controller.isGrounded;
-
+        // Debug.
         if (Input.GetKeyDown(KeyCode.T))
         {
             thirdPersonMode = !thirdPersonMode;
@@ -93,8 +92,6 @@ public class PlayerMotor : MonoBehaviour
                 {
                     Jump();
                 }
-
-                //HandleRunning(); // To disable running while jumping.
             }
             HandleRunning();
         }
@@ -136,12 +133,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         controller.Move(velocity * Time.deltaTime);
-
-        //if (moveDirection != Vector3.zero) // Looking at the moving direction.
-        //    transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotationSpeed * Time.deltaTime); // 3rd-person movement.
         
-
-
         isGrounded = controller.isGrounded;
     }
 
@@ -155,13 +147,8 @@ public class PlayerMotor : MonoBehaviour
         isFlying = playerInputInstance.IsFlyingPressed();
         if (isFlying)
         {
-            //currentSpeed = walkingSpeed;
-
-            //velocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
             velocity.y = flyingVelocity;
         }
-
-        //else velocity.y += gravity * Time.deltaTime;
     }
 
     private void HandleRunning()
@@ -201,10 +188,8 @@ public class PlayerMotor : MonoBehaviour
     {
         Ray ray = new Ray(PlayerLook.Instance.GetCameraPosition(), PlayerLook.Instance.GetCameraTransformForward());
 
-        /* TODO: (High Priority) Make system of distinguishing different doors.
-         * and different objects, too.
-         * It can be reached through using interfaces, like IInteractable, for special potions, keys, doors.
-        */
+        /* TODO: Make system of distinguishing different doors and objects.
+         * It can be reached through using interfaces, like IInteractable, for special potions, keys, doors. */
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 5f, doorLayerMask))
         {
@@ -225,16 +210,6 @@ public class PlayerMotor : MonoBehaviour
         if (isGrounded && PlayerCombat.Instance.IsEnemyLayer(hit.gameObject.layer))
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position, 1f);
-
-            //DebugDrawSphere(transform.position, 1f, Color.green);
-
-            // foreach (Collider collider in colliders)
-            // {
-            //     if (collider.CompareTag("Floor")) 
-            //         return;
-            //     //Debug.Log("Player is on top of the Skeleton.");
-            //     isStandingOnTopOfEnemy = true;
-            // }
 
             for (int i = 0; i < colliders.Length; i++)
             {

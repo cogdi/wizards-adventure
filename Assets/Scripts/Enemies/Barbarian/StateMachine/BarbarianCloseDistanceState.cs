@@ -23,20 +23,6 @@ public class BarbarianCloseDistanceState : BarbarianBaseState
         playerTransform = PlayerCombat.Instance.transform;
     }
     
-    // public override void PerformState()
-    // {
-    //     closeAttackTimer += Time.deltaTime;
-
-    //     stateMachine.Agent.SetDestination(PlayerCombat.Instance.transform.position);
-        
-    //     if (stateMachine.Agent.remainingDistance <= stateMachine.Agent.stoppingDistance &&
-    //     closeAttackTimer >= closeAttackTimerMax)
-    //     {
-    //         OnCloseAttack?.Invoke();
-    //         closeAttackTimer = 0f;
-    //     }
-    // }
-    
     public override void PerformState()
     {
         if (stateMachine.Barbarian.GetDistanceToPlayer() > Barbarian.CLOSE_DISTANCE)

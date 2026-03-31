@@ -151,19 +151,16 @@ public class PlayerCombat : MonoBehaviour
                 if (magicChargePowerTimer < 2f)
                 {
                     currentAttackType = MagicAttacks.Light;
-                    //ShootMagicCharge(MagicAttacks.Light);
                 }
 
                 else if (magicChargePowerTimer < 3f)
                 {
                     currentAttackType = MagicAttacks.Medium;
-                    //ShootMagicCharge(MagicAttacks.Medium);
                 }
 
                 else
                 {
                     currentAttackType = MagicAttacks.Strong;
-                    //ShootMagicCharge(MagicAttacks.Strong);
                 }
 
                 magicAttackIntervalTimer = 0f;

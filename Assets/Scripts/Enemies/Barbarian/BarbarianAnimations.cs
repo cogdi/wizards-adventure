@@ -15,11 +15,9 @@ public class BarbarianAnimations : MonoBehaviour
 
         barbarian.OnCloseAttack += Barbarian_OnCloseAttack;
         barbarian.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
-
         
         BarbarianCloseDistanceState.OnCloseAttack += Barbarian_OnCloseAttack;
         BarbarianMediumDistanceState.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
-
     }
 
     private void Barbarian_OnCloseAttack()
@@ -39,16 +37,6 @@ public class BarbarianAnimations : MonoBehaviour
 
     private void HandleWalking()
     {
-        // animator.SetBool(IS_WALKING, barbarian.IsMoving());
-
-        if (barbarian.IsMoving())
-        {
-            animator.SetBool(IS_WALKING, true);
-        }
-
-        else
-        {
-            animator.SetBool(IS_WALKING, false);
-        }
+        animator.SetBool(IS_WALKING, barbarian.IsMoving());
     }
 }

@@ -11,8 +11,6 @@ public class SkeletonStateMachine : MonoBehaviour
 
     [SerializeField] private Skeleton skeleton;
     private SkeletonBaseState currentState;
-    //private bool isSwitchingStates;
-    //private SkeletonBaseState nextState;
 
     public void Initialise()
     {
@@ -26,14 +24,10 @@ public class SkeletonStateMachine : MonoBehaviour
         if (skeleton.IsMeleeSkeleton)
             SwitchState(patrolState);
         else SwitchState(guardState);
-
-        // if (skeleton.IsMeleeSkeleton) SwitchState()
-        // else SwitchState(guardState);
     }
 
     private void Update()
     {
-        //Debug.Log(skeleton.gameObject.ToString() + currentState);
         currentState?.PerformState();
     }
 
