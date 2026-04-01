@@ -20,6 +20,8 @@ public class Skeleton : EnemyBase
     public bool IsMeleeSkeleton { get; private set; }
     public bool IsSkeletonArcher { get; private set; }
     public bool IsSkeletonMage { get; private set; }
+    public bool IsAssistanceSkeleton => isAssistanceSkeleton;
+    [SerializeField] private bool isAssistanceSkeleton;
 
     private const string MELEE_SKELETON_TAG = "MeleeSkeleton";
     private const string SKELETON_ARCHER_TAG = "SkeletonArcher";

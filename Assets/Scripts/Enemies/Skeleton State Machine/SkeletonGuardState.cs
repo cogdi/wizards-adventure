@@ -8,34 +8,33 @@ public class SkeletonGuardState : SkeletonBaseState
     // The difference is that melee skeletons do patrolling and the others don't.
 
     private NavMeshAgent agent;
-    private List<Transform> patrolPointList;
-    private int currentPatrolPoint;
-    private float patrolStandTimer;
-    private float patrolStandTimerMax = 2f;
-
-    private bool isAtGuardPoint;
+    private Transform guardPost;
+    
+    private bool isAssistanceSkeleton;
+    private Transform assistancePosition;
+    
+    // To make the skeletons look to the right side on their guard posts.
+    private bool isStayingOnPost;
+    private bool isLookingRightWay;
+    
 
     public override void EnterState()
     {
         agent = skeleton.Agent;
-
-        patrolPointList = skeleton.GetPatrolPointList();
-        if (patrolPointList != null)
-        {
-            if (currentPatrolPoint < patrolPointList.Count)
-            {
-                agent.SetDestination(patrolPointList[currentPatrolPoint].position);
-            }
-
-            else
-            {
-                agent.SetDestination(patrolPointList[0].position);
-            }
-        }
+        isAssistanceSkeleton = skeleton.IsAssistanceSkeleton;
+        
+        List<Transform> patrolPointList = skeleton.GetPatrolPointList();
+        guardPost = patrolPointList[0];
+        
+        isLookingRightWay = false;
 
         SoundManager.Instance.OnAnySoundMade += PlayerCombat_OnWallHit;
-        
-        //BossFightTrigger.OnBossFightTriggered += 
+        BossFightTrigger.OnBossFightTriggered += BossFightTrigger_OnOnBossFightTriggered; 
+    }
+
+    private void BossFightTrigger_OnOnBossFightTriggered()
+    {
+        agent.SetDestination(assistancePosition.position);
     }
 
     public override void PerformState()
@@ -45,9 +44,9 @@ public class SkeletonGuardState : SkeletonBaseState
             stateMachine.SwitchState(stateMachine.attackState);
         }
 
-        else if (patrolPointList != null)
+        else if (guardPost)
         {
-            if (!isAtGuardPoint)
+            if (!isStayingOnPost && !isLookingRightWay)
             {
                 SendAgentToGuardPost();
             }
@@ -58,16 +57,26 @@ public class SkeletonGuardState : SkeletonBaseState
     {
         /* This method is mostly needed to make Skeletons look at the right directions when they come back
            to their posts. */
-
-        agent.SetDestination(patrolPointList[0].position);
-
+        
+        Debug.Log("SENDING TO: " + guardPost.position);
+        agent.SetDestination(guardPost.position);
+   
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            agent.ResetPath();
-            skeleton.transform.rotation = Quaternion.Lerp(skeleton.transform.rotation, patrolPointList[0].rotation, Time.deltaTime * 10f);
+            if (!isStayingOnPost)
+            {
+                agent.ResetPath();
+                isStayingOnPost = true;
+            }
+            
+            skeleton.transform.rotation = Quaternion.Lerp(skeleton.transform.rotation, guardPost.rotation, Time.deltaTime * 10f); // 10
+        
+            float dot = Quaternion.Dot(skeleton.transform.rotation.normalized, guardPost.rotation.normalized);
 
-            if (skeleton.transform.rotation == patrolPointList[0].rotation)
-                isAtGuardPoint = true;
+            if (dot > 0.999f)
+            {
+                isLookingRightWay = true;
+            }
         }
     }
 
@@ -82,12 +91,13 @@ public class SkeletonGuardState : SkeletonBaseState
     public override void UnsubscribeFromEvents()
     {
         SoundManager.Instance.OnAnySoundMade -= PlayerCombat_OnWallHit;
+        BossFightTrigger.OnBossFightTriggered -= BossFightTrigger_OnOnBossFightTriggered;
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        
-        isAtGuardPoint = false;
+        isStayingOnPost = false;
+        isLookingRightWay = false;
     }
 }

@@ -21,9 +21,10 @@ public class SkeletonStateMachine : MonoBehaviour
         attackState = new SkeletonAttackState();
         searchState = new SkeletonSearchState();
 
-        if (skeleton.IsMeleeSkeleton)
+        if (skeleton.IsMeleeSkeleton && !skeleton.IsAssistanceSkeleton)
             SwitchState(patrolState);
-        else SwitchState(guardState);
+        else
+            SwitchState(guardState);
     }
 
     private void Update()
