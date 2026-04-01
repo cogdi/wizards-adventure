@@ -2,11 +2,20 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    private const string IS_WALKING = "IsWalking";
-    private const string IS_RUNNING = "IsRunning";
-    private const string IS_BLOCKING = "IsBlocking";
-    private const string IS_SPELLCASTING = "IsSpellcasting";
-    private const string TRIGGER_ATTACK = "Attack";
+    private static readonly int IsWalking = Animator.StringToHash("IsWalking");
+    private static readonly int IsRunning = Animator.StringToHash("IsRunning");
+    private static readonly int IsBlocking = Animator.StringToHash("IsBlocking");
+    private static readonly int IsSpellcasting = Animator.StringToHash("IsSpellcasting");
+    private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int Dodge = Animator.StringToHash("Dodge");
+    
+    // private const string IS_WALKING = "IsWalking";
+    // private const string IS_RUNNING = "IsRunning";
+    // private const string IS_BLOCKING = "IsBlocking";
+    // private const string IS_SPELLCASTING = "IsSpellcasting";
+    // private const string TRIGGER_ATTACK = "Attack";
+    // private const string TRIGGER_DODGE = "Dodge";
+    
 
     private PlayerInput playerInputInstance;
 
@@ -38,17 +47,17 @@ public class PlayerAnimator : MonoBehaviour
     private void HandleSpellcasting(bool isSpellcasting)
     {
         // There's animation event inside Spellcasting animation, that triggers attack.
-        animator.SetBool(IS_SPELLCASTING, isSpellcasting);
+        animator.SetBool(IsSpellcasting, isSpellcasting);
     }
 
     private void HandleWalking()
     {
-        animator.SetBool(IS_WALKING, playerInputInstance.GetMovementVectorNormalized() != Vector2.zero);
+        animator.SetBool(IsWalking, playerInputInstance.GetMovementVectorNormalized() != Vector2.zero);
     }
 
     private void HandleRunning()
     {
-        animator.SetBool(IS_RUNNING, playerInputInstance.IsRunningTriggered());
+        animator.SetBool(IsRunning, playerInputInstance.IsRunningTriggered());
     }
 
     private void HandleAttacking()
@@ -57,16 +66,24 @@ public class PlayerAnimator : MonoBehaviour
 
         if (attackTimer >= attackTimerMax && playerInputInstance.IsAttackTriggered())
         {
-            animator.SetTrigger(TRIGGER_ATTACK);
+            animator.SetTrigger(Attack);
             attackTimer = 0;
         }
     }
 
     private void HandleBlocking()
     {
-        animator.SetBool(IS_BLOCKING, playerInputInstance.IsBlockingPressed());
+        animator.SetBool(IsBlocking, playerInputInstance.IsBlockingPressed());
     }
 
+    private void DodgeDebug()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            animator.SetTrigger(Dodge);
+        }
+    }
+    
     private void OnDestroy()
     {
         PlayerCombat.Instance.OnChargingMagicAttack -= HandleSpellcasting;
