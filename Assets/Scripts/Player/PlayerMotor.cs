@@ -58,12 +58,17 @@ public class PlayerMotor : MonoBehaviour
 
         playerInputInstance = PlayerInput.Instance;
         playerLookInstance = PlayerLook.Instance;
-        playerInputInstance.OnInteractPerformed += PlayerInput_OnInteractPerformed;
+        playerInputInstance.OnInteractPerformed += Interact;
+        playerInputInstance.OnJumpPerformed += Jump;
+        playerInputInstance.OnDodgePerformed += Dodge;
     }
 
-    private void PlayerInput_OnInteractPerformed()
+    private void Dodge()
     {
-        Interact();
+        if (isGrounded)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     private void Update()
@@ -86,13 +91,6 @@ public class PlayerMotor : MonoBehaviour
             if (thirdPersonMode) MoveThirdPerson();
             else Move();
 
-            if (isGrounded)
-            {
-                if (playerInputInstance.IsJumpTriggered())
-                {
-                    Jump();
-                }
-            }
             HandleRunning();
         }
 
@@ -104,7 +102,7 @@ public class PlayerMotor : MonoBehaviour
         Vector2 inputVector = playerInputInstance.GetMovementVectorNormalized();
         Vector3 moveDirection = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        controller.Move(transform.TransformDirection(moveDirection) * currentSpeed * Time.deltaTime);
+        controller.Move(transform.TransformDirection(moveDirection) * (currentSpeed * Time.deltaTime));
 
         velocity.y -= gravity * Time.deltaTime;
 
@@ -123,7 +121,7 @@ public class PlayerMotor : MonoBehaviour
         Vector2 inputVector = playerInputInstance.GetMovementVectorNormalized();
         Vector3 moveDirection = new Vector3(inputVector.y, 0f, -inputVector.x); // 3rd-person movement from above.
 
-        controller.Move(moveDirection * currentSpeed * Time.deltaTime);
+        controller.Move(moveDirection * (currentSpeed * Time.deltaTime));
 
         velocity.y -= gravity * Time.deltaTime;
 
@@ -139,7 +137,8 @@ public class PlayerMotor : MonoBehaviour
 
     private void Jump()
     {
-        velocity.y += Mathf.Sqrt(2 * gravity * jumpHeight);
+        if (isGrounded)
+            velocity.y += Mathf.Sqrt(2 * gravity * jumpHeight);
     }
 
     private void HandleFlying()
@@ -181,7 +180,7 @@ public class PlayerMotor : MonoBehaviour
     private void PushAwayFromEnemy()
     {
         Vector3 moveDirection = (Vector3.down - transform.forward).normalized;
-        controller.Move(moveDirection * 10f * Time.deltaTime);
+        controller.Move(moveDirection * (10f * Time.deltaTime));
     }
 
     private void Interact()

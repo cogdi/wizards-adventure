@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
     public static PlayerInput Instance { get; private set; }
 
+    public event Action OnJumpPerformed;
     public event Action OnInteractPerformed;
+    public event Action OnDodgePerformed;
 
     private PlayerInputActions playerInputActions;
 
@@ -20,6 +23,18 @@ public class PlayerInput : MonoBehaviour
         playerInputActions.OnFoot.Enable();
 
         playerInputActions.OnFoot.Interact.performed += Interact_performed;
+        playerInputActions.OnFoot.Jump.performed += Jump_performed;
+        playerInputActions.OnFoot.Dodge.performed += Dodge_performed;
+    }
+
+    private void Dodge_performed(InputAction.CallbackContext obj)
+    {
+        OnDodgePerformed?.Invoke();
+    }
+
+    private void Jump_performed(InputAction.CallbackContext obj)
+    {
+        OnJumpPerformed?.Invoke();
     }
 
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

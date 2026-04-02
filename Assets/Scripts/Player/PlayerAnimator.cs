@@ -30,6 +30,7 @@ public class PlayerAnimator : MonoBehaviour
         attackTimer = attackTimerMax;
 
         PlayerCombat.Instance.OnChargingMagicAttack += HandleSpellcasting;
+        PlayerInput.Instance.OnDodgePerformed += HandleDodging;
     }
 
     private void Update()
@@ -41,9 +42,14 @@ public class PlayerAnimator : MonoBehaviour
         if (!playerInputInstance.IsBlockingPressed())
         {
             HandleAttacking();
-        }
+        } 
     }
 
+    private void HandleDodging()
+    {
+        animator.SetTrigger(Dodge);
+    }
+    
     private void HandleSpellcasting(bool isSpellcasting)
     {
         // There's animation event inside Spellcasting animation, that triggers attack.
@@ -74,14 +80,6 @@ public class PlayerAnimator : MonoBehaviour
     private void HandleBlocking()
     {
         animator.SetBool(IsBlocking, playerInputInstance.IsBlockingPressed());
-    }
-
-    private void DodgeDebug()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            animator.SetTrigger(Dodge);
-        }
     }
     
     private void OnDestroy()
