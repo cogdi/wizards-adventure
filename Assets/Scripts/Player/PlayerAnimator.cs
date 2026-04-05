@@ -7,7 +7,11 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int IsBlocking = Animator.StringToHash("IsBlocking");
     private static readonly int IsSpellcasting = Animator.StringToHash("IsSpellcasting");
     private static readonly int Attack = Animator.StringToHash("Attack");
-    private static readonly int Dodge = Animator.StringToHash("Dodge");
+    private static readonly int DodgeLeft = Animator.StringToHash("DodgeLeft");
+    private static readonly int DodgeRight = Animator.StringToHash("DodgeRight");
+    private static readonly int DodgeForward = Animator.StringToHash("DodgeForward");
+    private static readonly int DodgeBackward = Animator.StringToHash("DodgeBackward");
+    
     
     // private const string IS_WALKING = "IsWalking";
     // private const string IS_RUNNING = "IsRunning";
@@ -30,7 +34,8 @@ public class PlayerAnimator : MonoBehaviour
         attackTimer = attackTimerMax;
 
         PlayerCombat.Instance.OnChargingMagicAttack += HandleSpellcasting;
-        PlayerInput.Instance.OnDodgePerformed += HandleDodging;
+        //PlayerInput.Instance.OnDodgePerformed += HandleDodging;
+        PlayerMotor.Instance.OnPlayerDodged += HandleDodging;
     }
 
     private void Update()
@@ -45,9 +50,34 @@ public class PlayerAnimator : MonoBehaviour
         } 
     }
 
-    private void HandleDodging()
+    // private void HandleDodging()
+    // {
+    //     animator.SetTrigger(DodgeLeft);
+    // }
+    
+    private void HandleDodging(PlayerMotor.DodgeTypes type)
     {
-        animator.SetTrigger(Dodge);
+        switch (type)
+        {
+            case PlayerMotor.DodgeTypes.Forward: 
+                Debug.Log("Forward dodge");
+                animator.SetTrigger(DodgeForward);
+                break;
+            case PlayerMotor.DodgeTypes.Backward:
+                Debug.Log("Backward dodge");
+                animator.SetTrigger(DodgeBackward);
+                break;
+            case PlayerMotor.DodgeTypes.Right:
+                Debug.Log("Right dodge");
+                animator.SetTrigger(DodgeRight);
+                break;
+            case PlayerMotor.DodgeTypes.Left:
+                Debug.Log("Left dodge");
+                animator.SetTrigger(DodgeLeft);
+                break;
+            default:
+                break;
+        }
     }
     
     private void HandleSpellcasting(bool isSpellcasting)

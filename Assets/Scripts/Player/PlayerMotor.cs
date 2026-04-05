@@ -1,15 +1,24 @@
 using System;
 using UnityEngine;
-using UnityEngine.Android;
-using UnityEngine.InputSystem;
 
 public class PlayerMotor : MonoBehaviour
 {
+    public enum DodgeTypes
+    {
+        Left,
+        Right,
+        Forward,
+        Backward   
+    }
+    
     public static PlayerMotor Instance { get; private set; }
 
     public event Action<Transform> OnDoorInteracted;
     public event Action<int> OnPickingKeys;
     public event Action<bool> OnThirdPersonModeStateChanged;
+    
+    public event Action<DodgeTypes> OnPlayerDodged;
+    
 
     private PlayerInput playerInputInstance;
     private PlayerLook playerLookInstance;
@@ -40,7 +49,17 @@ public class PlayerMotor : MonoBehaviour
     // Interactables.
     private int doorLayerMask;
     private int keyLayerMask;
-
+    
+    // Dodging.
+    private Vector3 lastMoveDirection;
+    private float dodgeSpeed = 10f;
+    private float dodgeDuration = 0.2f;
+    private bool isDodging;
+    private float dodgeTimer;
+    private Vector3 dodgeDirection;
+    private float dodgeCooldown;
+    private float dodgeCooldownMax = 2.5f;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -63,14 +82,6 @@ public class PlayerMotor : MonoBehaviour
         playerInputInstance.OnDodgePerformed += Dodge;
     }
 
-    private void Dodge()
-    {
-        if (isGrounded)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     private void Update()
     {
         // Debug.
@@ -88,13 +99,20 @@ public class PlayerMotor : MonoBehaviour
         
         else
         {
-            if (thirdPersonMode) MoveThirdPerson();
+            if (thirdPersonMode)
+            {
+                MoveThirdPerson();
+                
+                HandleDodging();
+            }
             else Move();
 
             HandleRunning();
         }
 
         HandleFlying(); // Experiment.
+        
+        dodgeCooldown += Time.deltaTime;
     }
 
     private void Move()
@@ -102,8 +120,12 @@ public class PlayerMotor : MonoBehaviour
         Vector2 inputVector = playerInputInstance.GetMovementVectorNormalized();
         Vector3 moveDirection = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        controller.Move(transform.TransformDirection(moveDirection) * (currentSpeed * Time.deltaTime));
-
+        if (!isDodging)
+        {
+            lastMoveDirection = transform.TransformDirection(moveDirection);
+            controller.Move(transform.TransformDirection(moveDirection) * (currentSpeed * Time.deltaTime));
+        }
+        
         velocity.y -= gravity * Time.deltaTime;
 
         if (isGrounded && velocity.y < 0f)
@@ -111,7 +133,8 @@ public class PlayerMotor : MonoBehaviour
             velocity.y = -2f;
         }
 
-        controller.Move(velocity * Time.deltaTime);
+        if (!isDodging)
+            controller.Move(velocity * Time.deltaTime);
 
         isGrounded = controller.isGrounded;
     }
@@ -121,7 +144,11 @@ public class PlayerMotor : MonoBehaviour
         Vector2 inputVector = playerInputInstance.GetMovementVectorNormalized();
         Vector3 moveDirection = new Vector3(inputVector.y, 0f, -inputVector.x); // 3rd-person movement from above.
 
-        controller.Move(moveDirection * (currentSpeed * Time.deltaTime));
+        if (!isDodging)
+        {
+            lastMoveDirection = moveDirection;
+            controller.Move(moveDirection * (currentSpeed * Time.deltaTime));
+        }
 
         velocity.y -= gravity * Time.deltaTime;
 
@@ -130,8 +157,11 @@ public class PlayerMotor : MonoBehaviour
             velocity.y = -2f;
         }
 
-        controller.Move(velocity * Time.deltaTime);
-        
+        if (!isDodging)
+        {
+            controller.Move(velocity * Time.deltaTime);
+        }
+
         isGrounded = controller.isGrounded;
     }
 
@@ -139,6 +169,79 @@ public class PlayerMotor : MonoBehaviour
     {
         if (isGrounded)
             velocity.y += Mathf.Sqrt(2 * gravity * jumpHeight);
+    }
+    
+    private void Dodge()
+    {
+        if (!isDodging && dodgeCooldown >= dodgeCooldownMax)
+        {
+            //StartDodging();
+            
+            if (lastMoveDirection.sqrMagnitude < 0.01f)
+            {
+                return;
+            }
+
+            isDodging = true;
+            dodgeTimer = dodgeDuration;
+            dodgeDirection = lastMoveDirection;
+            
+            dodgeCooldown = 0f;
+        }
+    }
+
+    // private void StartDodging()
+    // {
+    //     if (lastMoveDirection.sqrMagnitude < 0.01f)
+    //     {
+    //         return;
+    //     }
+    //
+    //     isDodging = true;
+    //     dodgeTimer = dodgeDuration;
+    //     dodgeDirection = lastMoveDirection;
+    // }
+    
+    private void HandleDodging()
+    {
+        if (!isDodging) return;
+
+        float forwardDot = Vector3.Dot(transform.forward, lastMoveDirection);
+        float rightDot = Vector3.Dot(transform.right, lastMoveDirection);
+        
+        if (Mathf.Abs(forwardDot) > Mathf.Abs(rightDot))
+        {
+            switch (forwardDot)
+            {
+                case > 0:
+                    OnPlayerDodged?.Invoke(DodgeTypes.Forward);
+                    break;
+                default:
+                    OnPlayerDodged?.Invoke(DodgeTypes.Backward);
+                    break;
+            }
+        }
+        else
+        {
+            switch (rightDot)
+            {
+                case > 0:
+                    OnPlayerDodged?.Invoke(DodgeTypes.Right);
+                    break;
+                default:
+                    OnPlayerDodged?.Invoke(DodgeTypes.Left);
+                    break;
+            }
+        }
+        
+        dodgeTimer -= Time.deltaTime;
+        
+        controller.Move(dodgeDirection * (dodgeSpeed * Time.deltaTime));
+
+        if (dodgeTimer <= 0f)
+        {
+            isDodging = false;
+        }
     }
 
     private void HandleFlying()
