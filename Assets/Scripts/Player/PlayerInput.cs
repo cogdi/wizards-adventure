@@ -9,6 +9,8 @@ public class PlayerInput : MonoBehaviour
     public event Action OnJumpPerformed;
     public event Action OnInteractPerformed;
     public event Action OnDodgePerformed;
+    public event Action OnMeleeAttackPerformed;
+    
 
     private PlayerInputActions playerInputActions;
 
@@ -25,6 +27,12 @@ public class PlayerInput : MonoBehaviour
         playerInputActions.OnFoot.Interact.performed += Interact_performed;
         playerInputActions.OnFoot.Jump.performed += Jump_performed;
         playerInputActions.OnFoot.Dodge.performed += Dodge_performed;
+        playerInputActions.OnFoot.Attack.performed += Attack_performed;
+    }
+
+    private void Attack_performed(InputAction.CallbackContext obj)
+    {
+        OnMeleeAttackPerformed?.Invoke();
     }
 
     private void Dodge_performed(InputAction.CallbackContext obj)
@@ -67,10 +75,10 @@ public class PlayerInput : MonoBehaviour
         return playerInputActions.OnFoot.Run.ReadValue<float>() > 0f;
     }
 
-    public bool IsAttackTriggered()
-    {
-        return playerInputActions.OnFoot.Attack.triggered;
-    }
+    // public bool IsAttackTriggered()
+    // {
+    //     return playerInputActions.OnFoot.Attack.triggered;
+    // }
 
     public bool IsMagicAttackTriggered()
     {

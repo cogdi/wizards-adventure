@@ -37,6 +37,7 @@ public class PlayerUI : MonoBehaviour
     
     private void CharacterAttributes_OnHealthChanged()
     {
+        hpText.text = characterAttributesInstance.Health.ToString();
         hpSlider.value = characterAttributesInstance.Health;
     }
     

@@ -115,7 +115,7 @@ public class CharacterAttributes : MonoBehaviour
             // character dies.
         }
 
-        // OnHealthChanged?.Invoke();
+        OnHealthChanged?.Invoke();
     }
 
     private void TakeStun(float damage)
@@ -133,7 +133,7 @@ public class CharacterAttributes : MonoBehaviour
 
         else health = MAX_HEALTH;
 
-        // OnHealthChanged?.Invoke();
+        OnHealthChanged?.Invoke();
     }
 
     private void SpendMana(float amount)
@@ -143,7 +143,7 @@ public class CharacterAttributes : MonoBehaviour
             mana -= amount;
         }
         
-        // OnManaChanged?.Invoke();
+        OnManaChanged?.Invoke();
     }
 
     private void RestoreMana(float manaAmount)
@@ -155,7 +155,7 @@ public class CharacterAttributes : MonoBehaviour
 
         else mana = MAX_MANA;
         
-        // OnManaChanged?.Invoke();
+        OnManaChanged?.Invoke();
     }
 
     private void HandleStamina()
@@ -166,7 +166,7 @@ public class CharacterAttributes : MonoBehaviour
             {
                 if (IsCharacterAbleToRun())
                 {
-                    // OnStaminaStateChanged?.Invoke(true);
+                    OnStaminaStateChanged?.Invoke(true);
                     
                     staminaRecoveryTimer = 0f;
 
@@ -186,7 +186,7 @@ public class CharacterAttributes : MonoBehaviour
 
             else
             {
-                // OnStaminaStateChanged?.Invoke(false);
+                OnStaminaStateChanged?.Invoke(false);
                 staminaRecoveryTimer = 0f;
             }
         }
