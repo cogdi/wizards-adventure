@@ -20,6 +20,7 @@ public class Loader : MonoBehaviour
         }
 
         SCENE_COUNT = SceneManager.sceneCountInBuildSettings;
+        Debug.Log("Scenes count:" + SceneManager.sceneCountInBuildSettings);
     }
 
     public void PerformSceneTransition()

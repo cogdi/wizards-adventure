@@ -58,7 +58,6 @@ public class SkeletonGuardState : SkeletonBaseState
         /* This method is mostly needed to make Skeletons look at the right directions when they come back
            to their posts. */
         
-        Debug.Log("SENDING TO: " + guardPost.position);
         agent.SetDestination(guardPost.position);
    
         if (agent.remainingDistance <= agent.stoppingDistance)

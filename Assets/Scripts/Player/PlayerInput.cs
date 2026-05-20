@@ -45,7 +45,7 @@ public class PlayerInput : MonoBehaviour
         OnJumpPerformed?.Invoke();
     }
 
-    private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void Interact_performed(InputAction.CallbackContext obj)
     {
         OnInteractPerformed?.Invoke();
     }

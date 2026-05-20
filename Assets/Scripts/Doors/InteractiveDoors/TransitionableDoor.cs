@@ -9,7 +9,7 @@ public class TransitionableDoor : InteractiveDoor
 
     public override void PlayerMotor_OnDoorInteracted(Transform door)
     {
-        if (door == transform)
+        if (door == this.transform)
         {
             Loader.Instance.PerformSceneTransition();
         }

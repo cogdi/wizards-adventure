@@ -37,6 +37,7 @@ public class Barbarian : EnemyBase
     public const float CLOSE_DISTANCE = 5.5f;
     public const float MEDIUM_DISTANCE = 12f;
     public const float earthquakeDistance = 8f;
+    [SerializeField] private float meleeDamageDistance = 2.75f;
 
     // Timings.
     private float closeAttackTimer;
@@ -84,7 +85,7 @@ public class Barbarian : EnemyBase
 
     public void MeleeDamageToPlayer()
     {
-        if (GetDistanceToPlayer() <= 2.25f)
+        if (GetDistanceToPlayer() <= meleeDamageDistance)
         {
             OnPlayerHit?.Invoke(CLOSE_DISTANCE_DAMAGE);
         }

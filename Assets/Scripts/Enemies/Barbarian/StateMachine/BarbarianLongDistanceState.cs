@@ -90,13 +90,14 @@ public class BarbarianLongDistanceState : BarbarianBaseState
             agent.speed = rushSpeed;
             IsRushing = true;
 
-            if (NavMesh.SamplePosition(barbarian.transform.position + barbarian.transform.forward * 5f, out NavMeshHit hit, 2.0f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(barbarian.transform.position + barbarian.transform.forward * 5f,
+             out NavMeshHit hit, 2.0f, NavMesh.AllAreas))
             {
                 agent.SetDestination(hit.position);
             }
             else
             {
-                Debug.Log("Navmesh ended");
+                Debug.Log("Barbarian Rush: Navmesh ended");
 
                 StopRushing();
             }
@@ -116,13 +117,13 @@ public class BarbarianLongDistanceState : BarbarianBaseState
 
     private void OnPlayerHitInRush()
     {
-        Debug.Log("Hit player: ");
+        Debug.Log("Barbarian Rush: Hit player");
         StopRushing();
     }
 
     private void OnWallHitInRush()
     {
-        Debug.Log("Hit wall: ");
+        Debug.Log("Barbarian Rush: Hit wall");
         StopRushing();
     }
 
