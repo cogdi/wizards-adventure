@@ -1318,7 +1318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8955680382669341667, guid: 57d003f4b82b402499067e2233f6900b, type: 3}
       propertyPath: m_Name
-      value: CrossfadeCanvas
+      value: Canvas_Crossfade
       objectReference: {fileID: 0}
     - target: {fileID: 8955680382669341667, guid: 57d003f4b82b402499067e2233f6900b, type: 3}
       propertyPath: m_StaticEditorFlags

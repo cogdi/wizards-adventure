@@ -26,6 +26,7 @@ public class CharacterAttributes : MonoBehaviour
     public float Health { get => health; }
     public float Mana { get => mana; }
     public float Stamina { get => stamina; }
+    public bool IsStunned { get => isStunned; }
     
     private float health;
     private float mana;

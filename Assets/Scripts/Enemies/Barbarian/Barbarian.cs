@@ -19,7 +19,8 @@ public class Barbarian : EnemyBase
     [SerializeField] private NavMeshAgent agent;
     public NavMeshAgent Agent { get => agent; set 
     {
-        agent = value; // Debug.
+        if (value)
+            agent = value; // Debug.
     }}
 
     // Weapons.
@@ -53,16 +54,19 @@ public class Barbarian : EnemyBase
     // Rush.
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] public float RushSpeed { get => rushSpeed; }
+    [SerializeField] public float RegularSpeed { get => regularSpeed; }
     private bool isRushing;
     private bool isDestinationSet;
-    private float regularSpeed = 1.75f;
-    private float rushSpeed = 5f;
     private const float rushTimerMax = 4f;
     private float rushTimer = rushTimerMax;
     private bool lookingAtPlayerDirection;
+    private float rushSpeed = 5f;
+    private float regularSpeed = 1.75f;
 
     // State Machine.
     [SerializeField] private BarbarianStateMachine stateMachine;
+
 
     public override bool IsMoving()
     {
@@ -72,7 +76,7 @@ public class Barbarian : EnemyBase
     private void Awake()
     {
         MAX_HEALTH = 300f;
-        agent.speed = regularSpeed;
+        ApplyRegularSpeed();
     }
 
     protected override void Start()
@@ -119,6 +123,16 @@ public class Barbarian : EnemyBase
     public bool IsWallLayer(int layer)
     {
         return wallLayer == (wallLayer | 1 << layer);
+    }
+
+    public void ApplyRushSpeed()
+    {
+        agent.speed = rushSpeed;
+    }
+
+    public void ApplyRegularSpeed()
+    {
+        agent.speed = regularSpeed;
     }
 
     private void OnCollisionEnter(Collision collision)

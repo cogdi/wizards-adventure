@@ -173,7 +173,8 @@ public class PlayerMotor : MonoBehaviour
     
     private void Dodge()
     {
-        if (!isDodging && dodgeCooldown >= dodgeCooldownMax)
+        if (!isDodging && dodgeCooldown >= dodgeCooldownMax &&
+        !CharacterAttributes.Instance.IsStunned)
         {
             //StartDodging();
             

@@ -21,8 +21,6 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     public static bool IsRushing { get; private set; }
 
     private bool isDestinationSet;
-    private float regularSpeed = 1.75f;
-    private float rushSpeed = 7f;
     private float rushTimer;
     private const float rushTimerMax = 4f;
     private bool lookingAtPlayerDirection;
@@ -87,7 +85,8 @@ public class BarbarianLongDistanceState : BarbarianBaseState
                 lookingAtPlayerDirection = true;
             }
 
-            agent.speed = rushSpeed;
+            //agent.speed = rushSpeed;
+            barbarian.ApplyRushSpeed();
             IsRushing = true;
 
             if (NavMesh.SamplePosition(barbarian.transform.position + barbarian.transform.forward * 5f,
@@ -109,7 +108,8 @@ public class BarbarianLongDistanceState : BarbarianBaseState
         agent.ResetPath();
         agent.updateRotation = true;
         
-        agent.speed = regularSpeed;
+        //agent.speed = regularSpeed;
+        barbarian.ApplyRegularSpeed();
         IsRushing = false;
         lookingAtPlayerDirection = false;
         rushTimer = 0f;
