@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 1H_Melee_Attack_Chop
+  m_Name: 1H_Melee_Attack_Chop_Backup
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0

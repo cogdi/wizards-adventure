@@ -19,6 +19,7 @@ public class PlayerMotor : MonoBehaviour
     
     public event Action<DodgeTypes> OnPlayerDodged;
     
+    public bool IsGrounded { get => isGrounded; }
 
     private PlayerInput playerInputInstance;
     private PlayerLook playerLookInstance;

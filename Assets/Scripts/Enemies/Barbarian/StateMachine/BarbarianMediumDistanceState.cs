@@ -11,6 +11,8 @@ public class BarbarianMediumDistanceState : BarbarianBaseState
     private float earthquakeTimer;
     private float earthquakeTimerMax = 4f;
 
+    //private bool IsEarthquakeHappening;
+
     public override void EnterState()
     {
         // earthquakeTimer = earthquakeTimerMax;
@@ -26,16 +28,27 @@ public class BarbarianMediumDistanceState : BarbarianBaseState
         }
 
         earthquakeTimer += Time.deltaTime;
-
         if (earthquakeTimer >= earthquakeTimerMax)
         {
-            OnEarthquakeTriggered?.Invoke();
-            earthquakeTimer = 0f;
-            
+           Earthquake();
+        }
+
+        else if (!stateMachine.Barbarian.IsEarthquakeHappening)
+        {
             stateMachine.Agent.SetDestination(PlayerCombat.Instance.transform.position);
         }
     }
     
+    private void Earthquake()
+    {
+        stateMachine.Barbarian.Agent.ResetPath();
+
+        OnEarthquakeTriggered?.Invoke();
+        earthquakeTimer = 0f;            
+    }
+
+
+
     public override void ExitState()
     {
 

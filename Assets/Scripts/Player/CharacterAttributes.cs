@@ -121,8 +121,11 @@ public class CharacterAttributes : MonoBehaviour
 
     private void TakeStun(float damage)
     {
-        isStunned = true;
-        TakeDamage(damage);
+        if (playerMotorInstance.IsGrounded)
+        {
+            isStunned = true;
+            TakeDamage(damage);
+        }
     }
 
     private void Heal(float hp)

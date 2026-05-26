@@ -23,6 +23,8 @@ public class Barbarian : EnemyBase
             agent = value; // Debug.
     }}
 
+    public bool IsEarthquakeHappening { get; private set; }
+
     // Weapons.
     [SerializeField] private GameObject leftHandWeapon;
     [SerializeField] private GameObject rightHandWeapon;
@@ -54,15 +56,13 @@ public class Barbarian : EnemyBase
     // Rush.
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] public float RushSpeed { get => rushSpeed; }
-    [SerializeField] public float RegularSpeed { get => regularSpeed; }
+    [SerializeField] private float rushSpeed = 5f;
+    [SerializeField] private float regularSpeed = 1.75f; // 1.75f - default value.
     private bool isRushing;
     private bool isDestinationSet;
     private const float rushTimerMax = 4f;
     private float rushTimer = rushTimerMax;
     private bool lookingAtPlayerDirection;
-    private float rushSpeed = 5f;
-    private float regularSpeed = 1.75f;
 
     // State Machine.
     [SerializeField] private BarbarianStateMachine stateMachine;
@@ -85,6 +85,17 @@ public class Barbarian : EnemyBase
 
         stateMachine.Initialise();
         BarbarianLongDistanceState.OnRockThrowned += ShootProjectile;
+        BarbarianMediumDistanceState.OnEarthquakeTriggered += BarbarianMediumDistanceState_OnEarthquakeTriggered;
+    }
+
+    private void BarbarianMediumDistanceState_OnEarthquakeTriggered()
+    {
+        IsEarthquakeHappening = true;
+    }
+
+    public void OnEarthquakeFinished()
+    {
+        IsEarthquakeHappening = false;
     }
 
     public void MeleeDamageToPlayer()
