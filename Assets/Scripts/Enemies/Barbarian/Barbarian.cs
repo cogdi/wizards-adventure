@@ -41,7 +41,10 @@ public class Barbarian : EnemyBase
     // Distances.
     public const float CLOSE_DISTANCE = 5.5f;
     public const float MEDIUM_DISTANCE = 15f;
-    public const float EARTHQUAKE_DISTANCE = 10f; // 8f - default.
+    /* Combined MEDIUM_DISTANCE AND EARTHQUAKE_DISTANCE at one const.
+       It's not meaningful to keep them as separate properties,
+       because the Barbarian will stand at one place when got out of EARTHQUAKE_DISTANCE boundaries. */
+
     [SerializeField] private float meleeDamageDistance = 2.75f;
 
     // Timings.
@@ -106,7 +109,7 @@ public class Barbarian : EnemyBase
     {
         // Called by an animation event.
 
-        if (GetDistanceToPlayer() <= EARTHQUAKE_DISTANCE)
+        if (GetDistanceToPlayer() <= MEDIUM_DISTANCE)
         {
             OnEarthquakeHitPlayer?.Invoke(STUN_DAMAGE);
         }
