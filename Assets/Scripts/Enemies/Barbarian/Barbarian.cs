@@ -14,6 +14,8 @@ public class Barbarian : EnemyBase
     
     public event Action OnCloseAttack;
     public event Action OnEarthquakeTriggered;
+    public event Action OnEarthquakeFinishedEvent;
+
     
 
     [SerializeField] private NavMeshAgent agent;
@@ -38,8 +40,8 @@ public class Barbarian : EnemyBase
 
     // Distances.
     public const float CLOSE_DISTANCE = 5.5f;
-    public const float MEDIUM_DISTANCE = 12f;
-    public const float earthquakeDistance = 8f;
+    public const float MEDIUM_DISTANCE = 15f;
+    public const float EARTHQUAKE_DISTANCE = 10f; // 8f - default.
     [SerializeField] private float meleeDamageDistance = 2.75f;
 
     // Timings.
@@ -85,18 +87,12 @@ public class Barbarian : EnemyBase
 
         stateMachine.Initialise();
         BarbarianLongDistanceState.OnRockThrowned += ShootProjectile;
-        BarbarianMediumDistanceState.OnEarthquakeTriggered += BarbarianMediumDistanceState_OnEarthquakeTriggered;
     }
 
-    private void BarbarianMediumDistanceState_OnEarthquakeTriggered()
-    {
-        IsEarthquakeHappening = true;
-    }
-
-    public void OnEarthquakeFinished()
-    {
-        IsEarthquakeHappening = false;
-    }
+    // private void Update()
+    // {
+        //Debug.Log("Distance to player: " + GetDistanceToPlayer());
+    // }
 
     public void MeleeDamageToPlayer()
     {
@@ -110,10 +106,15 @@ public class Barbarian : EnemyBase
     {
         // Called by an animation event.
 
-        if (GetDistanceToPlayer() <= earthquakeDistance)
+        if (GetDistanceToPlayer() <= EARTHQUAKE_DISTANCE)
         {
             OnEarthquakeHitPlayer?.Invoke(STUN_DAMAGE);
         }
+    }
+
+    public void OnEarthquakeFinished()
+    {
+        OnEarthquakeFinishedEvent?.Invoke();
     }
 
     public void ShootProjectile()

@@ -9,15 +9,21 @@ public class BarbarianMediumDistanceState : BarbarianBaseState
     public static event Action OnEarthquakeTriggered;
 
     private float earthquakeTimer;
-    private float earthquakeTimerMax = 4f;
+    private float earthquakeTimerMax = 8f;
 
-    //private bool IsEarthquakeHappening;
+    private bool IsEarthquakeHappening;
 
     public override void EnterState()
     {
-        // earthquakeTimer = earthquakeTimerMax;
+        stateMachine.Barbarian.OnEarthquakeFinishedEvent += Barbarian_OnEarthquakeFinishedEvent;
+        //earthquakeTimer = earthquakeTimerMax;
     }
-    
+
+    private void Barbarian_OnEarthquakeFinishedEvent()
+    {
+        IsEarthquakeHappening = false;
+    }
+
     public override void PerformState()
     {
         if (stateMachine.Barbarian.GetDistanceToPlayer() <= Barbarian.CLOSE_DISTANCE ||
@@ -27,23 +33,27 @@ public class BarbarianMediumDistanceState : BarbarianBaseState
             OnStateChanged?.Invoke();
         }
 
-        earthquakeTimer += Time.deltaTime;
-        if (earthquakeTimer >= earthquakeTimerMax)
-        {
-           Earthquake();
-        }
-
-        else if (!stateMachine.Barbarian.IsEarthquakeHappening)
+        if (!IsEarthquakeHappening)
         {
             stateMachine.Agent.SetDestination(PlayerCombat.Instance.transform.position);
+
+            earthquakeTimer += Time.deltaTime;
+            if (earthquakeTimer >= earthquakeTimerMax)
+            {
+                Earthquake();
+            }
         }
     }
     
+
+
     private void Earthquake()
     {
-        stateMachine.Barbarian.Agent.ResetPath();
+        IsEarthquakeHappening = true;
 
+        stateMachine.Barbarian.Agent.ResetPath();
         OnEarthquakeTriggered?.Invoke();
+        
         earthquakeTimer = 0f;            
     }
 
@@ -51,6 +61,6 @@ public class BarbarianMediumDistanceState : BarbarianBaseState
 
     public override void ExitState()
     {
-
+        stateMachine.Barbarian.OnEarthquakeFinishedEvent -= Barbarian_OnEarthquakeFinishedEvent;
     }
 }
