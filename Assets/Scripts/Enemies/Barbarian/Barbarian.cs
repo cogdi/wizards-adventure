@@ -16,16 +16,12 @@ public class Barbarian : EnemyBase
     public event Action OnEarthquakeTriggered;
     public event Action OnEarthquakeFinishedEvent;
 
-    
-
     [SerializeField] private NavMeshAgent agent;
     public NavMeshAgent Agent { get => agent; set 
     {
         if (value)
             agent = value; // Debug.
     }}
-
-    public bool IsEarthquakeHappening { get; private set; }
 
     // Weapons.
     [SerializeField] private GameObject leftHandWeapon;
@@ -47,12 +43,6 @@ public class Barbarian : EnemyBase
 
     [SerializeField] private float meleeDamageDistance = 2.75f;
 
-    // Timings.
-    private float closeAttackTimer;
-    private float closeAttackTimerMax = 3f;
-    private float earthquakeTimer;
-    private float earthquakeTimerMax = 4f;
-
     // Throwing rocks.
     private const string BARBARIAN_ROCK = "Barbarian_Rock";
     private const float rockThrowingSpeed = 40f;
@@ -63,11 +53,6 @@ public class Barbarian : EnemyBase
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private float rushSpeed = 5f;
     [SerializeField] private float regularSpeed = 1.75f; // 1.75f - default value.
-    private bool isRushing;
-    private bool isDestinationSet;
-    private const float rushTimerMax = 4f;
-    private float rushTimer = rushTimerMax;
-    private bool lookingAtPlayerDirection;
 
     // State Machine.
     [SerializeField] private BarbarianStateMachine stateMachine;
