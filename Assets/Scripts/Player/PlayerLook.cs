@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
@@ -14,6 +15,8 @@ public class PlayerLook : MonoBehaviour
     private float sensitivity = 20f;
     private float xRotation;
 
+    [SerializeField] private Transform[] thirdPersonAnglesArray;
+
     private void Awake()
     {
         if (Instance == null)
@@ -22,6 +25,8 @@ public class PlayerLook : MonoBehaviour
         }
         
         Cursor.lockState = CursorLockMode.Locked;
+
+        
     }
 
     private void Start()
@@ -29,8 +34,28 @@ public class PlayerLook : MonoBehaviour
         playerInputInstance = PlayerInput.Instance;
         playerMotorInstance = PlayerMotor.Instance;
 
-        playerMotorInstance.OnThirdPersonModeStateChanged += PlayerMotorInstance_OnThirdPersonModeStateChanged;
+        playerMotorInstance.OnThirdPersonModeStateChanged += PlayerMotor_OnThirdPersonModeStateChanged;
+
+        CameraPerspectiveTrigger.OnPlayerNearWall += CameraPerspectiveTrigger_OnPlayerNearWall;
     }
+
+    private void CameraPerspectiveTrigger_OnPlayerNearWall(bool state)
+    {
+        // Transitioning between two virtual cameras.
+
+        if (state)
+        {
+            thirdPersonAnglesArray[1].gameObject.SetActive(true);
+            thirdPersonAnglesArray[0].gameObject.SetActive(false);
+        }
+
+        else
+        {
+            thirdPersonAnglesArray[0].gameObject.SetActive(true);
+            thirdPersonAnglesArray[1].gameObject.SetActive(false);
+        }
+    }
+
 
     private void LateUpdate()
     {
@@ -55,7 +80,7 @@ public class PlayerLook : MonoBehaviour
         }
     }
 
-    private void PlayerMotorInstance_OnThirdPersonModeStateChanged(bool thirdPerson)
+    private void PlayerMotor_OnThirdPersonModeStateChanged(bool thirdPerson)
     {
         if (thirdPerson)
             ActivateThirdPersonCamera();
@@ -99,5 +124,10 @@ public class PlayerLook : MonoBehaviour
     public Vector3 GetCameraTransformForward()
     {
         return cam.transform.forward;
+    }
+
+    private void OnDestroy()
+    {
+        CameraPerspectiveTrigger.OnPlayerNearWall -= CameraPerspectiveTrigger_OnPlayerNearWall;
     }
 }
