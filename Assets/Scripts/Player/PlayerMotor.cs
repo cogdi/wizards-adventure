@@ -32,9 +32,8 @@ public class PlayerMotor : MonoBehaviour
     private bool isGrounded;
     private bool isMoving;
     private bool isStandingOnTopOfEnemy;
-    private float verticalVelocity = 0f;
-    private bool thirdPersonMode = false;
-    [SerializeField] private float rotationSpeed = 10f;
+    // private float verticalVelocity = 0f;
+    // [SerializeField] private float rotationSpeed = 10f;
 
     // Flying.
     public bool IsFlying { get => isFlying; }
@@ -60,6 +59,19 @@ public class PlayerMotor : MonoBehaviour
     private Vector3 dodgeDirection;
     private float dodgeCooldown;
     private float dodgeCooldownMax = 2.5f;
+
+    // Third-person movement.
+    /* "isPlayerNearWall" checks, if the player is in fact near the walls that let them see behind them.
+        It's the walls that go from Armory and PreMainHall rooms. 
+        
+        "nearWallControls" is needed to give a signal that we should change controls behaviour.
+        See ThirdPersonMove() for more context.
+        */
+    private bool isPlayerNearWall;
+    private bool nearWallControls; 
+    private bool thirdPersonMode;
+    private Vector2 thirdPersonInputVector;
+
     
     private void Awake()
     {
@@ -69,6 +81,8 @@ public class PlayerMotor : MonoBehaviour
         }
 
         currentSpeed = walkingSpeed;
+
+        thirdPersonInputVector = new Vector2();
     }
 
     private void Start()
@@ -81,7 +95,15 @@ public class PlayerMotor : MonoBehaviour
         playerInputInstance.OnInteractPerformed += Interact;
         playerInputInstance.OnJumpPerformed += Jump;
         playerInputInstance.OnDodgePerformed += Dodge;
+
+        CameraPerspectiveTrigger.OnPlayerNearWall += CameraPerspectiveTrigger_OnPlayerNearWall;
     }
+
+    private void CameraPerspectiveTrigger_OnPlayerNearWall(bool state)
+    {
+        isPlayerNearWall = state;
+    }
+
 
     private void Update()
     {
@@ -102,7 +124,7 @@ public class PlayerMotor : MonoBehaviour
         {
             if (thirdPersonMode)
             {
-                MoveThirdPerson();
+                ThirdPersonMove();
                 
                 HandleDodging();
             }
@@ -139,11 +161,34 @@ public class PlayerMotor : MonoBehaviour
 
         isGrounded = controller.isGrounded;
     }
-
-    private void MoveThirdPerson()
+    
+    private void ThirdPersonMove()
     {
+        // TODO: Refactor this method and get rid of this many if-else's.
+
         Vector2 inputVector = playerInputInstance.GetMovementVectorNormalized();
-        Vector3 moveDirection = new Vector3(inputVector.y, 0f, -inputVector.x); // 3rd-person movement from above.
+
+        if (inputVector.magnitude < 1f)
+        {
+            /* It goes here, because we should only change the controls, when the player is not
+                using them. In other way, the player goes in an infinite loop that won't
+                let him get pass camera transition. */
+            nearWallControls = isPlayerNearWall;
+        }
+
+        if (nearWallControls)
+        {
+            thirdPersonInputVector.y = -inputVector.y;
+            thirdPersonInputVector.x = inputVector.x;
+        }
+
+        else
+        {
+            thirdPersonInputVector.y = inputVector.y;
+            thirdPersonInputVector.x = -inputVector.x;
+        }
+
+        Vector3 moveDirection = new Vector3(thirdPersonInputVector.y, 0f, thirdPersonInputVector.x); // 3rd-person movement from above.
 
         if (!isDodging)
         {
