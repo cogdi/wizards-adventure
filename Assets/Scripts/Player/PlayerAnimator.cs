@@ -13,14 +13,6 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int DodgeForward = Animator.StringToHash("DodgeForward");
     private static readonly int DodgeBackward = Animator.StringToHash("DodgeBackward");
 
-
-    // private const string IS_WALKING = "IsWalking";
-    // private const string IS_RUNNING = "IsRunning";
-    // private const string IS_BLOCKING = "IsBlocking";
-    // private const string IS_SPELLCASTING = "IsSpellcasting";
-    // private const string TRIGGER_ATTACK = "Attack";
-    // private const string TRIGGER_DODGE = "Dodge";
-    
     private PlayerInput playerInputInstance;
 
     [SerializeField] private Animator animator;
@@ -35,7 +27,6 @@ public class PlayerAnimator : MonoBehaviour
         attackTimer = attackTimerMax;
 
         PlayerCombat.Instance.OnChargingMagicAttack += HandleSpellcasting;
-        //PlayerInput.Instance.OnDodgePerformed += HandleDodging;
         PlayerMotor.Instance.OnPlayerDodged += HandleDodging;
         PlayerInput.Instance.OnMeleeAttackPerformed += HandleAttacks;
     }
@@ -49,14 +40,7 @@ public class PlayerAnimator : MonoBehaviour
         attackTimer += Time.deltaTime;
     }
 
-    // private void HandleDodging()
-    // {
-    //     animator.SetTrigger(DodgeLeft);
-    // }
-
-    // Debug.
-    private float isAttacking;
-    private Dictionary<int, string> IndexAnimationsDictionary = new Dictionary<int, string>()
+    private Dictionary<int, string> AnimationIndexDictionary = new Dictionary<int, string>()
     { 
         { 0, "FirstAttack" },
         { 1, "SecondAttack" },
@@ -66,11 +50,11 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleAttacks()
     {
-        if (attacksCounter >= IndexAnimationsDictionary.Count) attacksCounter = 0;
+        if (attacksCounter >= AnimationIndexDictionary.Count) attacksCounter = 0;
 
         if (!playerInputInstance.IsBlockingPressed() && attackTimer >= attackTimerMax)
         {
-            animator.SetTrigger(IndexAnimationsDictionary[attacksCounter]);
+            animator.SetTrigger(AnimationIndexDictionary[attacksCounter]);
 
             attacksCounter++;
             attackTimer = 0;

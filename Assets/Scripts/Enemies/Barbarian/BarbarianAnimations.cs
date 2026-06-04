@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BarbarianAnimations : MonoBehaviour
@@ -5,7 +6,15 @@ public class BarbarianAnimations : MonoBehaviour
     [SerializeField] private Animator animator;
     private Barbarian barbarian;
 
-    private string ATTACK_TRIGGER = "Attack";
+    // private string ATTACK_TRIGGER = "Attack";
+    private Dictionary<int, string> AnimationIndexDictionary = new Dictionary<int, string>()
+    { 
+            { 0, "FirstAttack" },
+            { 1, "SecondAttack" },
+            { 2, "ThirdAttack" }
+    };
+    private int currentAnimIndex;
+
     private string EARTHQUAKE_TRIGGER = "Earthquake";
     private string IS_WALKING = "IsWalking";
 
@@ -22,7 +31,11 @@ public class BarbarianAnimations : MonoBehaviour
 
     private void Barbarian_OnCloseAttack()
     {
-        animator.SetTrigger(ATTACK_TRIGGER);
+        if (currentAnimIndex >= AnimationIndexDictionary.Count)
+            currentAnimIndex = 0;
+
+        animator.SetTrigger(AnimationIndexDictionary[currentAnimIndex]);
+        currentAnimIndex++;
     }
 
     private void Barbarian_OnEarthquakeTriggered()
