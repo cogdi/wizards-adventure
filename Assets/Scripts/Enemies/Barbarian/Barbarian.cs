@@ -77,10 +77,19 @@ public class Barbarian : EnemyBase
         BarbarianLongDistanceState.OnRockThrowned += ShootProjectile;
     }
 
-    // private void Update()
-    // {
-        //Debug.Log("Distance to player: " + GetDistanceToPlayer());
-    // }
+    protected override void TakeDamage(EnemyBase enemy, float damage)
+    {
+        if (enemy == this && !BarbarianLongDistanceState.IsRushing)
+        {
+            health -= damage;
+            Debug.Log(health);
+
+            if (health <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
 
     public void MeleeDamageToPlayer()
     {
@@ -135,6 +144,13 @@ public class Barbarian : EnemyBase
         agent.speed = regularSpeed;
     }
 
+    private bool IsMagicCharge(GameObject go)
+    {
+        return  go.CompareTag(PlayerCombat.LIGHT_MAGIC_CHARGE_TAG) ||
+                go.CompareTag(PlayerCombat.MEDIUM_MAGIC_CHARGE_TAG) ||
+                go.CompareTag(PlayerCombat.STRONG_MAGIC_CHARGE_TAG);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (BarbarianLongDistanceState.IsRushing)
@@ -146,7 +162,10 @@ public class Barbarian : EnemyBase
 
             else if (!IsFloorLayer(collision.collider.gameObject.layer))
             {
-                OnWallHitInRush?.Invoke();
+                if (!IsMagicCharge(collision.collider.gameObject))
+                {
+                    OnWallHitInRush?.Invoke();
+                }
             }
         }
     }

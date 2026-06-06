@@ -133,7 +133,7 @@ public class PlayerCombat : MonoBehaviour
             magicAttackIntervalTimer += Time.deltaTime;
 
         //else if (!PlayerMotor.Instance.IsRunning())
-        else if (5 == 5) // Experimental.
+        else
         {
             if (playerInputInstance.IsMagicAttackTriggered())
             {
@@ -147,7 +147,7 @@ public class PlayerCombat : MonoBehaviour
                 OnStaffStateChanged?.Invoke(StaffState.Fired);
                 OnChargingMagicAttack?.Invoke(false);
 
-                // The button's been just released.
+                // The button's just been released.
                 if (magicChargePowerTimer < 2f)
                 {
                     currentAttackType = MagicAttacks.Light;

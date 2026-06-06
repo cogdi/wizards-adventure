@@ -9,6 +9,7 @@ public class BarbarianLongDistanceState : BarbarianBaseState
 {
     public static event Action OnStateChanged;
     public static event Action OnRockThrowned;
+    public static event Action OnHeadachePassed;
 
     // Throwing rocks.
     private const string BARBARIAN_ROCK = "Barbarian_Rock";
@@ -19,6 +20,9 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask wallLayer;
     public static bool IsRushing { get; private set; }
+    private bool isHeadaching;
+    private float headacheTimer;
+    private float headacheTimerMax = 5f;
 
     private bool isDestinationSet;
     private float rushTimer;
@@ -46,23 +50,36 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     
     public override void PerformState()
     {
-        if (barbarian.GetDistanceToPlayer() <= Barbarian.MEDIUM_DISTANCE &&
-        IsRushing == false)
+        if (!isHeadaching)
         {
-            // The distance got out of the boundaries of long-distance attacks.
-            OnStateChanged?.Invoke();
-        }
+            if (barbarian.GetDistanceToPlayer() <= Barbarian.MEDIUM_DISTANCE && !IsRushing)
+            {
+                // The distance got out of the boundaries of long-distance attacks.
+                OnStateChanged?.Invoke();
+            }
 
-        if (!isRockThrowed)
-        {
-            OnRockThrowned?.Invoke();
+            if (!isRockThrowed)
+            {
+                OnRockThrowned?.Invoke();
 
-            isRockThrowed = true;
+                isRockThrowed = true;
+            }
+
+            else
+            {
+                Rush();
+            }
         }
 
         else
         {
-            Rush();
+            headacheTimer += Time.deltaTime;
+            if (headacheTimer >= headacheTimerMax)
+            {
+                isHeadaching = false;
+                OnHeadachePassed?.Invoke();
+                headacheTimer = 0;
+            }
         }
     }
 
@@ -115,6 +132,11 @@ public class BarbarianLongDistanceState : BarbarianBaseState
         rushTimer = 0f;
     }
 
+    private void Headache()
+    {
+        isHeadaching = true;
+    }
+
     private void OnPlayerHitInRush()
     {
         Debug.Log("Barbarian Rush: Hit player");
@@ -125,6 +147,8 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     {
         Debug.Log("Barbarian Rush: Hit wall");
         StopRushing();
+
+        Headache();
     }
 
     public override void ExitState()
