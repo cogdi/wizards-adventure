@@ -124,6 +124,8 @@ public class CharacterAttributes : MonoBehaviour
         if (playerMotorInstance.IsGrounded)
         {
             isStunned = true;
+            Debug.Log("IsStunned: " + isStunned);
+
             TakeDamage(damage);
         }
     }
@@ -209,6 +211,8 @@ public class CharacterAttributes : MonoBehaviour
             else
             {
                 isStunned = false;
+                Debug.Log("IsStunned: " + isStunned);
+
                 playerMotorInstance.ApplyNormalSpeed();
                 stunTimer = 0f;
             }
@@ -223,7 +227,9 @@ public class CharacterAttributes : MonoBehaviour
         PlayerCombat.Instance.OnManaSpent -= SpendMana;
         ManaObject.OnManaRestored -= RestoreMana;
         HealingObject.OnHealthRestored -= Heal;
-        
-        //Barbarian.OnDamagingPlayer -= TakeDamage;
+
+        Barbarian.OnPlayerHit -= TakeDamage;
+        Barbarian.OnEarthquakeHitPlayer -= TakeStun;
+        BarbarianRock.OnPlayerHit -= TakeDamage;
     }
 }

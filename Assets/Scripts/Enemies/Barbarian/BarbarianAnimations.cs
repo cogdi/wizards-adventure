@@ -7,7 +7,6 @@ public class BarbarianAnimations : MonoBehaviour
     [SerializeField] private Animator animator;
     private Barbarian barbarian;
 
-    // private string ATTACK_TRIGGER = "Attack";
     private Dictionary<int, string> AnimationIndexDictionary = new Dictionary<int, string>()
     { 
             { 0, "FirstAttack" },
@@ -20,6 +19,8 @@ public class BarbarianAnimations : MonoBehaviour
     private string IS_WALKING = "IsWalking";
     private string HEADACHE_TRIGGER = "Headache";
     private string IS_HEADACHING = "IsHeadaching";
+    private string PICKUP_TRIGGER = "PickUp";
+    private string SPIN_TRIGGER = "Spin";
 
 
     private void Start()
@@ -29,11 +30,24 @@ public class BarbarianAnimations : MonoBehaviour
         barbarian.OnCloseAttack += Barbarian_OnCloseAttack;
         barbarian.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
         barbarian.OnWallHitInRush += Barbarian_OnWallHitInRush;
+        barbarian.OnStoneCrushed += Barbarian_OnStoneCrushed;
 
         BarbarianCloseDistanceState.OnCloseAttack += Barbarian_OnCloseAttack;
         BarbarianMediumDistanceState.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
         BarbarianLongDistanceState.OnHeadachePassed += Barbarian_OnHeadachePassed;
+        BarbarianLongDistanceState.OnPickingUpStone += BarbarianLongDistanceState_OnPickingUpStone;
     }
+
+    private void Barbarian_OnStoneCrushed()
+    {
+        animator.SetBool(SPIN_TRIGGER, true);
+    }
+
+    private void BarbarianLongDistanceState_OnPickingUpStone()
+    {
+        animator.SetTrigger(PICKUP_TRIGGER);
+    }
+
 
     private void Barbarian_OnHeadachePassed()
     {
@@ -69,5 +83,13 @@ public class BarbarianAnimations : MonoBehaviour
     private void HandleWalking()
     {
         animator.SetBool(IS_WALKING, barbarian.IsMoving());
+    }
+
+    private void OnDestroy()
+    {
+        BarbarianCloseDistanceState.OnCloseAttack -= Barbarian_OnCloseAttack;
+        BarbarianMediumDistanceState.OnEarthquakeTriggered -= Barbarian_OnEarthquakeTriggered;
+        BarbarianLongDistanceState.OnHeadachePassed -= Barbarian_OnHeadachePassed;
+        BarbarianLongDistanceState.OnPickingUpStone -= BarbarianLongDistanceState_OnPickingUpStone;
     }
 }

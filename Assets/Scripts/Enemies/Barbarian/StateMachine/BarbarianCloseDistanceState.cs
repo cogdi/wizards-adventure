@@ -15,6 +15,7 @@ public class BarbarianCloseDistanceState : BarbarianBaseState
 
     private NavMeshAgent agent;
     private Transform playerTransform;
+    private float attackDistance = 2.5f;
 
     public override void EnterState()
     {
@@ -31,13 +32,31 @@ public class BarbarianCloseDistanceState : BarbarianBaseState
             OnStateChanged?.Invoke();
         }
 
-        closeAttackTimer += Time.deltaTime;
+        // closeAttackTimer += Time.deltaTime;
 
-        agent.SetDestination(playerTransform.position);
+        //agent.SetDestination(playerTransform.position);
         
-        if (agent.remainingDistance <= stateMachine.Agent.stoppingDistance &&
-        closeAttackTimer >= closeAttackTimerMax)
+        // if (agent.remainingDistance <= stateMachine.Agent.stoppingDistance &&
+        // closeAttackTimer >= closeAttackTimerMax)
+        // {
+        //     OnCloseAttack?.Invoke();
+        //     closeAttackTimer = 0f;
+        // }
+
+        Vector3 directionToPlayer = playerTransform.position - stateMachine.Barbarian.transform.position;
+        Quaternion rotiationToPlayer = Quaternion.LookRotation(directionToPlayer.normalized);
+        stateMachine.Barbarian.transform.rotation = Quaternion.RotateTowards(stateMachine.Barbarian.transform.rotation, rotiationToPlayer, agent.angularSpeed * Time.deltaTime);
+
+        closeAttackTimer += Time.deltaTime;
+        if (stateMachine.Barbarian.GetDistanceToPlayer() > attackDistance)
         {
+            agent.SetDestination(playerTransform.position);
+        }
+
+        else if (closeAttackTimer >= closeAttackTimerMax)
+        {
+            agent.ResetPath();
+
             OnCloseAttack?.Invoke();
             closeAttackTimer = 0f;
         }

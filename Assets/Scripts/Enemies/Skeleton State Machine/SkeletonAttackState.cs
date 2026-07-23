@@ -27,6 +27,7 @@ public class SkeletonAttackState : SkeletonBaseState
 
     public override void PerformState()
     {
+        // TODO: It doesn't work.
         if (skeleton.CanSeePlayer() || BossFightTrigger.IsBossFightTriggered)
         {
             // Skeletons won't change state while Boss-Fight is active.

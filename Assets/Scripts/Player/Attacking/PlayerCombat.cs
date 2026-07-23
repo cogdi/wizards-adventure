@@ -200,7 +200,7 @@ public class PlayerCombat : MonoBehaviour
 
         Vector3 shootDirection = PlayerLook.Instance.GetCameraTransformForward().normalized;
         magicCharge.GetComponent<Rigidbody>().velocity = shootDirection * 17.5f;
-        if (Vector3.Distance(magicChargePosition.position, magicCharge.transform.position) > 5f)
+        if (Vector3.Distance(magicChargePosition.position, magicCharge.transform.position) > 5f) // TODO: Probably it's not working.
         {
             Destroy(magicCharge);
         }

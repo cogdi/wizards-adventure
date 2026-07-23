@@ -3,6 +3,8 @@ using System.Resources;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
+using System.Threading;
 
 public class Barbarian : EnemyBase
 {
@@ -16,6 +18,9 @@ public class Barbarian : EnemyBase
     public event Action OnEarthquakeTriggered;
     public event Action OnEarthquakeFinishedEvent;
 
+    public event Action OnRocksThrowned;
+    public event Action OnStoneCrushed;
+
     [SerializeField] private NavMeshAgent agent;
     public NavMeshAgent Agent { get => agent; set 
     {
@@ -23,11 +28,14 @@ public class Barbarian : EnemyBase
             agent = value; // Debug.
     }}
 
+    public Transform RockSpawnPoint { get => rockSpawnPoint; }
+
     // Weapons.
     [SerializeField] private GameObject leftHandWeapon;
     [SerializeField] private GameObject rightHandWeapon;
     [SerializeField] private GameObject twoHandedWeapon;
     [SerializeField] private Transform rockSpawnPoint;
+
 
     // Damage.
     public const float STONES_DAMAGE = 30f;
@@ -44,9 +52,14 @@ public class Barbarian : EnemyBase
     [SerializeField] private float meleeDamageDistance = 2.75f;
 
     // Throwing rocks.
-    private const string BARBARIAN_ROCK = "Barbarian_Rock";
-    private const float rockThrowingSpeed = 40f;
-    private bool isRockThrowed;
+    public List<GameObject> Rocks { get => rocks; }
+    private const string BARBARIAN_ROCK = "Barbarian_Rock_1";
+    private const float STONE_THROWING_SPEED = 40f;
+    private const int STONES_COUNT = 50;
+    [SerializeField] private List<GameObject> rocks;
+
+    private BarbarianObjectPool<BarbarianStoneProjectile> stonesPool;
+    [SerializeField] private GameObject stonePiecePrefab;
 
     // Rush.
     [SerializeField] private LayerMask floorLayer;
@@ -66,7 +79,12 @@ public class Barbarian : EnemyBase
     private void Awake()
     {
         MAX_HEALTH = 300f;
-        ApplyRegularSpeed();
+        ApplyRegularSpeed();        
+    }
+
+    private void OnEnable()
+    {
+        InitializeStonesPool();
     }
 
     protected override void Start()
@@ -74,7 +92,6 @@ public class Barbarian : EnemyBase
         base.Start();
 
         stateMachine.Initialise();
-        BarbarianLongDistanceState.OnRockThrowned += ShootProjectile;
     }
 
     protected override void TakeDamage(EnemyBase enemy, float damage)
@@ -99,6 +116,42 @@ public class Barbarian : EnemyBase
         }
     }
     
+    private void InitializeStonesPool()
+    {
+        if (stonesPool == null || stonesPool.Count <= 0)
+        {
+            stonesPool = new BarbarianObjectPool<BarbarianStoneProjectile>(stonePiecePrefab.GetComponent<BarbarianStoneProjectile>(), STONES_COUNT);
+
+            for (int i = 0; i < STONES_COUNT; i++)
+            {
+                stonesPool.Get().SetPoolReference(stonesPool);
+            }
+        }
+    }
+
+    public void ThrowStones()
+    {
+        for (int i = 0; i < STONES_COUNT; i++)
+        {
+            float yaw = UnityEngine.Random.Range(-15f, 15f);
+            float pitch = UnityEngine.Random.Range(-3.5f, 3.5f);
+
+            LookTowards(playerBody.transform.position);
+
+            Vector3 dir = Quaternion.Euler(pitch, yaw, 0) * rockSpawnPoint.forward;
+
+            BarbarianStoneProjectile sp = stonesPool.Get();
+
+            sp.transform.position = RockSpawnPoint.position;
+            sp.transform.rotation = Quaternion.identity;
+
+            // sp.GetComponent<Rigidbody>().velocity = dir * STONE_THROWING_SPEED;
+            sp.ShootProjectile(dir, STONE_THROWING_SPEED);
+        }
+
+        OnRocksThrowned?.Invoke();
+    }
+
     public void Earthquake()
     {
         // Called by an animation event.
@@ -114,14 +167,23 @@ public class Barbarian : EnemyBase
         OnEarthquakeFinishedEvent?.Invoke();
     }
 
-    public void ShootProjectile()
+    public void PickUpStone()
     {
-        Vector3 direction = playerBody.position - rockSpawnPoint.position;
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        Vector3 directionToPlayer = (playerBody.position - transform.position).normalized;
+        if (Rocks.Count < 0)
+            return;
 
-        GameObject projectile = Instantiate(Resources.Load($"Prefabs/{BARBARIAN_ROCK}") as GameObject, rockSpawnPoint.position, rotation, parent: this.transform);
-        projectile.GetComponent<Rigidbody>().velocity = directionToPlayer * rockThrowingSpeed;
+        Rocks[Rocks.Count - 1].transform.SetParent(transform);
+        Rocks[Rocks.Count - 1].transform.position = RockSpawnPoint.position;
+    }
+
+    public void ShootOnStoneCrushedEvent()
+    {
+        Destroy(stateMachine.Barbarian.Rocks[Rocks.Count - 1]);
+        stateMachine.Barbarian.Rocks.RemoveAt(Rocks.Count - 1);
+        
+        //stateMachine.Barbarian.Rocks[Rocks.Count - 1].gameObject.SetActive(false);
+
+        OnStoneCrushed?.Invoke();
     }
 
     public bool IsFloorLayer(int layer)

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class BarbarianObjectPool<T> where T : Component
 {
+    public int Count { get => objects.Count; }
+
     private T prefab;
     private Queue<T> objects = new Queue<T>();
 

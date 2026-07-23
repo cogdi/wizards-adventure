@@ -8,13 +8,15 @@ using UnityEngine.AI;
 public class BarbarianLongDistanceState : BarbarianBaseState
 {
     public static event Action OnStateChanged;
-    public static event Action OnRockThrowned;
+    //public static event Action OnRockThrowned;
     public static event Action OnHeadachePassed;
+    public static event Action OnPickingUpStone;
 
     // Throwing rocks.
     private const string BARBARIAN_ROCK = "Barbarian_Rock";
     private const float rockThrowingSpeed = 40f;
-    private bool isRockThrowed;
+    private bool isRockPickedUp;
+    private bool isAllRocksBeenThrowned;
 
     // Rush.
     [SerializeField] private LayerMask floorLayer;
@@ -35,6 +37,7 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     private NavMeshAgent agent;
     private Transform playerTransform;
 
+    private BarbarianObjectPool<BarbarianStoneProjectile> stonesPool;
 
     public override void EnterState()
     {
@@ -45,9 +48,21 @@ public class BarbarianLongDistanceState : BarbarianBaseState
         agent.areaMask = 1 << NavMesh.GetAreaFromName("Walkable");
 
         stateMachine.Barbarian.OnPlayerHitInRush += OnPlayerHitInRush;
-        stateMachine.Barbarian.OnWallHitInRush += OnWallHitInRush;
+        stateMachine.Barbarian.OnWallHitInRush += OnWallHitInRush;        
+        stateMachine.Barbarian.OnRocksThrowned += Barbarian_OnRocksThrowned;        
     }
-    
+
+    private void Barbarian_OnRocksThrowned()
+    {
+        isRockPickedUp = false;
+
+        if (barbarian.Rocks.Count < 1)
+        {
+            isAllRocksBeenThrowned = true;
+        }
+    }
+
+
     public override void PerformState()
     {
         if (!isHeadaching)
@@ -58,11 +73,12 @@ public class BarbarianLongDistanceState : BarbarianBaseState
                 OnStateChanged?.Invoke();
             }
 
-            if (!isRockThrowed)
+            if (!isAllRocksBeenThrowned)
             {
-                OnRockThrowned?.Invoke();
-
-                isRockThrowed = true;
+                if (!isRockPickedUp)
+                {
+                    PickUpRock();
+                }
             }
 
             else
@@ -83,12 +99,23 @@ public class BarbarianLongDistanceState : BarbarianBaseState
         }
     }
 
+    private void PickUpRock()
+    {
+        agent.SetDestination(barbarian.Rocks[barbarian.Rocks.Count - 1].transform.position);
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            OnPickingUpStone?.Invoke();
+            isRockPickedUp = true;
+        }
+    }
+
+
     private void Rush()
     {
-        // agent.updateRotation = false;
         if (!IsRushing)
-            barbarian.LookTowards(playerTransform.position);
-
+        {
+            LookAtPlayer();
+        }
 
         rushTimer += Time.deltaTime;
         
@@ -96,13 +123,9 @@ public class BarbarianLongDistanceState : BarbarianBaseState
         {
             if (!lookingAtPlayerDirection)
             {
-                agent.updateRotation = false;
-                barbarian.LookTowards(playerTransform.position);
-
-                lookingAtPlayerDirection = true;
+                return;
             }
 
-            //agent.speed = rushSpeed;
             barbarian.ApplyRushSpeed();
             IsRushing = true;
 
@@ -120,12 +143,19 @@ public class BarbarianLongDistanceState : BarbarianBaseState
         }
     }
 
+    private void LookAtPlayer()
+    {
+        agent.updateRotation = false;
+        barbarian.LookTowards(playerTransform.position);
+        lookingAtPlayerDirection = true;
+        agent.updateRotation = true;
+    }
+
     public void StopRushing()
     {
         agent.ResetPath();
         agent.updateRotation = true;
         
-        //agent.speed = regularSpeed;
         barbarian.ApplyRegularSpeed();
         IsRushing = false;
         lookingAtPlayerDirection = false;
@@ -153,6 +183,10 @@ public class BarbarianLongDistanceState : BarbarianBaseState
 
     public override void ExitState()
     {
+        stateMachine.Barbarian.OnPlayerHitInRush -= OnPlayerHitInRush;
+        stateMachine.Barbarian.OnWallHitInRush -= OnWallHitInRush;
+        stateMachine.Barbarian.OnRocksThrowned -= Barbarian_OnRocksThrowned;        
+
         StopRushing();
     }
 }
