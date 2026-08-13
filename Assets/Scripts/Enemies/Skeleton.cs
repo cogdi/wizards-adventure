@@ -22,6 +22,8 @@ public class Skeleton : EnemyBase
     public bool IsSkeletonMage { get; private set; }
     public bool IsAssistanceSkeleton => isAssistanceSkeleton;
     [SerializeField] private bool isAssistanceSkeleton;
+    public Transform AssistancePosition => assistancePosition;
+    [SerializeField] private Transform assistancePosition;
 
     private const string MELEE_SKELETON_TAG = "MeleeSkeleton";
     private const string SKELETON_ARCHER_TAG = "SkeletonArcher";

@@ -10,7 +10,6 @@ public class InteractiveDoorAnimations : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Door anim awake()");
         animator.SetBool(IS_OPENING, false);
 
         door.OnDoorStateChanged += Door_OnDoorStateChanged;

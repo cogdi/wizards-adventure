@@ -29,8 +29,9 @@ public class BarbarianAnimations : MonoBehaviour
 
         barbarian.OnCloseAttack += Barbarian_OnCloseAttack;
         barbarian.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
-        barbarian.OnWallHitInRush += Barbarian_OnWallHitInRush;
-        barbarian.OnStoneCrushed += Barbarian_OnStoneCrushed;
+        // barbarian.OnWallHitInRush += Barbarian_OnWallHitInRush;
+        BarbarianLongDistanceState.OnHeadacheStarted += Barbarian_OnWallHitInRush;
+        barbarian.OnRockCrushed += Barbarian_OnStoneCrushed;
 
         BarbarianCloseDistanceState.OnCloseAttack += Barbarian_OnCloseAttack;
         BarbarianMediumDistanceState.OnEarthquakeTriggered += Barbarian_OnEarthquakeTriggered;
@@ -47,7 +48,6 @@ public class BarbarianAnimations : MonoBehaviour
     {
         animator.SetTrigger(PICKUP_TRIGGER);
     }
-
 
     private void Barbarian_OnHeadachePassed()
     {

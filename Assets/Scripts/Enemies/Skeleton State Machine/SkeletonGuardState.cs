@@ -10,8 +10,10 @@ public class SkeletonGuardState : SkeletonBaseState
     private NavMeshAgent agent;
     private Transform guardPost;
     
+
+    // They'll go to help when Boss-Fight started.
     private bool isAssistanceSkeleton;
-    private Transform assistancePosition;
+    private Transform assistancePost;
     
     // To make the skeletons look to the right side on their guard posts.
     private bool isStayingOnPost;
@@ -22,6 +24,7 @@ public class SkeletonGuardState : SkeletonBaseState
     {
         agent = skeleton.Agent;
         isAssistanceSkeleton = skeleton.IsAssistanceSkeleton;
+        assistancePost = skeleton.AssistancePosition;
         
         List<Transform> patrolPointList = skeleton.GetPatrolPointList();
         guardPost = patrolPointList[0];
@@ -29,12 +32,17 @@ public class SkeletonGuardState : SkeletonBaseState
         isLookingRightWay = false;
 
         SoundManager.Instance.OnAnySoundMade += PlayerCombat_OnWallHit;
-        BossFightTrigger.OnBossFightTriggered += BossFightTrigger_OnOnBossFightTriggered; 
+        BossFightManager.OnBossFightTriggered += BossFightManager_OnBossFightTriggered; 
     }
 
-    private void BossFightTrigger_OnOnBossFightTriggered()
+    private void BossFightManager_OnBossFightTriggered()
     {
-        agent.SetDestination(assistancePosition.position);
+        if (isAssistanceSkeleton)
+        {
+            //SendAgentToHelp();
+            SendAgentToPost(assistancePost);
+
+        }
     }
 
     public override void PerformState()
@@ -48,17 +56,18 @@ public class SkeletonGuardState : SkeletonBaseState
         {
             if (!isStayingOnPost && !isLookingRightWay)
             {
-                SendAgentToGuardPost();
+                //SendAgentToGuardPost();
+                SendAgentToPost(guardPost);
             }
         }
     }
 
-    private void SendAgentToGuardPost()
+    private void SendAgentToPost(Transform post)
     {
         /* This method is mostly needed to make Skeletons look at the right directions when they come back
            to their posts. */
         
-        agent.SetDestination(guardPost.position);
+        agent.SetDestination(post.position);
    
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
@@ -68,9 +77,9 @@ public class SkeletonGuardState : SkeletonBaseState
                 isStayingOnPost = true;
             }
             
-            skeleton.transform.rotation = Quaternion.Lerp(skeleton.transform.rotation, guardPost.rotation, Time.deltaTime * 10f); // 10
+            skeleton.transform.rotation = Quaternion.Lerp(skeleton.transform.rotation, post.rotation, Time.deltaTime * 10f); // 10
         
-            float dot = Quaternion.Dot(skeleton.transform.rotation.normalized, guardPost.rotation.normalized);
+            float dot = Quaternion.Dot(skeleton.transform.rotation.normalized, post.rotation.normalized);
 
             if (dot > 0.999f)
             {
@@ -78,6 +87,55 @@ public class SkeletonGuardState : SkeletonBaseState
             }
         }
     }
+
+    // private void SendAgentToGuardPost()
+    // {
+    //     /* This method is mostly needed to make Skeletons look at the right directions when they come back
+    //        to their posts. */
+        
+    //     agent.SetDestination(guardPost.position);
+   
+    //     if (agent.remainingDistance <= agent.stoppingDistance)
+    //     {
+    //         if (!isStayingOnPost)
+    //         {
+    //             agent.ResetPath();
+    //             isStayingOnPost = true;
+    //         }
+            
+    //         skeleton.transform.rotation = Quaternion.Lerp(skeleton.transform.rotation, guardPost.rotation, Time.deltaTime * 10f); // 10
+        
+    //         float dot = Quaternion.Dot(skeleton.transform.rotation.normalized, guardPost.rotation.normalized);
+
+    //         if (dot > 0.999f)
+    //         {
+    //             isLookingRightWay = true;
+    //         }
+    //     }
+    // }
+
+    // private void SendAgentToHelp()
+    // {
+    //     agent.SetDestination(assistancePosition.position);
+   
+    //     if (agent.remainingDistance <= agent.stoppingDistance)
+    //     {
+    //         if (!isStayingOnPost)
+    //         {
+    //             agent.ResetPath();
+    //             isStayingOnPost = true;
+    //         }
+            
+    //         skeleton.transform.rotation = Quaternion.Lerp(skeleton.transform.rotation, guardPost.rotation, Time.deltaTime * 10f); // 10
+        
+    //         float dot = Quaternion.Dot(skeleton.transform.rotation.normalized, guardPost.rotation.normalized);
+
+    //         if (dot > 0.999f)
+    //         {
+    //             isLookingRightWay = true;
+    //         }
+    //     }
+    // }
 
     private void PlayerCombat_OnWallHit(Vector3 hitPosition)
     {
@@ -90,7 +148,7 @@ public class SkeletonGuardState : SkeletonBaseState
     public override void UnsubscribeFromEvents()
     {
         SoundManager.Instance.OnAnySoundMade -= PlayerCombat_OnWallHit;
-        BossFightTrigger.OnBossFightTriggered -= BossFightTrigger_OnOnBossFightTriggered;
+        BossFightManager.OnBossFightTriggered -= BossFightManager_OnBossFightTriggered;
     }
 
     public override void ExitState()

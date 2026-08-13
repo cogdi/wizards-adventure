@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2355938396832820271}
   - component: {fileID: 631406220843532212}
   - component: {fileID: 8005682667355173655}
+  - component: {fileID: 261223731368678238}
   m_Layer: 0
   m_Name: Barbarian_Rock
   m_TagString: Untagged
@@ -94,7 +95,7 @@ MeshCollider:
   m_GameObject: {fileID: 3325218233818123789}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -115,3 +116,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &261223731368678238
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3325218233818123789}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.3285377, y: 1.4219627, z: 1.2422025}
+  m_Center: {x: 0.069378525, y: -0.028208166, z: -0.08326268}

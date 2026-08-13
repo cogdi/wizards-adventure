@@ -41,8 +41,6 @@ public class BarbarianStateMachine : MonoBehaviour
 
     private void SwitchState(BarbarianBaseState state)
     {
-        Debug.Log("BarbarianStateMachine: switching to " + state.ToString());
-
         if (state != null)
         {
             currentState?.ExitState();
@@ -71,6 +69,9 @@ public class BarbarianStateMachine : MonoBehaviour
             {
                 SwitchState(BarbarianLongDistanceState);
             }
+
+            Debug.Log("Switching state to: " + currentState);
+
         }
     }
 

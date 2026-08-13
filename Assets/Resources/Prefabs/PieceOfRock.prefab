@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 631406220843532212}
   - component: {fileID: 6280363969531815582}
   - component: {fileID: 1682527914269668838}
+  - component: {fileID: -3806105629263985545}
   m_Layer: 0
   m_Name: PieceOfRock
   m_TagString: Untagged
@@ -95,7 +96,7 @@ MeshCollider:
   m_GameObject: {fileID: 3325218233818123789}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -128,3 +129,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19fcdcc88e4c3347a95e58f8c9d61916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &-3806105629263985545
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3325218233818123789}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.3285377, y: 1.4219627, z: 1.2422025}
+  m_Center: {x: 0.069378525, y: -0.028208166, z: -0.08326268}

@@ -13,7 +13,6 @@ public class RegularDoor : InteractiveDoor
 
     protected override void Start()
     {
-        Debug.Log("Start()");
         base.Start();
 
         PlayerMotor.Instance.OnPickingKeys += PickKey;

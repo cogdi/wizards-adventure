@@ -1,4 +1,6 @@
+using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,12 +13,14 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Slider manaSlider;
     [SerializeField] private Slider staminaSlider;
 
+    [SerializeField] private Slider bossHealthSlider;
+
     private float health;
     private float mana;
     private float stamina;
 
     private bool isStaminaChanging;
-    
+
     private void Start()
     {
         characterAttributesInstance = CharacterAttributes.Instance;
@@ -25,13 +29,32 @@ public class PlayerUI : MonoBehaviour
         characterAttributesInstance.OnManaChanged += CharacterAttributes_OnManaChanged;
         characterAttributesInstance.OnStaminaStateChanged += CharacterAttributes_OnStaminaChanged;
         
+        BossFightManager.OnBossFightTriggered += BossFightManager_OnBossFightTriggered;
+        BossFightManager.Instance.OnBossFightEnded += BossFightManager_OnBossFightEnded;
     }
-    
+
+    private void BossFightManager_OnBossFightEnded()
+    {
+        bossHealthSlider.gameObject.SetActive(false);
+    }
+
+
+    private void BossFightManager_OnBossFightTriggered()
+    {
+        bossHealthSlider.gameObject.SetActive(true);
+    }
+
+
     private void Update()
     {
         if (isStaminaChanging)
         {
             staminaSlider.value = characterAttributesInstance.Stamina;
+        }
+
+        if (bossHealthSlider.IsActive())
+        {
+            bossHealthSlider.value = BossFightManager.Instance.GetCurrentBossHP();
         }
     }
     
@@ -49,5 +72,10 @@ public class PlayerUI : MonoBehaviour
     private void CharacterAttributes_OnStaminaChanged(bool isChanging)
     {
         isStaminaChanging = isChanging;
+    }
+
+    private void OnDestroy()
+    {
+        BossFightManager.OnBossFightTriggered -= BossFightManager_OnBossFightTriggered;
     }
 }

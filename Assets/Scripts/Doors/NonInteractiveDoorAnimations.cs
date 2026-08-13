@@ -6,11 +6,16 @@ public class NonInteractiveDoorAnimations : MonoBehaviour
     
     private void Start()
     {
-        BossFightTrigger.OnBossFightTriggered += BossFightTrigger_OnBossFightTriggered;
+        BossFightManager.OnBossFightTriggered += BossFightManager_OnBossFightTriggered;
     }
 
-    private void BossFightTrigger_OnBossFightTriggered()
+    private void BossFightManager_OnBossFightTriggered()
     {
         animator.SetTrigger("BossFightTrigger");
+    }
+
+    private void OnDestroy()
+    {
+        BossFightManager.OnBossFightTriggered -= BossFightManager_OnBossFightTriggered;
     }
 }

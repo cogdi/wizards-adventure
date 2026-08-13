@@ -10,6 +10,7 @@ public class Barbarian : EnemyBase
 {
     public static event Action<float> OnPlayerHit;
     public static event Action<float> OnEarthquakeHitPlayer;
+    public static event Action OnBarbarianBeated;
     
     public event Action OnPlayerHitInRush;
     public event Action OnWallHitInRush;
@@ -18,8 +19,8 @@ public class Barbarian : EnemyBase
     public event Action OnEarthquakeTriggered;
     public event Action OnEarthquakeFinishedEvent;
 
-    public event Action OnRocksThrowned;
-    public event Action OnStoneCrushed;
+    public event Action OnRockCrushed;
+    public event Action OnStonesThrowned;
 
     [SerializeField] private NavMeshAgent agent;
     public NavMeshAgent Agent { get => agent; set 
@@ -28,7 +29,7 @@ public class Barbarian : EnemyBase
             agent = value; // Debug.
     }}
 
-    public Transform RockSpawnPoint { get => rockSpawnPoint; }
+    public Transform StonesSpawnPoint { get => rockSpawnPoint; }
 
     // Weapons.
     [SerializeField] private GameObject leftHandWeapon;
@@ -53,10 +54,12 @@ public class Barbarian : EnemyBase
 
     // Throwing rocks.
     public List<GameObject> Rocks { get => rocks; }
+    public bool AllRocksCrushed { get => rocks.Count <= 0; }
     private const string BARBARIAN_ROCK = "Barbarian_Rock_1";
     private const float STONE_THROWING_SPEED = 40f;
     private const int STONES_COUNT = 50;
-    [SerializeField] private List<GameObject> rocks;
+    // [SerializeField] private List<GameObject> rocks;
+    private List<GameObject> rocks;
 
     private BarbarianObjectPool<BarbarianStoneProjectile> stonesPool;
     [SerializeField] private GameObject stonePiecePrefab;
@@ -80,6 +83,8 @@ public class Barbarian : EnemyBase
     {
         MAX_HEALTH = 300f;
         ApplyRegularSpeed();        
+
+        rocks = new List<GameObject>();
     }
 
     private void OnEnable()
@@ -91,8 +96,11 @@ public class Barbarian : EnemyBase
     {
         base.Start();
 
+        RockManager.Instance.OnRockFallen += AddRock;
+
         stateMachine.Initialise();
     }
+
 
     protected override void TakeDamage(EnemyBase enemy, float damage)
     {
@@ -103,7 +111,7 @@ public class Barbarian : EnemyBase
 
             if (health <= 0f)
             {
-                Destroy(gameObject);
+                OnBeated();
             }
         }
     }
@@ -142,14 +150,14 @@ public class Barbarian : EnemyBase
 
             BarbarianStoneProjectile sp = stonesPool.Get();
 
-            sp.transform.position = RockSpawnPoint.position;
+            sp.transform.position = StonesSpawnPoint.position;
             sp.transform.rotation = Quaternion.identity;
 
             // sp.GetComponent<Rigidbody>().velocity = dir * STONE_THROWING_SPEED;
             sp.ShootProjectile(dir, STONE_THROWING_SPEED);
         }
 
-        OnRocksThrowned?.Invoke();
+        OnStonesThrowned?.Invoke();
     }
 
     public void Earthquake()
@@ -164,26 +172,31 @@ public class Barbarian : EnemyBase
 
     public void OnEarthquakeFinished()
     {
+        RockManager.Instance.TriggerRockFalling();
+
         OnEarthquakeFinishedEvent?.Invoke();
     }
 
     public void PickUpStone()
     {
-        if (Rocks.Count < 0)
+        if (rocks.Count < 0)
             return;
 
-        Rocks[Rocks.Count - 1].transform.SetParent(transform);
-        Rocks[Rocks.Count - 1].transform.position = RockSpawnPoint.position;
+        rocks[rocks.Count - 1].transform.SetParent(transform);
+        rocks[rocks.Count - 1].transform.localPosition = StonesSpawnPoint.position;
     }
 
     public void ShootOnStoneCrushedEvent()
     {
-        Destroy(stateMachine.Barbarian.Rocks[Rocks.Count - 1]);
-        stateMachine.Barbarian.Rocks.RemoveAt(Rocks.Count - 1);
+        // Destroy(stateMachine.Barbarian.rocks[rocks.Count - 1]);
+        // stateMachine.Barbarian.rocks.RemoveAt(rocks.Count - 1);
         
-        //stateMachine.Barbarian.Rocks[Rocks.Count - 1].gameObject.SetActive(false);
+        GameObject rock = rocks[rocks.Count - 1];
+        stateMachine.Barbarian.rocks.RemoveAt(rocks.Count - 1);
+        
+        Destroy(rock);
 
-        OnStoneCrushed?.Invoke();
+        OnRockCrushed?.Invoke();
     }
 
     public bool IsFloorLayer(int layer)
@@ -204,6 +217,11 @@ public class Barbarian : EnemyBase
     public void ApplyRegularSpeed()
     {
         agent.speed = regularSpeed;
+    }
+
+    public void AddRock(GameObject rock)
+    {
+        rocks.Add(rock);
     }
 
     private bool IsMagicCharge(GameObject go)
@@ -230,5 +248,12 @@ public class Barbarian : EnemyBase
                 }
             }
         }
+    }
+
+    private void OnBeated()
+    {
+        OnBarbarianBeated?.Invoke();
+
+        Destroy(gameObject);
     }
 }
