@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class BarbarianStoneProjectile : MonoBehaviour
 {
+    public static event Action OnStoneProjectileHitPlayer;
+
     private BarbarianObjectPool<BarbarianStoneProjectile> pool;
     private float flyTime = 0f;
     private const float FLY_TIME_MAX = 3.5f;
@@ -17,10 +20,13 @@ public class BarbarianStoneProjectile : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // TODO: Damage logic.
-        Debug.Log("Stone projectile OnTriggerEnter");
+        //Debug.Log("Stone projectile OnTriggerEnter");
 
         if (other.CompareTag(PlayerCombat.PLAYER_TAG))
+        {
+            OnStoneProjectileHitPlayer?.Invoke();
             pool.ReturnToPool(this);
+        }
     }
 
     private void Awake()

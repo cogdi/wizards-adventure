@@ -65,8 +65,16 @@ public class CharacterAttributes : MonoBehaviour
 
         BarbarianRock.OnPlayerHit += TakeDamage;
 
+        BarbarianStoneProjectile.OnStoneProjectileHitPlayer += BarbarianStoneProjectile_OnStoneProjectileHitPlayer;
+
         playerMotorInstance = PlayerMotor.Instance;
     }
+
+    private void BarbarianStoneProjectile_OnStoneProjectileHitPlayer()
+    {
+        TakeDamage(5f);
+    }
+
 
     private void Update()
     {
@@ -231,5 +239,7 @@ public class CharacterAttributes : MonoBehaviour
         Barbarian.OnPlayerHit -= TakeDamage;
         Barbarian.OnEarthquakeHitPlayer -= TakeStun;
         BarbarianRock.OnPlayerHit -= TakeDamage;
+
+        BarbarianStoneProjectile.OnStoneProjectileHitPlayer -= BarbarianStoneProjectile_OnStoneProjectileHitPlayer;
     }
 }
