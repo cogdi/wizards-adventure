@@ -1,14 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class BarbarianLongDistanceState : BarbarianBaseState
 {
+    public static event Action OnPlayerHitOnWall;
+
     public static event Action OnStateChanged;
-    //public static event Action OnRockThrowned;
     public static event Action OnHeadacheStarted;
     public static event Action OnHeadachePassed;
     public static event Action OnPickingUpStone;
@@ -17,7 +15,6 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     private const string BARBARIAN_ROCK = "Barbarian_Rock";
     private const float rockThrowingSpeed = 40f;
     private bool isRockPickedUp;
-    // private bool allRocksCrushed;
 
     // Rush.
     [SerializeField] private LayerMask floorLayer;
@@ -26,6 +23,7 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     private bool isHeadaching;
     private float headacheTimer;
     private float headacheTimerMax = 5f;
+    private bool isHoldingPlayer;
 
     private bool isDestinationSet;
     private float rushTimer;
@@ -146,6 +144,12 @@ public class BarbarianLongDistanceState : BarbarianBaseState
             {
                 Debug.Log("Barbarian Rush: Navmesh ended");
 
+                if (isHoldingPlayer)
+                {
+                    OnHitPlayerOnWall();
+                    return;
+                }
+
                 StopRushing();
 
                 isHeadaching = true;
@@ -176,18 +180,37 @@ public class BarbarianLongDistanceState : BarbarianBaseState
     private void OnPlayerHitInRush()
     {
         Debug.Log("Barbarian Rush: Hit player");
-
-        StopRushing();
+        
+        PlayerMotor.Instance.DisableMovement();
+        PlayerMotor.Instance.transform.SetParent(barbarian.transform);
+        isHoldingPlayer = true;
     }
-
+    
     private void OnWallHitInRush()
     {
         Debug.Log("Barbarian Rush: Hit wall");
+
+        if (isHoldingPlayer)
+        {
+            OnHitPlayerOnWall();
+            return;
+        }
 
         StopRushing();
 
         isHeadaching = true;
         OnHeadacheStarted?.Invoke();
+    }
+
+    private void OnHitPlayerOnWall()
+    {
+        StopRushing();
+
+        OnPlayerHitOnWall?.Invoke();
+
+        PlayerMotor.Instance.transform.SetParent(null);
+        PlayerMotor.Instance.EnableMovement();
+        isHoldingPlayer = false;
     }
 
     public override void ExitState()

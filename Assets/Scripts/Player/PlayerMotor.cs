@@ -26,6 +26,7 @@ public class PlayerMotor : MonoBehaviour
 
     // Movement.
     [SerializeField] private CharacterController controller;
+    private bool movementEnabled = true;
     private float jumpHeight = 2f;
     private float gravity = 9.8f;
     private Vector3 velocity;
@@ -120,7 +121,7 @@ public class PlayerMotor : MonoBehaviour
             PushAwayFromEnemy();
         }
         
-        else
+        else if (movementEnabled)
         {
             if (thirdPersonMode)
             {
@@ -398,5 +399,15 @@ public class PlayerMotor : MonoBehaviour
     public void ApplyNormalSpeed()
     {
         currentSpeed = walkingSpeed;
+    }
+
+    public void DisableMovement()
+    {
+        movementEnabled = false;
+    }
+
+    public void EnableMovement()
+    {
+        movementEnabled = true;
     }
 }

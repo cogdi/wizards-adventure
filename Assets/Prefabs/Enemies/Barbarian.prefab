@@ -2878,11 +2878,11 @@ GameObject:
   - component: {fileID: 3956388538471423992}
   - component: {fileID: 3956388538471423991}
   - component: {fileID: 3956388538471423990}
-  - component: {fileID: 3956388538471423994}
   - component: {fileID: 3956388538471423995}
   - component: {fileID: 3956388538471423997}
   - component: {fileID: 3956388538471423999}
   - component: {fileID: 3956388538471423998}
+  - component: {fileID: 9134934979058783371}
   m_Layer: 9
   m_Name: Barbarian
   m_TagString: Untagged
@@ -2957,19 +2957,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!65 &3956388538471423994
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3956388538471423988}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.4705001, y: 2.4545658, z: 1.2690902}
-  m_Center: {x: -0.006177584, y: 1.2272829, z: 0.008092999}
 --- !u!114 &3956388538471423995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2988,10 +2975,6 @@ MonoBehaviour:
   twoHandedWeapon: {fileID: 0}
   rockSpawnPoint: {fileID: 3956388537011747789}
   meleeDamageDistance: 2.75
-  rocks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   stonePiecePrefab: {fileID: 3325218233818123789, guid: 8ff2ecf7b16778776b732089766b73d8, type: 3}
   floorLayer:
     serializedVersion: 2
@@ -3043,6 +3026,19 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &9134934979058783371
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3956388538471423988}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.4705003, y: 3.9972281, z: 1.2690902}
+  m_Center: {x: -0.0061775846, y: 2.0258968, z: 0.008092999}
 --- !u!1 &3956388538479808693
 GameObject:
   m_ObjectHideFlags: 0

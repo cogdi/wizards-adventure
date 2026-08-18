@@ -67,12 +67,9 @@ public class CharacterAttributes : MonoBehaviour
 
         BarbarianStoneProjectile.OnStoneProjectileHitPlayer += BarbarianStoneProjectile_OnStoneProjectileHitPlayer;
 
-        playerMotorInstance = PlayerMotor.Instance;
-    }
+        BarbarianLongDistanceState.OnPlayerHitOnWall += BarbarianLongDistanceState_OnPlayerHitOnWall;
 
-    private void BarbarianStoneProjectile_OnStoneProjectileHitPlayer()
-    {
-        TakeDamage(5f);
+        playerMotorInstance = PlayerMotor.Instance;
     }
 
 
@@ -97,6 +94,16 @@ public class CharacterAttributes : MonoBehaviour
         }
     }
 
+    private void BarbarianLongDistanceState_OnPlayerHitOnWall()
+    {
+        TakeDamage(20f);
+    }
+
+    private void BarbarianStoneProjectile_OnStoneProjectileHitPlayer()
+    {
+        TakeDamage(5f);
+    }
+
     public bool IsCharacterAbleToRun()
     {
         return stamina > 0;
@@ -104,6 +111,9 @@ public class CharacterAttributes : MonoBehaviour
 
     private void TakeDamage(float damage)
     {
+        if (damage <= 0)
+            return;
+
         if (health - damage > 0)
         {
             if (PlayerInput.Instance.IsBlockingPressed())
