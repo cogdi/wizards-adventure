@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Dungeon.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
+    path: Assets/Scenes/WitchCorridors.unity
+    guid: 01ebee3f6b6a36666a272f96a02c786a
+  - enabled: 1
     path: Assets/Scenes/WitchLayer.unity
     guid: 96d9f98f0f30e1348be3135d0bb50b1d
   m_configObjects: {}
