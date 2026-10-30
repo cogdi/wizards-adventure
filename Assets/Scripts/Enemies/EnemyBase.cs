@@ -21,9 +21,9 @@ public abstract class EnemyBase : MonoBehaviour
     protected PlayerCombat playerCombatInstance;
     protected int ignoreRaycastMask; // It is for the main character's shield, clothes, etc.
 
+    //public abstract void DamageToPlayer();
     // protected abstract void TakeDamage(EnemyBase enemy, float damage);
     public abstract bool IsMoving();
-    //public abstract void DamageToPlayer();
 
     protected virtual void TakeDamage(EnemyBase enemy, float damage)
     {

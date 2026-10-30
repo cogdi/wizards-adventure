@@ -33,8 +33,6 @@ public class Loader : MonoBehaviour
             Debug.Log("Changing scene...");
             StartCoroutine(LoadSceneAsync(++buildIndex));
         }
-
-        Debug.Log("Currently this is the final scene!");
     }
 
     private IEnumerator LoadSceneAsync(int buildIndex)

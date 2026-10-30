@@ -1302,6 +1302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 5782024289354048992}
+  flyingVelocity: 4.5
 --- !u!114 &5782024289354049004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1325,7 +1326,7 @@ Animator:
   m_GameObject: {fileID: 5782024289354048994}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 053b60d506151384c84a790d1d0c9ba8, type: 3}
-  m_Controller: {fileID: 9100000, guid: 01cab3d436cb2e94da7a267c615bd0d0, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8c61db722ad8df42b84270d8c4cdc38e, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1349,6 +1350,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 517459407091806851}
+  thirdPersonCamera: {fileID: 0}
+  thirdPersonAnglesArray: []
 --- !u!114 &8428007803463230753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1361,6 +1364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e170b1daf2e5e2644a878fb44a5f5131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerMotorInstance: {fileID: 0}
 --- !u!114 &8428007803463230799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1373,6 +1377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87e062478b340bd47bf03adf0cc5ddae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerBody: {fileID: 0}
   attackRangeSphere: {fileID: 8428007803367581647}
   attackRangeSphereRadius: 0.5
   enemyLayer:
